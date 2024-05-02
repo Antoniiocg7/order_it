@@ -1,11 +1,11 @@
 
 // FOOD ITEM
 class Food {
-  final String name;          // HAMBURGUESA CON QUESA
-  final String description;   // UNA HAMBURGUESA CON MUCHO QUESO
-  final String imagePath;     // lib/images/cheese_burguer.png
-  final double price;         // 4,99€
-  final FoodCategory category;
+  final String name;          
+  final String description;
+  final String imagePath;     
+  final double price;      
+  final Enum category;
   List<Addon> availableAddons;
 
   Food({
@@ -19,14 +19,12 @@ class Food {
 
 }
 
-// FOOD CATEGORIES
-
 enum FoodCategory {
   burguers,
-  salads,
   sides,
-  desserts,
-  drinks
+  salads,
+  drinks,
+  desserts
 }
 
 // FOOD ADDONS
