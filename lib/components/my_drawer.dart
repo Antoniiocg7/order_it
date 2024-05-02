@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
 import 'package:order_it/pages/settings_page.dart';
 
@@ -51,7 +52,10 @@ class MyDrawer extends StatelessWidget {
           MyDrawerTile(
             text: "L O G O U T",
             icon: Icons.logout,
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push( context, MaterialPageRoute( builder: (context) => const LoginOrRegister() ) );
+            },
           ),
 
           const SizedBox( height: 25,)
