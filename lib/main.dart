@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/models/restaurant.dart';
+import 'package:order_it/pages/test_supabase.dart';
 import 'package:order_it/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      home: const LoginOrRegister(),
+      home: SupabaseTest(),
       theme: Provider.of<ThemeProvider>(context).themeData,
       
     );

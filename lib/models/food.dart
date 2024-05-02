@@ -1,5 +1,7 @@
 
 // FOOD ITEM
+import 'package:flutter/foundation.dart';
+
 class Food {
   final String name;          
   final String description;
@@ -13,7 +15,7 @@ class Food {
     required this.description, 
     required this.imagePath, 
     required this.price,
-    required this.category,
+    required this.categoryId,
     required this.availableAddons
   });
 
