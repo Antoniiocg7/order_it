@@ -1,6 +1,5 @@
 
 // FOOD ITEM
-import 'package:flutter/foundation.dart';
 
 class Food {
   final String name;          
