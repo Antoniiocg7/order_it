@@ -40,13 +40,13 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //logo
-            Icon(
-              Icons.lock_open_rounded,
-              size: 100,
-              color: Theme.of(context).colorScheme.inversePrimary,
+            Image.asset(
+              'lib/images/Logo.jpg',
+              width: 300,
+              height: 500,
             ),
 
-            const SizedBox(height: 25,),
+            const SizedBox(height: 25),
 
             //message, app slogan
             Text(
