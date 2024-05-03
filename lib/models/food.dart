@@ -38,5 +38,4 @@ class Addon {
     required this.name,
     required this.price
   });
-
 }

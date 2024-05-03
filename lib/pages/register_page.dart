@@ -15,6 +15,9 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
@@ -22,17 +25,17 @@ class RegisterPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //logo
-            Icon(
-              Icons.lock_open_rounded,
-              size: 100,
-              color: Theme.of(context).colorScheme.inversePrimary,
+            Image.asset(
+              'lib/images/Logo.png',
+              width: size.width * 1.2,
+              height: size.height * 0.5,
             ),
 
             const SizedBox(height: 25,),
 
             //message, app slogan
             Text(
-              "Let´s create an account for you!",
+              "¡Crea tu cuenta ahora!",
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).colorScheme.inversePrimary

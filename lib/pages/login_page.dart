@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:order_it/components/my_button.dart';
@@ -33,6 +34,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
@@ -40,83 +44,79 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //logo
-            Image.asset(
-              'lib/images/Logo.jpg',
-              width: 300,
-              height: 500,
-            ),
-
-            const SizedBox(height: 25),
-
-            //message, app slogan
-            Text(
-              "Food Delivery App",
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.inversePrimary
+            FadeInDown(
+              child: Image.asset(
+                'lib/images/Logo.png',
+                width: size.width * 1.2,
+                height: size.height * 0.5,
               ),
             ),
 
             const SizedBox(height: 25,),
 
             // EMAIL TEXTFIELD
-            MyTextField(
-              controller: emailController, 
-              hintText: "Email", 
-              obscureText: false
+            FadeInDown(
+              child: MyTextField(
+                controller: emailController, 
+                hintText: "Email", 
+                obscureText: false
+              ),
             ),
 
             const SizedBox(height: 10,),
 
             //PASSWORD TEXTFIELD
-            MyTextField(
-              controller: passwordController, 
-              hintText: "Password", 
-              obscureText: true
+            FadeInDown(
+              child: MyTextField(
+                controller: passwordController, 
+                hintText: "Password", 
+                obscureText: true
+              ),
             ),
 
             const SizedBox(height: 10,),
             
             //SIGN IN BUTTON
-            MyButton(
-              text: "Sign In",
-              onTap: () {
-                login();
-              },
+            FadeInUp(
+              child: MyButton(
+                text: "Sign In",
+                onTap: () {
+                  login();
+                },
+              ),
             ),
 
             const SizedBox(height: 25,),
 
             // NOT A MEMEBER? REGISTER NOW!
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-                Text(
-                  "Not a member?",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary
-                  ),
-                ),
-                
-                const SizedBox(width: 4,),
-
-                GestureDetector(
-                  onTap: widget.onTap,
-                  child: Text(
-                    "Registe now!",
+            FadeInUp(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  
+                  Text(
+                    "Not a member?",
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontWeight: FontWeight.bold
+                      color: Theme.of(context).colorScheme.inversePrimary
                     ),
                   ),
-                )
-
-              ],
+                  
+                  const SizedBox(width: 4,),
+              
+                  GestureDetector(
+                    onTap: widget.onTap,
+                    child: Text(
+                      "Registe now!",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  )
+                ],
+              ),
             )
-
           ],
-          
         ),
       ),
     );

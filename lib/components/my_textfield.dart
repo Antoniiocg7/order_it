@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
@@ -17,20 +18,30 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: TextField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary)
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+              border: InputBorder.none, // Elimina la línea inferior del texto
+              hintText: hintText,
+              hintStyle: const TextStyle(color: Colors.black)
+            ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary)
+          SizedBox(height: 2), // Espacio entre el texto y el contenedor azul
+          FadeInLeft(
+            delay: const Duration(milliseconds: 1100),
+            child: Container(
+              width: 220,
+              height: 2,
+              color: Colors.blue,
+            ),
           ),
-          hintText: hintText,
-          hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary)
-        ),
+        ],
       ),
     );
   }
+
 }
