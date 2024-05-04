@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/pages/call_waiter.dart';
 
 class FirstPage extends StatelessWidget {
   const FirstPage({super.key});
@@ -10,7 +11,7 @@ class FirstPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order It!'),
+        title: const Text('Order It!', style: TextStyle(fontSize: 20, color: Colors.white) ),
         backgroundColor: Colors.green,
         //todo: action: logout
       ),
@@ -33,9 +34,12 @@ class FirstPage extends StatelessWidget {
                   color: Colors.blue,
                   child: IconButton(
                     onPressed: () {
-                      
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CallWaiter())
+                      );
                     },
-                    icon: const Icon(Icons.person_2_outlined),
+                    icon: const Icon(Icons.person),
                     color: Colors.black,
                   ),
                 ),
@@ -44,7 +48,12 @@ class FirstPage extends StatelessWidget {
                   width: size.width * 0.4,
                   height: size.height * 0.3,
                   color: Colors.red,
-                  child: const Icon(Icons.qr_code),
+                  child: IconButton(
+                    onPressed: () {
+                      
+                    },
+                    icon: const Icon(Icons.qr_code),
+                  ),
                 )
               ],
             )
