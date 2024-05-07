@@ -8,22 +8,26 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.background,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // APP LOGO
           Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Icon(
-              Icons.lock_open_rounded,
-              size: 80,
-              color: Theme.of(context).colorScheme.inversePrimary,
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            child: Image.asset(
+              'lib/images/Logo.png',
+              width: size.width * 0.8,
+              height: size.height * 0.3,
             ),
           ),
 
+          // Divider
           Padding(
-            padding: const EdgeInsets.all(25),
+            padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Divider(
               color: Theme.of(context).colorScheme.secondary,
             ),
@@ -36,29 +40,41 @@ class MyDrawer extends StatelessWidget {
             onTap: () => Navigator.pop(context),
           ),
 
-          //SETTINGS LIST
+          //SETTINGS LIST TILE
           MyDrawerTile(
             text: "S E T T I N G S",
             icon: Icons.settings,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push( context, MaterialPageRoute( builder: (context) => const SettingsPage() ) );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
             },
           ),
 
+          // Tirar logout abajo del todo
           const Spacer(),
 
-          //LOGGIN OUT
+          //LOGGING OUT LIST TILE
           MyDrawerTile(
             text: "L O G O U T",
             icon: Icons.logout,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push( context, MaterialPageRoute( builder: (context) => const LoginOrRegister() ) );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginOrRegister(),
+                ),
+              );
             },
           ),
-
-          const SizedBox( height: 25,)
+          const SizedBox(
+            height: 25,
+          )
         ],
       ),
     );
