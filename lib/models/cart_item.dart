@@ -1,4 +1,5 @@
 
+import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/food.dart';
 
 class CartItem {
