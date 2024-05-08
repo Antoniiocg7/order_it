@@ -17,6 +17,7 @@ class MyTabBar extends StatelessWidget implements PreferredSizeWidget {
       controller: tabController,
       isScrollable: true,
       indicatorColor: Colors.white,
+      tabAlignment: TabAlignment.start,
       tabs: categories.map((category) {
         return Tab(
           text: category.name,
