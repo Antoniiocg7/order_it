@@ -17,8 +17,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
   void login(){
@@ -41,10 +41,12 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //logo
             FadeInDown(
+              duration: const Duration( seconds: 2),
               child: Image.asset(
                 'lib/images/Logo.png',
                 width: size.width * 1.2,
@@ -52,10 +54,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
 
-            const SizedBox(height: 25,),
+            const SizedBox(height: 90),
 
             // EMAIL TEXTFIELD
             FadeInRight(
+              duration: const Duration( seconds: 1),
               child: MyTextField(
                 controller: emailController, 
                 hintText: "Email", 
@@ -69,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
 
             //PASSWORD TEXTFIELD
             FadeInLeft(
+              duration: const Duration( seconds: 1),
               child: MyTextField(
                 controller: passwordController, 
                 hintText: "Password", 
@@ -82,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
             
             //SIGN IN BUTTON
             FadeInUp(
+              duration: const Duration( seconds: 1),
               child: MyButton(
                 text: "Sign In",
                 onTap: () {
@@ -94,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
 
             // NOT A MEMEBER? REGISTER NOW!
             FadeInUp(
+              duration: const Duration( seconds: 1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
