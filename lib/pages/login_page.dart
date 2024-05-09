@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Email", 
                 labelText: "Email",
                 obscureText: false,
-                icon: const Icon(Icons.email)
+                icon: Icons.email
               ),
             ),
 
@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Password", 
                 labelText: "Password",
                 obscureText: true,
-                icon: const Icon(Icons.password),
+                icon: Icons.password
               ),
             ),
 

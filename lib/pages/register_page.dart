@@ -50,7 +50,7 @@ class RegisterPage extends StatelessWidget {
               hintText: "Email", 
               labelText: "Email",
               obscureText: false,
-              icon: const Icon(Icons.email),
+              icon: Icons.email
             ),
 
             const SizedBox(height: 10,),
@@ -61,7 +61,7 @@ class RegisterPage extends StatelessWidget {
               hintText: "Password",
               labelText: "Password",
               obscureText: true,
-              icon: const Icon(Icons.password)
+              icon: Icons.password
             ),
 
             const SizedBox(height: 10,),
@@ -72,7 +72,7 @@ class RegisterPage extends StatelessWidget {
               hintText: "Confirm password", 
               labelText: "Confirm password",
               obscureText: true,
-              icon: const Icon(Icons.password),
+              icon: Icons.password
             ),
 
             const SizedBox(height: 10,),
