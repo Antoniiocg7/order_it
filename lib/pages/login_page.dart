@@ -55,22 +55,26 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 25,),
 
             // EMAIL TEXTFIELD
-            FadeInDown(
+            FadeInRight(
               child: MyTextField(
                 controller: emailController, 
                 hintText: "Email", 
-                obscureText: false
+                labelText: "Email",
+                obscureText: false,
+                icon: const Icon(Icons.email)
               ),
             ),
 
             const SizedBox(height: 10,),
 
             //PASSWORD TEXTFIELD
-            FadeInDown(
+            FadeInLeft(
               child: MyTextField(
                 controller: passwordController, 
                 hintText: "Password", 
-                obscureText: true
+                labelText: "Password",
+                obscureText: true,
+                icon: const Icon(Icons.password),
               ),
             ),
 

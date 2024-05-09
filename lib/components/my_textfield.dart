@@ -1,47 +1,67 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextField extends StatefulWidget {
 
   final TextEditingController controller;
   final String hintText;
+  final String labelText;
   final bool obscureText;
+  final Icon icon;
 
   const MyTextField({
     super.key, 
     required this.controller, 
-    required this.hintText, 
-    required this.obscureText
+    required this.hintText,
+    required this.labelText,
+    required this.obscureText,
+    required this.icon
   });
+
+  @override
+  State<MyTextField> createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
+
+  bool _showHint = true;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextField(
-            controller: controller,
-            obscureText: obscureText,
+            controller: widget.controller,
+            obscureText: widget.obscureText,
             decoration: InputDecoration(
-              border: InputBorder.none, // Elimina la línea inferior del texto
-              hintText: hintText,
-              hintStyle: const TextStyle(color: Colors.black)
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.indigo.withOpacity(0.3))
+              ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.indigo.withOpacity(0.3)),
             ),
-          ),
-          SizedBox(height: 2), // Espacio entre el texto y el contenedor azul
-          FadeInLeft(
-            delay: const Duration(milliseconds: 1100),
-            child: Container(
-              width: 220,
-              height: 2,
-              color: Colors.blue,
+              hintText: _showHint ? widget.hintText : null,
+              hintStyle: const TextStyle(color: Colors.black),
+              labelText: widget.labelText,
+              prefixIcon: widget.icon,
+              labelStyle: const TextStyle( color: Colors.grey ),
             ),
+            onTap: () {
+              setState(() {
+                _showHint = false;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                _showHint = value.isEmpty;
+              });
+            },
           ),
         ],
       ),
     );
   }
-
 }
