@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_cart_tile.dart';
 import 'package:order_it/models/restaurant.dart';
@@ -20,7 +19,7 @@ class CartPage extends StatelessWidget {
         // SCAFFOLD UI
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Cart"),
+            title: const Text("Carta"),
             backgroundColor: Colors.transparent,
             foregroundColor: Theme.of(context).colorScheme.inversePrimary,
             actions: [
@@ -31,17 +30,17 @@ class CartPage extends StatelessWidget {
                   showDialog(
                     context: context, 
                     builder: (context) => AlertDialog(
-                      title: const Text("Are you sure you want to clear the cart?"),
+                      title: const Text("¿Quieres eliminar el carrito?"),
                       actions: [
                         // CANCEL BUTTON
                         TextButton(
-                          child: const Text("Cancel"),
+                          child: const Text("Cancelar"),
                           onPressed: () => Navigator.pop(context)
                         ),
 
                         // ACCEPT BUTTON
                         TextButton(
-                          child: const Text("Yes"),
+                          child: const Text("Si"),
                           onPressed: () {
                             Navigator.pop(context);
                             restaurant.clearCart();
@@ -62,7 +61,7 @@ class CartPage extends StatelessWidget {
                 child: Column(
                   children: [
                     (userCart.isEmpty) 
-                    ? const Expanded(child: Center(child: Text("Cart is empty..."))) 
+                    ? const Expanded(child: Center(child: Text("El carrito está vacío."))) 
                     : Expanded(
                       child: ListView.builder(
                         itemCount: userCart.length,
@@ -85,7 +84,7 @@ class CartPage extends StatelessWidget {
               // BUTTON TO PAY
               MyButton(
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentPage())), 
-                text: "Go to checkout"
+                text: "Hacer el pedido."
               ),
 
               const SizedBox( height: 25 )

@@ -10,7 +10,7 @@ class Restaurant extends ChangeNotifier{
 
     // BURGUERS
     Food(
-      name: "Classic Cheeseburguer", 
+      name: "La clasica.", 
       description: "Una jugosa ternera madurada con extra de queso", 
       imagePath: "lib/images/dishes/classic_burguer.jpeg", 
       price: 0.99, 
@@ -22,7 +22,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "Vegan Burguer", 
+      name: "La vegana.", 
       description: "Una suculenta hamburguesa vegana", 
       imagePath: "lib/images/dishes/vegan_burguer.jpg", // Rellena la ruta de la imagen aquí
       price: 8.99, 
@@ -46,7 +46,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "BBQ Ranch Burger", 
+      name: "BBQ Burger", 
       description: "Una deliciosa hamburguesa con salsa BBQ, queso cheddar y aderezo ranchero", 
       imagePath: "lib/images/dishes/bbq_burguer.jpeg", // Rellena la ruta de la imagen aquí
       price: 9.99, 
@@ -73,7 +73,7 @@ class Restaurant extends ChangeNotifier{
 
     // SALADS
     Food(
-      name: "Caesar Salad", 
+      name: "Ensalada Cesar", 
       description: "Fresca lechuga romana con aderezo Caesar y crutones", 
       imagePath: "lib/images/salads/caesar_salad.jpeg", // Rellena la ruta de la imagen aquí
       price: 6.99, 
@@ -85,7 +85,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "Caprese Salad", 
+      name: "Caprese Ensalada", 
       description: "Ensalada fresca con tomates, mozzarella de búfala y albahaca", 
       imagePath: "lib/images/salads/normal_salad.jpeg", // Rellena la ruta de la imagen aquí
       price: 9.49, 
@@ -109,7 +109,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "Asian Sesame Salad", 
+      name: "Ensalada Asiatica", 
       description: "Ensalada fresca con pollo a la parrilla, fideos de arroz crujientes y aderezo de sésamo", 
       imagePath: "lib/images/salads/ensalada2.png", // Rellena la ruta de la imagen aquí
       price: 10.49, 
@@ -121,7 +121,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "Quinoa Salad", 
+      name: "Quinoa Ensalada", 
       description: "Ensalada nutritiva de quinoa con vegetales frescos y vinagreta de limón", 
       imagePath: "lib/images/salads/ensalada3.jpeg", // Rellena la ruta de la imagen aquí
       price: 8.99, 
@@ -275,7 +275,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "Cheesecake", 
+      name: "Tarta de queso", 
       description: "Delicioso pastel de queso con salsa de frutos rojos", 
       imagePath: "lib/images/desserts/cheese_cake.jpeg", // Rellena la ruta de la imagen aquí
       price: 7.99, 
@@ -287,7 +287,7 @@ class Restaurant extends ChangeNotifier{
       ]
     ),
     Food(
-      name: "MilkShake", 
+      name: "", 
       description: "Batido de leche vainilla y plátano", 
       imagePath: "lib/images/desserts/milkshakes.jpeg", // Rellena la ruta de la imagen aquí
       price: 6.99, 

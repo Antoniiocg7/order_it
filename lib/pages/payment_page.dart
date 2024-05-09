@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
@@ -28,13 +27,13 @@ class _PaymentPageState extends State<PaymentPage> {
       showDialog(
         context: context, 
         builder: (context) => AlertDialog(
-          title: const Text("Confirm payment"),
+          title: const Text("Realizar Pago"),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Text("Card Number: $cardNumber"),
-                Text("Expiry Date: $expiryDate"),
-                Text("Card Holder name: $cardHolderName"),
+                Text("Numero tarjeta: $cardNumber"),
+                Text("Mes/Año: $expiryDate"),
+                Text("Titular Tarjeta: $cardHolderName"),
                 Text("CVV: $cvvCode"),
               ],
             ),
@@ -43,7 +42,7 @@ class _PaymentPageState extends State<PaymentPage> {
             // CANCEL BUTTON
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")
+              child: const Text("Cancelar")
             ),
 
             // ACCEPT BUTTON
@@ -56,7 +55,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   )
                 );
               },
-              child: const Text("Yes")
+              child: const Text("Si")
             ),
           ],
         ),
@@ -67,7 +66,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -109,7 +108,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
           MyButton(
             onTap: userTappedPay, 
-            text: "Pay now!"
+            text: "¡Paga y disfruta de tu comida!"
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/pages/home_page.dart';
@@ -34,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
             
             //SIGN IN BUTTON
             MyButton(
-              text: "Sign In",
+              text: "Iniciar Sesion",
               onTap: () {
                 login();
               },
@@ -93,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 
                 Text(
-                  "Not a member?",
+                  "¿Aun no estás registrado? Únete a la familia",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.inversePrimary
                   ),
@@ -104,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                 GestureDetector(
                   onTap: widget.onTap,
                   child: Text(
-                    "Registe now!",
+                    "¡Registrate ya!",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.inversePrimary,
                       fontWeight: FontWeight.bold

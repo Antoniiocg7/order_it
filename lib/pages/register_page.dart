@@ -16,7 +16,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -32,7 +32,7 @@ class RegisterPage extends StatelessWidget {
 
             //message, app slogan
             Text(
-              "Let´s create an account for you!",
+              "¡Crea una cuenta y empieza a disfrutar!",
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).colorScheme.inversePrimary
@@ -70,7 +70,7 @@ class RegisterPage extends StatelessWidget {
             
             //SIGN Up BUTTON
             MyButton(
-              text: "Sign Up",
+              text: "Registrarte",
               onTap: () {
 
               },
@@ -84,7 +84,7 @@ class RegisterPage extends StatelessWidget {
               children: [
                 
                 Text(
-                  "Already have an account?",
+                  "¿Has olvidado la contraseña?",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.inversePrimary
                   ),
@@ -95,7 +95,7 @@ class RegisterPage extends StatelessWidget {
                 GestureDetector(
                   onTap: onTap,
                   child: Text(
-                    "Login Now!",
+                    "Inicia Sesión",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.inversePrimary,
                       fontWeight: FontWeight.bold
