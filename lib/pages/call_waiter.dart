@@ -17,15 +17,16 @@ class CallWaiter extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: size.height * 0.3, // 30% de la altura de la pantalla
+              height: size.height * 0.1,
               child: const Center(
                 child: Text(
                   'Nuestro camarero le atenderá enseguida, gracias por su paciencia',
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ),
@@ -34,20 +35,34 @@ class CallWaiter extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.account_tree,
-                    size: size.width * 0.3, // Ajustar tamaño del icono según necesites
-                    color: Colors.blue,
+                  Image.asset(
+                    'lib/images/application/vader-kebab.gif',
+                    height: size.height * 0.3,
+                    width: size.width * 0.4,
                   ),
-                  IconButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const HomePage())
                       );
                     },
-                    icon: const Icon(Icons.add),
-                    color: Colors.black,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Bordes redondeados
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        'Ver la carta',
+                        style: TextStyle(
+                          color: Colors.white, // Color del texto
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

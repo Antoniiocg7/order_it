@@ -21,125 +21,124 @@ class RegisterPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //logo
-            FadeInDown(
-              duration: const Duration( seconds: 2),
-              child: Image.asset(
-                'lib/images/Logo.png',
-                width: size.width * 1.2,
-                height: size.height * 0.5,
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            //message, app slogan
-            FadeInLeft(
-              duration: const Duration( seconds: 1),
-              child: Text(
-                "¡Crea tu cuenta ahora!",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.inversePrimary
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //logo
+              FadeInDown(
+                duration: const Duration( seconds: 2),
+                child: Image.asset(
+                  'lib/images/application/Logo.png',
+                  width: size.width * 1.2,
+                  height: size.height * 0.5,
                 ),
               ),
-            ),
-
-            const SizedBox(height: 25,),
-
-            // EMAIL TEXTFIELD
-            FadeInRight(
-              duration: const Duration( seconds: 1),
-              child: MyTextField(
-                controller: emailController, 
-                hintText: "Email", 
-                labelText: "Email",
-                obscureText: false,
-                icon: Icons.email
-              ),
-            ),
-
-            const SizedBox(height: 10,),
-
-            //PASSWORD TEXTFIELD
-            FadeInLeft(
-              duration: const Duration( seconds: 1),
-              child: MyTextField(
-                controller: passwordController, 
-                hintText: "Password",
-                labelText: "Password",
-                obscureText: true,
-                icon: Icons.password
-              ),
-            ),
-
-            const SizedBox(height: 10,),
-
-            //CONFIRM PASSWORD TEXTFIELD
-            FadeInRight(
-              duration: const Duration( seconds: 1),
-              child: MyTextField(
-                controller: confirmPasswordController, 
-                hintText: "Confirm password", 
-                labelText: "Confirm password",
-                obscureText: true,
-                icon: Icons.password
-              ),
-            ),
-
-            const SizedBox(height: 10,),
-            
-            //SIGN Up BUTTON
-            FadeInUp(
-              duration: const Duration( seconds: 1),
-              child: MyButton(
-                text: "Sign Up",
-                onTap: () {
-              
-                },
-              ),
-            ),
-
-            const SizedBox(height: 25,),
-
-            // ALREADY HAVE AN ACCOUNT? LOGIN HERE
-            FadeInUp(
-              duration: const Duration( seconds: 1),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  
-                  Text(
-                    "Already have an account?",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary
-                    ),
+        
+              //const SizedBox(height: 10),
+        
+              //message, app slogan
+              FadeInLeft(
+                duration: const Duration( seconds: 1),
+                child: Text(
+                  "¡Crea tu cuenta ahora!",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.inversePrimary
                   ),
-                  
-                  const SizedBox(width: 4,),
+                ),
+              ),
+        
+              const SizedBox(height: 25,),
+        
+              // EMAIL TEXTFIELD
+              FadeInRight(
+                duration: const Duration( seconds: 1),
+                child: MyTextField(
+                  controller: emailController, 
+                  hintText: "Email", 
+                  labelText: "Email",
+                  obscureText: false,
+                  icon: Icons.email
+                ),
+              ),
+        
+              const SizedBox(height: 10,),
+        
+              //PASSWORD TEXTFIELD
+              FadeInLeft(
+                duration: const Duration( seconds: 1),
+                child: MyTextField(
+                  controller: passwordController, 
+                  hintText: "Password",
+                  labelText: "Password",
+                  obscureText: true,
+                  icon: Icons.password
+                ),
+              ),
+        
+              const SizedBox(height: 10,),
+        
+              //CONFIRM PASSWORD TEXTFIELD
+              FadeInRight(
+                duration: const Duration( seconds: 1),
+                child: MyTextField(
+                  controller: confirmPasswordController, 
+                  hintText: "Confirm password", 
+                  labelText: "Confirm password",
+                  obscureText: true,
+                  icon: Icons.password
+                ),
+              ),
+        
+              const SizedBox(height: 10,),
               
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Text(
-                      "Login Now!",
+              //SIGN Up BUTTON
+              FadeInUp(
+                duration: const Duration( seconds: 1),
+                child: MyButton(
+                  text: "Sign Up",
+                  onTap: () {
+                
+                  },
+                ),
+              ),
+        
+              const SizedBox(height: 25,),
+        
+              // ALREADY HAVE AN ACCOUNT? LOGIN HERE
+              FadeInUp(
+                duration: const Duration( seconds: 1),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    
+                    Text(
+                      "¿Ya tienes cuenta?",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        fontWeight: FontWeight.bold
+                        color: Theme.of(context).colorScheme.inversePrimary
                       ),
                     ),
-                  )
-              
-                ],
-              ),
-            )
-
-          ],
-          
+                    
+                    const SizedBox(width: 4,),
+                
+                    GestureDetector(
+                      onTap: onTap,
+                      child: Text(
+                        "Inicia sesión",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ], 
+          ),
         ),
       ),
     );

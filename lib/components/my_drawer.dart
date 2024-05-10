@@ -19,7 +19,7 @@ class MyDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: Image.asset(
-              'lib/images/Logo.png',
+              'lib/images/application/Logo.png',
               width: size.width * 0.8,
               height: size.height * 0.3,
             ),
