@@ -30,7 +30,7 @@ class MyTextField extends StatelessWidget {
               hintStyle: const TextStyle(color: Colors.black)
             ),
           ),
-          SizedBox(height: 2), // Espacio entre el texto y el contenedor azul
+          const SizedBox(height: 2), // Espacio entre el texto y el contenedor azul
           FadeInLeft(
             delay: const Duration(milliseconds: 1100),
             child: Container(

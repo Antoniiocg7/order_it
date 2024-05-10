@@ -10,20 +10,20 @@ class MyCurrentLocation extends StatelessWidget {
         title: const Text("Your location"),
         content: const TextField(
           decoration: InputDecoration(
-            hintText: "Search adress ..."
+            hintText: "Buscar..."
           ),
         ),
         actions: [
           // CANCEL BUTTON
           MaterialButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: const Text("Cancelar"),
           ),
 
           // SAVE BUTTON
           MaterialButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Save"),
+            child: const Text("Guardar"),
           ),
 
         ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/themes/theme_provider.dart';
