@@ -42,7 +42,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           final categories = snapshot.data ?? [];
-          _tabController = TabController(length: categories.length, vsync: this);
+          _tabController =
+              TabController(length: categories.length, vsync: this);
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.secondary,
             drawer: const MyDrawer(),
@@ -64,12 +65,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               actions: [
                 IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CartPage(),) );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CartPage(),
+                        ));
                   },
                   icon: const Icon(Icons.shopping_cart),
                 ),
               ],
-
             ),
             body: Column(
               children: [
@@ -79,17 +83,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     builder: (context, restaurant, child) => TabBarView(
                       controller: _tabController,
                       children: categories.map((category) {
-                        final categoryMenu = restaurant.getMenuForCategory(category.id.toString());
+                        final categoryMenu = restaurant.getMenuForCategory(
+                          category.id.toString(),
+                        );
                         return ListView.builder(
                           itemCount: categoryMenu.length,
-                          physics: const NeverScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) {
                             final food = categoryMenu[index];
                             return FoodTile(
                               food: food,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => FoodPage(food: food)));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FoodPage(food: food),
+                                  ),
+                                );
                               },
                             );
                           },
