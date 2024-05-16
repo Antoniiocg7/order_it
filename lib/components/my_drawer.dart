@@ -11,7 +11,7 @@ class MyDrawer extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

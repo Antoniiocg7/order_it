@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      home: FirstPage(),
+      home:const FirstPage(),
       //home: const LoginOrRegister(),
       theme: Provider.of<ThemeProvider>(context).themeData,
       
