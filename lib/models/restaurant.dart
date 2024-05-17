@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 
@@ -14,7 +15,7 @@ class Restaurant extends ChangeNotifier{
       description: "Una jugosa ternera madurada con extra de queso", 
       imagePath: "lib/images/dishes/classic_burguer.jpeg", 
       price: 0.99, 
-      category: FoodCategory.burguers, 
+      categoryId: "1", 
       availableAddons: [
         Addon(name: "Extra queso", price: 0.99),
         Addon(name: "Bacon", price: 1.99),
@@ -26,7 +27,7 @@ class Restaurant extends ChangeNotifier{
       description: "Una suculenta hamburguesa vegana", 
       imagePath: "lib/images/dishes/vegan_burguer.jpg", // Rellena la ruta de la imagen aquí
       price: 8.99, 
-      category: FoodCategory.burguers, 
+      categoryId: "1", 
       availableAddons: [
         Addon(name: "Huevo frito", price: 1.49),
         Addon(name: "Aguacate", price: 1.99),
@@ -38,7 +39,7 @@ class Restaurant extends ChangeNotifier{
       description: "Jugosos fideos con pollo de primera calidad", 
       imagePath: "lib/images/dishes/fideos_pollo.png", // Rellena la ruta de la imagen aquí
       price: 10.99, 
-      category: FoodCategory.burguers, 
+      categoryId: "1", 
       availableAddons: [
         Addon(name: "Tomillo", price: 1.49),
         Addon(name: "Rúcula", price: 0.99),
@@ -50,7 +51,7 @@ class Restaurant extends ChangeNotifier{
       description: "Una deliciosa hamburguesa con salsa BBQ, queso cheddar y aderezo ranchero", 
       imagePath: "lib/images/dishes/bbq_burguer.jpeg", // Rellena la ruta de la imagen aquí
       price: 9.99, 
-      category: FoodCategory.burguers, 
+      categoryId: "1", 
       availableAddons: [
         Addon(name: "Cebolla rostizada", price: 1.49),
         Addon(name: "Pimiento jalapeño", price: 0.99),
@@ -62,7 +63,7 @@ class Restaurant extends ChangeNotifier{
       description: "Un salmon noruego fresco, de altísima calidad", 
       imagePath: "lib/images/dishes/salmon.png", // Rellena la ruta de la imagen aquí
       price: 9.49, 
-      category: FoodCategory.burguers, 
+      categoryId: "1", 
       availableAddons: [
         Addon(name: "Tomate en rodajas", price: 0.79),
         Addon(name: "Cebolla roja encurtida", price: 1.29),
@@ -77,7 +78,7 @@ class Restaurant extends ChangeNotifier{
       description: "Fresca lechuga romana con aderezo Caesar y crutones", 
       imagePath: "lib/images/salads/caesar_salad.jpeg", // Rellena la ruta de la imagen aquí
       price: 6.99, 
-      category: FoodCategory.salads, 
+      categoryId: "2", 
       availableAddons: [
         Addon(name: "Pollo a la parrilla", price: 2.99),
         Addon(name: "Langostinos", price: 4.99),
@@ -89,7 +90,7 @@ class Restaurant extends ChangeNotifier{
       description: "Ensalada fresca con tomates, mozzarella de búfala y albahaca", 
       imagePath: "lib/images/salads/normal_salad.jpeg", // Rellena la ruta de la imagen aquí
       price: 9.49, 
-      category: FoodCategory.salads, 
+      categoryId: "2", 
       availableAddons: [
         Addon(name: "Vinagre balsámico", price: 0.99),
         Addon(name: "Aceite de oliva virgen", price: 0.79),
@@ -101,7 +102,7 @@ class Restaurant extends ChangeNotifier{
       description: "Ensalada clásica con pollo a la parrilla, aguacate, bacon y huevo duro", 
       imagePath: "lib/images/salads/ensalada1.png", // Rellena la ruta de la imagen aquí
       price: 11.49, 
-      category: FoodCategory.salads, 
+      categoryId: "2", 
       availableAddons: [
         Addon(name: "Queso azul desmenuzado", price: 1.99),
         Addon(name: "Tomates cherry", price: 0.79),
@@ -113,7 +114,7 @@ class Restaurant extends ChangeNotifier{
       description: "Ensalada fresca con pollo a la parrilla, fideos de arroz crujientes y aderezo de sésamo", 
       imagePath: "lib/images/salads/ensalada2.png", // Rellena la ruta de la imagen aquí
       price: 10.49, 
-      category: FoodCategory.salads, 
+      categoryId: "2", 
       availableAddons: [
         Addon(name: "Zanahorias ralladas", price: 0.99),
         Addon(name: "Cacahuetes tostados", price: 1.29),
@@ -125,7 +126,7 @@ class Restaurant extends ChangeNotifier{
       description: "Ensalada nutritiva de quinoa con vegetales frescos y vinagreta de limón", 
       imagePath: "lib/images/salads/ensalada3.jpeg", // Rellena la ruta de la imagen aquí
       price: 8.99, 
-      category: FoodCategory.salads, 
+      categoryId: "2", 
       availableAddons: [
         Addon(name: "Aguacate en cubitos", price: 1.49),
         Addon(name: "Pimientos asados", price: 0.99),
@@ -140,7 +141,7 @@ class Restaurant extends ChangeNotifier{
       description: "Alitas de pollo rebozadas al estilo Kentucky", 
       imagePath: "lib/images/sides/chicken_wings.png", // Rellena la ruta de la imagen aquí
       price: 2.49, 
-      category: FoodCategory.sides, 
+      categoryId: "3", 
       availableAddons: [
         Addon(name: "Queso fundido", price: 1.49),
         Addon(name: "Salsa BBQ", price: 0.99),
@@ -152,7 +153,7 @@ class Restaurant extends ChangeNotifier{
       description: "Nachos mexicanos acompañados de salsa ranchera y pico de gallo", 
       imagePath: "lib/images/sides/nachos.png", // Rellena la ruta de la imagen aquí
       price: 5.99, 
-      category: FoodCategory.sides, 
+      categoryId: "3", 
       availableAddons: [
         Addon(name: "Salsa picante", price: 0.99),
         Addon(name: "Ranch dressing", price: 0.79),
@@ -164,7 +165,7 @@ class Restaurant extends ChangeNotifier{
       description: "Crujientes aros de cebolla fritos y sazonados", 
       imagePath: "lib/images/sides/onion_rings.jpg", // Rellena la ruta de la imagen aquí
       price: 4.99, 
-      category: FoodCategory.sides, 
+      categoryId: "3", 
       availableAddons: [
         Addon(name: "Salsa de arándanos", price: 1.49),
         Addon(name: "Salsa de cilantro y lima", price: 0.99),
@@ -176,7 +177,7 @@ class Restaurant extends ChangeNotifier{
       description: "Pan tostado con mantequilla de ajo y perejil", 
       imagePath: "lib/images/sides/pan_ajo.png", // Rellena la ruta de la imagen aquí
       price: 3.99, 
-      category: FoodCategory.sides, 
+      categoryId: "3", 
       availableAddons: [
         Addon(name: "Queso parmesano rallado", price: 1.49),
         Addon(name: "Tomates secos", price: 1.29),
@@ -188,7 +189,7 @@ class Restaurant extends ChangeNotifier{
       description: "Verduras frescas a la plancha con aceite de oliva virgen extra y sal", 
       imagePath: "lib/images/sides/verduras.png", // Rellena la ruta de la imagen aquí
       price: 4.99, 
-      category: FoodCategory.sides, 
+      categoryId: "3", 
       availableAddons: [
         Addon(name: "Salsa de yogur y eneldo", price: 0.99),
         Addon(name: "Salsa de tomate picante", price: 0.79),
@@ -203,7 +204,7 @@ class Restaurant extends ChangeNotifier{
       description: "Refrescante Coca-Cola servida bien fría", 
       imagePath: "lib/images/drinks/cocacola.png", // Rellena la ruta de la imagen aquí
       price: 1.99, 
-      category: FoodCategory.drinks, 
+      categoryId: "5", 
       availableAddons: [
         Addon(name: "Hielo extra", price: 0.49),
         Addon(name: "Limón", price: 0.29),
@@ -215,7 +216,7 @@ class Restaurant extends ChangeNotifier{
       description: "Agua de mineralizazión débil", 
       imagePath: "lib/images/drinks/agua.jpg", // Rellena la ruta de la imagen aquí
       price: 2.99, 
-      category: FoodCategory.drinks, 
+      categoryId: "5", 
       availableAddons: [
         Addon(name: "Hierbabuena", price: 0.50),
         Addon(name: "Melocotón", price: 0.75),
@@ -227,7 +228,7 @@ class Restaurant extends ChangeNotifier{
       description: "Refrescante cerveza alemana", 
       imagePath: "lib/images/drinks/beer.png", // Rellena la ruta de la imagen aquí
       price: 8.99, 
-      category: FoodCategory.drinks, 
+      categoryId: "5", 
       availableAddons: [
         Addon(name: "Hierbabuena fresca", price: 1.49),
         Addon(name: "Azúcar moreno", price: 0.99),
@@ -239,7 +240,7 @@ class Restaurant extends ChangeNotifier{
       description: "Zumo de naranja natural", 
       imagePath: "lib/images/drinks/zumo.png", // Rellena la ruta de la imagen aquí
       price: 4.99, 
-      category: FoodCategory.drinks, 
+      categoryId: "5", 
       availableAddons: [
         Addon(name: "Cardamomo molido", price: 0.99),
         Addon(name: "Sirope de rosa", price: 1.49),
@@ -251,7 +252,7 @@ class Restaurant extends ChangeNotifier{
       description: "Vino tinto reserva", 
       imagePath: "lib/images/drinks/wine.png", // Rellena la ruta de la imagen aquí
       price: 5.49, 
-      category: FoodCategory.drinks, 
+      categoryId: "5", 
       availableAddons: [
         Addon(name: "Sirope de agave", price: 0.99),
         Addon(name: "Leche de almendras", price: 1.29),
@@ -267,7 +268,7 @@ class Restaurant extends ChangeNotifier{
       description: "Deliciosa tarta de chocolate caliente con helado de vainilla", 
       imagePath: "lib/images/desserts/chocolate_cake.jpeg", // Rellena la ruta de la imagen aquí
       price: 4.99, 
-      category: FoodCategory.desserts, 
+      categoryId: "4", 
       availableAddons: [
         Addon(name: "Nueces", price: 0.99),
         Addon(name: "Caramelo", price: 1.49),
@@ -279,7 +280,7 @@ class Restaurant extends ChangeNotifier{
       description: "Delicioso pastel de queso con salsa de frutos rojos", 
       imagePath: "lib/images/desserts/cheese_cake.jpeg", // Rellena la ruta de la imagen aquí
       price: 7.99, 
-      category: FoodCategory.desserts, 
+      categoryId: "4", 
       availableAddons: [
         Addon(name: "Frambuesas frescas", price: 1.49),
         Addon(name: "Mango en rodajas", price: 1.99),
@@ -291,7 +292,7 @@ class Restaurant extends ChangeNotifier{
       description: "Batido de leche vainilla y plátano", 
       imagePath: "lib/images/desserts/milkshakes.jpeg", // Rellena la ruta de la imagen aquí
       price: 6.99, 
-      category: FoodCategory.desserts, 
+      categoryId: "4", 
       availableAddons: [
         Addon(name: "Helado de vainilla", price: 1.99),
         Addon(name: "Canela en polvo", price: 0.49),
@@ -303,7 +304,7 @@ class Restaurant extends ChangeNotifier{
       description: "Tarta de leche casera con una base de galletas y crema batida", 
       imagePath: "lib/images/desserts/milk_cake.png", // Rellena la ruta de la imagen aquí
       price: 7.49, 
-      category: FoodCategory.desserts, 
+      categoryId: "4", 
       availableAddons: [
         Addon(name: "Merengue tostado", price: 1.99),
         Addon(name: "Ralladura de lima", price: 0.79),
@@ -315,7 +316,7 @@ class Restaurant extends ChangeNotifier{
       description: "Tortitas esponjosas con sirope de chocolate", 
       imagePath: "lib/images/desserts/tortitas.png", // Rellena la ruta de la imagen aquí
       price: 7.99, 
-      category: FoodCategory.desserts, 
+      categoryId: "4", 
       availableAddons: [
         Addon(name: "Fresas frescas", price: 1.49),
         Addon(name: "Virutas de chocolate", price: 0.99),
@@ -412,6 +413,11 @@ class Restaurant extends ChangeNotifier{
   void clearCart() {
     _cart.clear();
     notifyListeners();
+  }
+
+  // FILTER FOOD BY CATEGORY
+  List<Food> getMenuForCategory(String categoryId) {
+    return _menu.where((food) => food.categoryId == categoryId).toList();
   }
 
 

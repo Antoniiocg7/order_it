@@ -8,31 +8,31 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializar Supabase
   await Supabase.initialize(
     url: 'https://gapuibdxbmoqjhibirjm.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E',
-    debug: true, // Activa esto solo en desarrollo
   );
 
   runApp(
-    MultiProvider(
-      providers: [
+    MultiProvider(providers: [
         // THEME PROVIDER
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
         ),
 
-        // RESTAURANT PROVIDER
-        ChangeNotifierProvider(
-          create: (context) => Restaurant(),
-        ),
-      ],
-      child: const MyApp(),
-    ),
-  );
-}
+      // RESTAURANT PROVIDER
+      ChangeNotifierProvider(
+        create: (context) => Restaurant()
+      ),
 
+    ],
+    child: const MyApp()
+  )
+);
+
+} 
+
+} 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

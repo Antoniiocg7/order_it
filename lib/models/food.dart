@@ -1,12 +1,13 @@
 
 // FOOD ITEM
+import 'package:order_it/models/addon.dart';
 
 class Food {
-  final String name;          
-  final String description;
-  final String imagePath;     
-  final double price;      
-  final Enum category;
+  final String name;          // HAMBURGUESA CON QUESA
+  final String description;   // UNA HAMBURGUESA CON MUCHO QUESO
+  final String imagePath;     // lib/images/cheese_burguer.png
+  final double price;         // 4,99€
+  final String categoryId;
   List<Addon> availableAddons;
 
   Food({
@@ -14,28 +15,8 @@ class Food {
     required this.description, 
     required this.imagePath, 
     required this.price,
-    required this.category,
+    required this.categoryId,
     required this.availableAddons
   });
 
-}
-
-enum FoodCategory {
-  burguers,
-  sides,
-  salads,
-  drinks,
-  desserts
-}
-
-// FOOD ADDONS
-class Addon {
-
-  String name;
-  double price;
-
-  Addon({
-    required this.name,
-    required this.price
-  });
 }

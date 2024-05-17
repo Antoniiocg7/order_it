@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:order_it/components/my_current_location.dart';
-import 'package:order_it/components/my_description_box.dart';
 import 'package:order_it/components/my_drawer.dart';
 import 'package:order_it/components/my_food_tile.dart';
-import 'package:order_it/components/my_sliver_app_bar.dart';
 import 'package:order_it/components/my_tab_bar.dart';
-import 'package:order_it/models/food.dart';
+import 'package:order_it/models/food_category.dart';
 import 'package:order_it/models/restaurant.dart';
+import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/food_page.dart';
+import 'package:order_it/controllers/food_category_controller.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,14 +16,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: FoodCategory.values.length, vsync: this);
+    _tabController = TabController(length: 0, vsync: this);
   }
 
   @override
@@ -33,75 +31,88 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
-  // SORT OUT AND RETURNA LIST OF FOOD ITEMS THAT BELONG TO A SPECIFIC CATEGORY
-  List<Food> _filterMenuByCategory(FoodCategory category, List<Food> fullMenu){
-    return fullMenu.where((food) => food.category == category).toList();
-  }
-
-  List<Widget> getFoodInThisCategory(List<Food> fullMenu){
-    return FoodCategory.values.map((category) {
-
-      // GET CATEGORY MENU
-      List<Food> categoryMenu = _filterMenuByCategory(category, fullMenu);
-
-      return ListView.builder(
-
-        itemCount: categoryMenu.length,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
-
-          //GET INDIVIDUAL FOOD ITEM
-          final food = categoryMenu[index];
-
-          // RETURN FOOD TILE
-          return FoodTile(
-            food: food,
-            onTap: (){
-              Navigator.push( context, MaterialPageRoute( builder: (context) => FoodPage(food: food) ) );
-            },
-          );
-        },
-      );
-
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      drawer: const MyDrawer(),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          MySliverAppBar(
-            title: MyTabBar(tabController: _tabController),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Divider(
-                  indent: 25,
-                  endIndent: 25,
-                  color: Theme.of(context).colorScheme.secondary,
+    return FutureBuilder<List<FoodCategory>>(
+      future: FoodCategoryController().fetchCategories(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final categories = snapshot.data ?? [];
+          _tabController =
+              TabController(length: categories.length, vsync: this);
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            drawer: const MyDrawer(),
+            appBar: AppBar(
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  );
+                },
+              ),
+              title: const Text('Order It'),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CartPage(),
+                        ));
+                  },
+                  icon: const Icon(Icons.shopping_cart),
                 ),
-
-                //MY CURRENT LOCATION
-                const MyCurrentLocation(),
-
-                //DESCRIPTION BOX
-                const MyDescriptionBox()
-
               ],
-            )
-          )
-        ], 
-        body: Consumer<Restaurant> (
-          builder: (context, restaurant, child) => TabBarView(
-            controller: _tabController,
-            children: getFoodInThisCategory(restaurant.menu),
-          ),
-        )
-      ),
+            ),
+            body: Column(
+              children: [
+                MyTabBar(tabController: _tabController, categories: categories),
+                Expanded(
+                  child: Consumer<Restaurant>(
+                    builder: (context, restaurant, child) => TabBarView(
+                      controller: _tabController,
+                      children: categories.map((category) {
+                        final categoryMenu = restaurant.getMenuForCategory(
+                          category.id.toString(),
+                        );
+                        return ListView.builder(
+                          itemCount: categoryMenu.length,
+                          padding: EdgeInsets.zero,
+                          itemBuilder: (context, index) {
+                            final food = categoryMenu[index];
+                            return FoodTile(
+                              food: food,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FoodPage(food: food),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }
