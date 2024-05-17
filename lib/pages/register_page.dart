@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
+import 'package:order_it/controllers/auth/register_controller.dart';
 
 class RegisterPage extends StatelessWidget {
 
@@ -11,6 +12,7 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
+  final registerController = RegisterController();
 
   RegisterPage({super.key, required this.onTap});
 
@@ -101,7 +103,7 @@ class RegisterPage extends StatelessWidget {
                 child: MyButton(
                   text: "Sign Up",
                   onTap: () {
-                
+                    registerController.register(emailController.text, passwordController.text);
                   },
                 ),
               ),

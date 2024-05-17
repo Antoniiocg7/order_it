@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
+import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/first_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,17 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  void login(){
-    /*
-      Fill authentication
-    */
-
-    //Navigate to Home Page
-    Navigator.push(
-      context, MaterialPageRoute(builder: (context) => const FirstPage() )
-    );
-  }
+  final LoginController loginController = LoginController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: MyButton(
                   text: "Iniciar Sesión",
                   onTap: () {
-                    login();
+                    loginController.login(context, emailController.text, passwordController.text);
                   },
                 ),
               ),
