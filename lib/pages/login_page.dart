@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
-import 'package:order_it/pages/first_page.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -45,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
         
-              const SizedBox(height: 90),
+              const SizedBox(height: 0),
         
               // EMAIL TEXTFIELD
               FadeInRight(
@@ -59,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
         
-              const SizedBox(height: 10,),
+              const SizedBox(height: 20,),
         
               //PASSWORD TEXTFIELD
               FadeInLeft(
@@ -73,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
         
-              const SizedBox(height: 10,),
+              const SizedBox(height: 50,),
               
               //SIGN IN BUTTON
               FadeInUp(

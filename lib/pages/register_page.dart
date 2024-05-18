@@ -35,7 +35,7 @@ class RegisterPage extends StatelessWidget {
                 child: Image.asset(
                   'lib/images/application/Logo.png',
                   width: size.width * 1.2,
-                  height: size.height * 0.5,
+                  height: size.height * 0.4,
                 ),
               ),
         
@@ -67,7 +67,7 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
         
-              const SizedBox(height: 10,),
+              const SizedBox(height: 20,),
         
               //PASSWORD TEXTFIELD
               FadeInLeft(
@@ -81,7 +81,7 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
         
-              const SizedBox(height: 10,),
+              const SizedBox(height: 20,),
         
               //CONFIRM PASSWORD TEXTFIELD
               FadeInRight(
@@ -95,13 +95,13 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
         
-              const SizedBox(height: 10,),
+              const SizedBox(height: 45,),
               
               //SIGN Up BUTTON
               FadeInUp(
                 duration: const Duration( seconds: 1),
                 child: MyButton(
-                  text: "Sign Up",
+                  text: "Registrar",
                   onTap: () {
                     registerController.register(emailController.text, passwordController.text);
                   },
