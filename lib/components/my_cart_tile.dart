@@ -1,7 +1,5 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:order_it/components/my_quantity_selector.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/restaurant.dart';

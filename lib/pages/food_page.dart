@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:order_it/components/my_button.dart';
+import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
