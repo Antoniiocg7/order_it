@@ -20,17 +20,19 @@ void main() async {
           create: (context) => ThemeProvider(),
         ),
 
-        // RESTAURANT PROVIDER
-        ChangeNotifierProvider(
-          create: (context) => Restaurant()
-        ),
+      // RESTAURANT PROVIDER
+      ChangeNotifierProvider(
+        create: (context) => Restaurant()
+      ),
 
-      ],
-      child: const MyApp()
-    )
-  );
+    ],
+    child: const MyApp()
+  )
+);
 
 } 
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Material App',
       home: const LoginOrRegister(),
+      //home: const LoginOrRegister(),
       theme: Provider.of<ThemeProvider>(context).themeData,
       
     );
