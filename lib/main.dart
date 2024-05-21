@@ -25,11 +25,10 @@ void main() async {
         create: (context) => Restaurant()
       ),
 
-    ],
-    child: const MyApp()
-  )
-);
-
+      ],
+      child: const MyApp()
+    )
+  );
 } 
 
 
