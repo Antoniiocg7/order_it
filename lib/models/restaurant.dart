@@ -5,331 +5,10 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 
-class Restaurant extends ChangeNotifier{
-
-  final List<Food> _menu = [
-
-    // BURGUERS
-    Food(
-      name: "Classic Cheeseburguer", 
-      description: "Una jugosa ternera madurada con extra de queso", 
-      imagePath: "lib/images/dishes/classic_burguer.jpeg", 
-      price: 0.99, 
-      categoryId: "1", 
-      availableAddons: [
-        Addon(name: "Extra queso", price: 0.99),
-        Addon(name: "Bacon", price: 1.99),
-        Addon(name: "Extra carne", price: 2.99),
-      ]
-    ),
-    Food(
-      name: "Vegan Burguer", 
-      description: "Una suculenta hamburguesa vegana", 
-      imagePath: "lib/images/dishes/vegan_burguer.jpg", // Rellena la ruta de la imagen aquí
-      price: 8.99, 
-      categoryId: "1", 
-      availableAddons: [
-        Addon(name: "Huevo frito", price: 1.49),
-        Addon(name: "Aguacate", price: 1.99),
-        Addon(name: "Chiles jalapeños", price: 0.99),
-      ]
-    ),
-    Food(
-      name: "Yakisoba", 
-      description: "Jugosos fideos con pollo de primera calidad", 
-      imagePath: "lib/images/dishes/fideos_pollo.png", // Rellena la ruta de la imagen aquí
-      price: 10.99, 
-      categoryId: "1", 
-      availableAddons: [
-        Addon(name: "Tomillo", price: 1.49),
-        Addon(name: "Rúcula", price: 0.99),
-        Addon(name: "Salsa de trufa", price: 2.99),
-      ]
-    ),
-    Food(
-      name: "BBQ Ranch Burger", 
-      description: "Una deliciosa hamburguesa con salsa BBQ, queso cheddar y aderezo ranchero", 
-      imagePath: "lib/images/dishes/bbq_burguer.jpeg", // Rellena la ruta de la imagen aquí
-      price: 9.99, 
-      categoryId: "1", 
-      availableAddons: [
-        Addon(name: "Cebolla rostizada", price: 1.49),
-        Addon(name: "Pimiento jalapeño", price: 0.99),
-        Addon(name: "Lechuga y tomate frescos", price: 0.79),
-      ]
-    ),
-    Food(
-      name: "Salmon Fresco", 
-      description: "Un salmon noruego fresco, de altísima calidad", 
-      imagePath: "lib/images/dishes/salmon.png", // Rellena la ruta de la imagen aquí
-      price: 9.49, 
-      categoryId: "1", 
-      availableAddons: [
-        Addon(name: "Tomate en rodajas", price: 0.79),
-        Addon(name: "Cebolla roja encurtida", price: 1.29),
-        Addon(name: "Hojas de espinaca fresca", price: 0.99),
-      ]
-    ),
-
-
-    // SALADS
-    Food(
-      name: "Caesar Salad", 
-      description: "Fresca lechuga romana con aderezo Caesar y crutones", 
-      imagePath: "lib/images/salads/caesar_salad.jpeg", // Rellena la ruta de la imagen aquí
-      price: 6.99, 
-      categoryId: "2", 
-      availableAddons: [
-        Addon(name: "Pollo a la parrilla", price: 2.99),
-        Addon(name: "Langostinos", price: 4.99),
-        Addon(name: "Aguacate", price: 1.99),
-      ]
-    ),
-    Food(
-      name: "Caprese Salad", 
-      description: "Ensalada fresca con tomates, mozzarella de búfala y albahaca", 
-      imagePath: "lib/images/salads/normal_salad.jpeg", // Rellena la ruta de la imagen aquí
-      price: 9.49, 
-      categoryId: "2", 
-      availableAddons: [
-        Addon(name: "Vinagre balsámico", price: 0.99),
-        Addon(name: "Aceite de oliva virgen", price: 0.79),
-        Addon(name: "Pesto", price: 1.29),
-      ]
-    ),
-    Food(
-      name: "Cobb Salad", 
-      description: "Ensalada clásica con pollo a la parrilla, aguacate, bacon y huevo duro", 
-      imagePath: "lib/images/salads/ensalada1.png", // Rellena la ruta de la imagen aquí
-      price: 11.49, 
-      categoryId: "2", 
-      availableAddons: [
-        Addon(name: "Queso azul desmenuzado", price: 1.99),
-        Addon(name: "Tomates cherry", price: 0.79),
-        Addon(name: "Aceitunas negras", price: 0.99),
-      ]
-    ),
-    Food(
-      name: "Asian Sesame Salad", 
-      description: "Ensalada fresca con pollo a la parrilla, fideos de arroz crujientes y aderezo de sésamo", 
-      imagePath: "lib/images/salads/ensalada2.png", // Rellena la ruta de la imagen aquí
-      price: 10.49, 
-      categoryId: "2", 
-      availableAddons: [
-        Addon(name: "Zanahorias ralladas", price: 0.99),
-        Addon(name: "Cacahuetes tostados", price: 1.29),
-        Addon(name: "Cilantro fresco", price: 0.79),
-      ]
-    ),
-    Food(
-      name: "Quinoa Salad", 
-      description: "Ensalada nutritiva de quinoa con vegetales frescos y vinagreta de limón", 
-      imagePath: "lib/images/salads/ensalada3.jpeg", // Rellena la ruta de la imagen aquí
-      price: 8.99, 
-      categoryId: "2", 
-      availableAddons: [
-        Addon(name: "Aguacate en cubitos", price: 1.49),
-        Addon(name: "Pimientos asados", price: 0.99),
-        Addon(name: "Semillas de girasol tostadas", price: 0.79),
-      ]
-    ),
-
-
-    // SIDES
-    Food(
-      name: "Alitas de pollo", 
-      description: "Alitas de pollo rebozadas al estilo Kentucky", 
-      imagePath: "lib/images/sides/chicken_wings.png", // Rellena la ruta de la imagen aquí
-      price: 2.49, 
-      categoryId: "3", 
-      availableAddons: [
-        Addon(name: "Queso fundido", price: 1.49),
-        Addon(name: "Salsa BBQ", price: 0.99),
-        Addon(name: "Cebolla caramelizada", price: 1.99),
-      ]
-    ),
-    Food(
-      name: "Nachos Rancheros", 
-      description: "Nachos mexicanos acompañados de salsa ranchera y pico de gallo", 
-      imagePath: "lib/images/sides/nachos.png", // Rellena la ruta de la imagen aquí
-      price: 5.99, 
-      categoryId: "3", 
-      availableAddons: [
-        Addon(name: "Salsa picante", price: 0.99),
-        Addon(name: "Ranch dressing", price: 0.79),
-        Addon(name: "Salsa de ajo", price: 1.29),
-      ]
-    ),
-    Food(
-      name: "Aros de cebolla", 
-      description: "Crujientes aros de cebolla fritos y sazonados", 
-      imagePath: "lib/images/sides/onion_rings.jpg", // Rellena la ruta de la imagen aquí
-      price: 4.99, 
-      categoryId: "3", 
-      availableAddons: [
-        Addon(name: "Salsa de arándanos", price: 1.49),
-        Addon(name: "Salsa de cilantro y lima", price: 0.99),
-        Addon(name: "Queso cheddar derretido", price: 1.79),
-      ]
-    ),
-    Food(
-      name: "Pan de ajo", 
-      description: "Pan tostado con mantequilla de ajo y perejil", 
-      imagePath: "lib/images/sides/pan_ajo.png", // Rellena la ruta de la imagen aquí
-      price: 3.99, 
-      categoryId: "3", 
-      availableAddons: [
-        Addon(name: "Queso parmesano rallado", price: 1.49),
-        Addon(name: "Tomates secos", price: 1.29),
-        Addon(name: "Champiñones salteados", price: 1.79),
-      ]
-    ),
-    Food(
-      name: "Verduras a la plancha", 
-      description: "Verduras frescas a la plancha con aceite de oliva virgen extra y sal", 
-      imagePath: "lib/images/sides/verduras.png", // Rellena la ruta de la imagen aquí
-      price: 4.99, 
-      categoryId: "3", 
-      availableAddons: [
-        Addon(name: "Salsa de yogur y eneldo", price: 0.99),
-        Addon(name: "Salsa de tomate picante", price: 0.79),
-        Addon(name: "Mayonesa de ajo", price: 1.29),
-      ]
-    ),
-
-
-    // DRINKS
-    Food(
-      name: "Coca Cola", 
-      description: "Refrescante Coca-Cola servida bien fría", 
-      imagePath: "lib/images/drinks/cocacola.png", // Rellena la ruta de la imagen aquí
-      price: 1.99, 
-      categoryId: "5", 
-      availableAddons: [
-        Addon(name: "Hielo extra", price: 0.49),
-        Addon(name: "Limón", price: 0.29),
-        Addon(name: "Cereza", price: 0.59),
-      ]
-    ),
-    Food(
-      name: "Agua", 
-      description: "Agua de mineralizazión débil", 
-      imagePath: "lib/images/drinks/agua.jpg", // Rellena la ruta de la imagen aquí
-      price: 2.99, 
-      categoryId: "5", 
-      availableAddons: [
-        Addon(name: "Hierbabuena", price: 0.50),
-        Addon(name: "Melocotón", price: 0.75),
-        Addon(name: "Fresa", price: 0.99),
-      ]
-    ),
-    Food(
-      name: "Cerveza", 
-      description: "Refrescante cerveza alemana", 
-      imagePath: "lib/images/drinks/beer.png", // Rellena la ruta de la imagen aquí
-      price: 8.99, 
-      categoryId: "5", 
-      availableAddons: [
-        Addon(name: "Hierbabuena fresca", price: 1.49),
-        Addon(name: "Azúcar moreno", price: 0.99),
-        Addon(name: "Soda de limón", price: 0.79),
-      ]
-    ),
-    Food(
-      name: "Zumo", 
-      description: "Zumo de naranja natural", 
-      imagePath: "lib/images/drinks/zumo.png", // Rellena la ruta de la imagen aquí
-      price: 4.99, 
-      categoryId: "5", 
-      availableAddons: [
-        Addon(name: "Cardamomo molido", price: 0.99),
-        Addon(name: "Sirope de rosa", price: 1.49),
-        Addon(name: "Nuez moscada", price: 0.79),
-      ]
-    ),
-    Food(
-      name: "Vino Tinto", 
-      description: "Vino tinto reserva", 
-      imagePath: "lib/images/drinks/wine.png", // Rellena la ruta de la imagen aquí
-      price: 5.49, 
-      categoryId: "5", 
-      availableAddons: [
-        Addon(name: "Sirope de agave", price: 0.99),
-        Addon(name: "Leche de almendras", price: 1.29),
-        Addon(name: "Ron blanco (opcional)", price: 2.99),
-      ]
-    ),
-
-
-    // DESSERTS
-
-    Food(
-      name: "Tarta de chocolate", 
-      description: "Deliciosa tarta de chocolate caliente con helado de vainilla", 
-      imagePath: "lib/images/desserts/chocolate_cake.jpeg", // Rellena la ruta de la imagen aquí
-      price: 4.99, 
-      categoryId: "4", 
-      availableAddons: [
-        Addon(name: "Nueces", price: 0.99),
-        Addon(name: "Caramelo", price: 1.49),
-        Addon(name: "Crema batida", price: 0.79),
-      ]
-    ),
-    Food(
-      name: "Cheesecake", 
-      description: "Delicioso pastel de queso con salsa de frutos rojos", 
-      imagePath: "lib/images/desserts/cheese_cake.jpeg", // Rellena la ruta de la imagen aquí
-      price: 7.99, 
-      categoryId: "4", 
-      availableAddons: [
-        Addon(name: "Frambuesas frescas", price: 1.49),
-        Addon(name: "Mango en rodajas", price: 1.99),
-        Addon(name: "Chocolate rallado", price: 0.99),
-      ]
-    ),
-    Food(
-      name: "MilkShake", 
-      description: "Batido de leche vainilla y plátano", 
-      imagePath: "lib/images/desserts/milkshakes.jpeg", // Rellena la ruta de la imagen aquí
-      price: 6.99, 
-      categoryId: "4", 
-      availableAddons: [
-        Addon(name: "Helado de vainilla", price: 1.99),
-        Addon(name: "Canela en polvo", price: 0.49),
-        Addon(name: "Nuez moscada", price: 0.79),
-      ]
-    ),
-    Food(
-      name: "Tarta 3 leches", 
-      description: "Tarta de leche casera con una base de galletas y crema batida", 
-      imagePath: "lib/images/desserts/milk_cake.png", // Rellena la ruta de la imagen aquí
-      price: 7.49, 
-      categoryId: "4", 
-      availableAddons: [
-        Addon(name: "Merengue tostado", price: 1.99),
-        Addon(name: "Ralladura de lima", price: 0.79),
-        Addon(name: "Hojas de menta fresca", price: 0.49),
-      ]
-    ),
-    Food(
-      name: "Tortitas con chocolate", 
-      description: "Tortitas esponjosas con sirope de chocolate", 
-      imagePath: "lib/images/desserts/tortitas.png", // Rellena la ruta de la imagen aquí
-      price: 7.99, 
-      categoryId: "4", 
-      availableAddons: [
-        Addon(name: "Fresas frescas", price: 1.49),
-        Addon(name: "Virutas de chocolate", price: 0.99),
-        Addon(name: "Granillo de almendra", price: 0.79),
-      ]
-    ),
-
-  ];
-
+class Restaurant extends ChangeNotifier {
   /*
     G E T T E R S
   */
-  List<Food> get menu => _menu;
   List<CartItem> get cart => _cart;
   /*
     O P E R A T I O N S
@@ -338,29 +17,25 @@ class Restaurant extends ChangeNotifier{
   final List<CartItem> _cart = [];
 
   // ADD TO CART
-  void addToCart( Food food, List<Addon> selectedAddons ){
+  void addToCart(Food food, List<Addon> selectedAddons) {
     // See if there is a cart item already with the same food and selected addons
     CartItem? cartItem = _cart.firstWhereOrNull((item) {
       // CHECK IF THE FOOD ITEMS ARE THE SAME
       bool isSameFood = item.food == food;
 
       //CHECK IF THE LIST OF SELECTED ADDONS ARE THE SAME
-      bool isSameAddons = const ListEquality().equals(item.selectedAddons, selectedAddons);
+      bool isSameAddons =
+          const ListEquality().equals(item.selectedAddons, selectedAddons);
 
       return isSameFood && isSameAddons;
     });
 
     // IF ITEM ALREADY EXISTS, INCREASE IT´S QUANTITY
-    if(cartItem != null){
+    if (cartItem != null) {
       cartItem.quantity++;
-    }else{
+    } else {
       // OTHERWISE, ADD A NEW CART ITEM TO THE CART
-      _cart.add(
-        CartItem(
-          food: food, 
-          selectedAddons: selectedAddons
-        )
-      );
+      _cart.add(CartItem(food: food, selectedAddons: selectedAddons));
     }
     notifyListeners();
   }
@@ -369,12 +44,10 @@ class Restaurant extends ChangeNotifier{
   void removeFromCart(CartItem cartItem) {
     int cartIndex = _cart.indexOf(cartItem);
 
-    if(cartIndex != -1){
-
-      if(_cart[cartIndex].quantity > 1){
+    if (cartIndex != -1) {
+      if (_cart[cartIndex].quantity > 1) {
         _cart[cartIndex].quantity--;
-
-      }else{
+      } else {
         _cart.removeAt(cartIndex);
       }
     }
@@ -385,10 +58,10 @@ class Restaurant extends ChangeNotifier{
   double getTotalPrice() {
     double total = 0.0;
 
-    for ( CartItem cartItem in _cart ){
+    for (CartItem cartItem in _cart) {
       double itemTotal = cartItem.food.price;
 
-      for ( Addon addon in cartItem.selectedAddons ){
+      for (Addon addon in cartItem.selectedAddons) {
         itemTotal += addon.price;
       }
 
@@ -402,7 +75,7 @@ class Restaurant extends ChangeNotifier{
   int getTotalItemCount() {
     int totalItemCount = 0;
 
-    for ( CartItem cartItem in _cart ){
+    for (CartItem cartItem in _cart) {
       totalItemCount += cartItem.quantity;
     }
 
@@ -415,12 +88,6 @@ class Restaurant extends ChangeNotifier{
     notifyListeners();
   }
 
-  // FILTER FOOD BY CATEGORY
-  List<Food> getMenuForCategory(String categoryId) {
-    return _menu.where((food) => food.categoryId == categoryId).toList();
-  }
-
-
   /*
     H E L P E R S
   */
@@ -432,7 +99,8 @@ class Restaurant extends ChangeNotifier{
     receipt.writeln();
 
     // FORMAT THE DATE TO INCLUDE UP TO SECONDS ONLY
-    String formattedData = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+    String formattedData =
+        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
     receipt.writeln(formattedData);
     receipt.writeln();
@@ -440,12 +108,11 @@ class Restaurant extends ChangeNotifier{
 
     for (final cartItem in _cart) {
       receipt.writeln(
-        "${cartItem.quantity} x ${cartItem.food.name} - ${_formatPrice(cartItem.food.price)}"
-      );
-      if(cartItem.selectedAddons.isNotEmpty){
+          "${cartItem.quantity} x ${cartItem.food.name} - ${_formatPrice(cartItem.food.price)}");
+      if (cartItem.selectedAddons.isNotEmpty) {
         receipt.writeln(" Add-ons: ${_formatAddons(cartItem.selectedAddons)}");
       }
-      receipt.writeln();   
+      receipt.writeln();
     }
 
     receipt.writeln("------------");
@@ -457,16 +124,14 @@ class Restaurant extends ChangeNotifier{
   }
 
   // FORMAT DOUBLE VALUE INTO MONEY
-  String _formatPrice(double price){
+  String _formatPrice(double price) {
     return "${price.toStringAsFixed(2)}€";
   }
 
   // FORMAT LIST OF ADDONS INTO A STRING SUMMARY
-  String _formatAddons(List<Addon> addons){
+  String _formatAddons(List<Addon> addons) {
     return addons
-      .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
-      .join(", ");
+        .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
+        .join(", ");
   }
-
-
 }
