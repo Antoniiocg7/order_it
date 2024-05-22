@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class LoginWithButton extends StatelessWidget {
   final Function()? onTap;
-  final String text;
+  final String? text;
   final Color? color;
   final String icon;
   final LinearGradient? linearGradient;
@@ -10,7 +10,7 @@ class LoginWithButton extends StatelessWidget {
   const LoginWithButton({
     super.key,
     required this.onTap,
-    required this.text,
+    this.text,
     this.color,
     this.linearGradient,
     required this.icon,
@@ -23,8 +23,8 @@ class LoginWithButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: size.height * 0.065,
-        width: size.width * 0.75,
+        height: size.height * 0.07,
+        width: size.width * 0.11,
         decoration: BoxDecoration(
             color: color ?? Theme.of(context).colorScheme.secondary,
             gradient: linearGradient,
@@ -40,14 +40,6 @@ class LoginWithButton extends StatelessWidget {
               icon,
               height: 30,
               width: 30,
-            ),
-            Text(
-              text,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.inversePrimary,
-                fontSize: 16,
-              ),
             ),
           ],
         ),

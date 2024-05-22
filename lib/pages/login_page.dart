@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -51,8 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: emailController,
                     hintText: "Email",
                     labelText: "Email",
-                    obscureText: false,
-                    icon: Icons.email),
+                    obscureText: false),
               ),
 
               const SizedBox(
@@ -66,8 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordController,
                     hintText: "Password",
                     labelText: "Password",
-                    obscureText: true,
-                    icon: Icons.password),
+                    obscureText: true),
               ),
 
               const SizedBox(
@@ -108,32 +106,32 @@ class _LoginPageState extends State<LoginPage> {
                 height: 10,
               ),
 
-              LoginWithButton(
-                onTap: () {
-                  GoogleSignInService.googleSignIn();
-                },
-                text: "  Continuar con Google",
-                icon: "assets/icons/google_icon.png",
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              LoginWithButton(
-                onTap: () {},
-                text: "Continuar con Facebook",
-                icon: "assets/icons/facebook_icon.png",
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              LoginWithButton(
-                onTap: () {},
-                text: "   Continuar con Apple",
-                icon: "assets/icons/apple_icon.png",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LoginWithButton(
+                    onTap: () {
+                      GoogleSignInService.googleSignIn();
+                    },
+                    icon: "assets/icons/google_icon.png",
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  LoginWithButton(
+                    onTap: () {},
+                    text: "Continuar con Facebook",
+                    icon: "assets/icons/facebook_icon.png",
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  LoginWithButton(
+                    onTap: () {},
+                    text: "   Continuar con Apple",
+                    icon: "assets/icons/apple_icon.png",
+                  ),
+                ],
               ),
 
               const SizedBox(
