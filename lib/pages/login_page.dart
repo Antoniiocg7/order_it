@@ -83,7 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                       colors: [Colors.green.shade900, Colors.green]),
                   onTap: () {
                     loginController.login(
-                        context, emailController.text, passwordController.text);
+                      context,
+                      emailController.text,
+                      passwordController.text,
+                    );
                   },
                 ),
               ),

@@ -59,32 +59,24 @@ class SupabaseApi {
     }
   }
 
-
   Future<int?> getUserRole(String email) async {
-    final url = '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
+    final url =
+        '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
 
-    print('URL: $url'); // Para verificar la URL
     final response = await http.get(Uri.parse(url), headers: headers);
-
-    print('Response status: ${response.statusCode}'); // Para verificar el estado de la respuesta
-    print('Response body: ${response.body}'); // Para verificar el cuerpo de la respuesta
-
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      print('JSON response: $jsonResponse'); // Para verificar el JSON decodificado
+
       if (jsonResponse.isNotEmpty && jsonResponse[0]['rol'] != null) {
-        print('User role: ${jsonResponse[0]['rol']}'); // Verificar el rol del usuario
         return jsonResponse[0]['rol'];
       } else {
-        print('No role found for the user'); // Mensaje de depuración
         return null;
       }
     } else {
       throw Exception('Error al obtener el rol del usuario');
     }
   }
-}
 
   Future<List<Map<String, dynamic>>> getCategories() async {
     final url = '$baseUrl/rest/v1/category?select=*';
@@ -128,4 +120,3 @@ class SupabaseApi {
     }
   }
 }
-
