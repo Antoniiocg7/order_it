@@ -14,7 +14,7 @@ class MyTextField extends StatefulWidget {
     required this.hintText,
     required this.labelText,
     required this.obscureText,
-    required this.icon
+    this.icon
   });
 
   @override
