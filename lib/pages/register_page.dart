@@ -103,7 +103,7 @@ class RegisterPage extends StatelessWidget {
                 child: MyButton(
                   text: "Registrar",
                   onTap: () {
-                    registerController.register(emailController.text, passwordController.text);
+                    registerController.register(context, emailController.text, passwordController.text);
                   },
                 ),
               ),

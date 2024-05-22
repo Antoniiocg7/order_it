@@ -20,10 +20,18 @@ void main() async {
       create: (context) => ThemeProvider(),
     ),
 
-    // RESTAURANT PROVIDER
-    ChangeNotifierProvider(create: (context) => Restaurant()),
-  ], child: const MyApp()));
-}
+      // RESTAURANT PROVIDER
+      ChangeNotifierProvider(
+        create: (context) => Restaurant()
+      ),
+
+      ],
+      child: const MyApp()
+    )
+  );
+} 
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

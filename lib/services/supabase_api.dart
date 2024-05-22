@@ -31,17 +31,14 @@ class SupabaseApi {
       body: body,
     );
 
-    // Aquí puedes trabajar con la respuesta, por ejemplo, verificar el estado de la respuesta:
     if (response.statusCode == 200) {
-      // Registro exitoso
       return true;
     } else {
-      // Manejar errores de registro
       return false;
     }
   }
 
-  Future<void> register(String email, String password) async {
+  Future<bool> register(String email, String password) async {
     final url = '$baseUrl/auth/v1/signup';
     final headers = _createHeaders();
 
@@ -50,7 +47,7 @@ class SupabaseApi {
       'password': password,
     });
 
-    await http.post(
+    http.Response response = await http.post(
       Uri.parse(url),
       headers: headers,
       body: body,
@@ -96,6 +93,15 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load categories');
+    }
+  }
+}
+
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
