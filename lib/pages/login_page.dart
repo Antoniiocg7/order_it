@@ -22,8 +22,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
@@ -37,8 +35,8 @@ class _LoginPageState extends State<LoginPage> {
                 duration: const Duration(seconds: 2),
                 child: Image.asset(
                   'lib/images/application/Logo.png',
-                  width: size.width * 1.2,
-                  height: size.height * 0.35,
+                  width: 500,
+                  height: 300,
                 ),
               ),
 

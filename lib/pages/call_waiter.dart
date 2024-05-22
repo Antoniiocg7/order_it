@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:order_it/pages/home_page.dart';
 
 class CallWaiter extends StatelessWidget {
@@ -6,66 +7,66 @@ class CallWaiter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: AppBar(
-        title: const Text('Order It!', style: TextStyle(fontSize: 20, color: Colors.white)),
+        title: const Text(
+          'Order It!',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.green,
         //todo: action: logout
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(
-              height: size.height * 0.1,
-              child: const Center(
+              child: Center(
                 child: Text(
                   'Nuestro camarero le atenderá enseguida, gracias por su paciencia',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).colorScheme.inversePrimary),
                 ),
               ),
             ),
-            SizedBox(
-              height: size.height * 0.4,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'lib/images/application/vader-kebab.gif',
-                    height: size.height * 0.3,
-                    width: size.width * 0.4,
+            LottieBuilder.network(
+              "https://lottie.host/e68cfcf9-06a6-41b6-a07b-2af798939f28/W6MR3uvtV7.json",
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const HomePage())
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Bordes redondeados
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        'Ver la carta',
-                        style: TextStyle(
-                          color: Colors.white, // Color del texto
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Bordes redondeados
+                ),
               ),
+              child: const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Ver la carta',
+                  style: TextStyle(
+                    color: Colors.white, // Color del texto
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),
