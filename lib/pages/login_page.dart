@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:order_it/components/login_with_button.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
@@ -67,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               const SizedBox(
-                height: 20,
+                height: 30,
               ),
 
               //SIGN IN BUTTON
@@ -88,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               const SizedBox(
-                height: 15,
+                height: 25,
               ),
 
               const Text(
@@ -101,20 +102,20 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               const SizedBox(
-                height: 10,
+                height: 15,
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
                 children: [
                   LoginWithButton(
                     onTap: () {
                       GoogleSignInService.googleSignIn();
                     },
+                    text: "Continuar con Google     ",
                     icon: "assets/icons/google_icon.png",
                   ),
                   const SizedBox(
-                    width: 10,
+                    height: 15,
                   ),
                   LoginWithButton(
                     onTap: () {},
@@ -122,11 +123,11 @@ class _LoginPageState extends State<LoginPage> {
                     icon: "assets/icons/facebook_icon.png",
                   ),
                   const SizedBox(
-                    width: 10,
+                    height: 15,
                   ),
                   LoginWithButton(
                     onTap: () {},
-                    text: "   Continuar con Apple",
+                    text: "Continuar con Apple       ",
                     icon: "assets/icons/apple_icon.png",
                   ),
                 ],
