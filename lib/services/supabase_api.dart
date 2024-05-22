@@ -52,6 +52,11 @@ class SupabaseApi {
       headers: headers,
       body: body,
     );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<List<Map<String, dynamic>>> getCategories() async {
@@ -93,15 +98,6 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load categories');
-    }
-  }
-}
-
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
     }
   }
 }
