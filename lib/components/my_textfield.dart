@@ -31,7 +31,7 @@ class _MyTextFieldState extends State<MyTextField> {
     final size = MediaQuery.of(context).size;
 
     return SizedBox(
-      width: size.width * 0.8,
+      width: size.width * 0.9,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
@@ -42,19 +42,22 @@ class _MyTextFieldState extends State<MyTextField> {
               obscureText: widget.obscureText,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.indigo.withOpacity(0.3))
+                  borderSide: BorderSide(color: Colors.indigo.withOpacity(0.3)),
                 ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color.fromARGB(255, 82, 81, 81)),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color.fromARGB(255, 82, 81, 81)),
+                  borderRadius: BorderRadius.circular(18)
                 ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide( color: Colors.blue)
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide( color: Colors.grey),
+                  borderRadius: BorderRadius.circular(18)
+
                 ),
                 hintText: _showHint ? widget.hintText : null,
-                hintStyle: const TextStyle(color: Colors.blue),
+                hintStyle: const TextStyle(color: Colors.grey),
                 labelText: widget.labelText,
-                labelStyle: const TextStyle(color: Colors.blue),
-                prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.blue) : null
+                labelStyle: const TextStyle(color: Colors.grey),
+                prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.lightGreen) : null
               ),
               onTap: () {
                 setState(() {

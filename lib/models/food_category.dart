@@ -1,5 +1,5 @@
 class FoodCategory {
-  int id;
+  String id;
   String name;
 
   FoodCategory({
@@ -9,7 +9,7 @@ class FoodCategory {
 
   factory FoodCategory.fromJson(Map<String, dynamic> json) {
     return FoodCategory(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
     );
   }

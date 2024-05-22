@@ -10,15 +10,15 @@ void main() async {
 
   await Supabase.initialize(
     url: 'https://gapuibdxbmoqjhibirjm.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E',
   );
 
-  runApp(
-    MultiProvider(providers: [
-        // THEME PROVIDER
-        ChangeNotifierProvider(
-          create: (context) => ThemeProvider(),
-        ),
+  runApp(MultiProvider(providers: [
+    // THEME PROVIDER
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+    ),
 
       // RESTAURANT PROVIDER
       ChangeNotifierProvider(
@@ -44,7 +44,6 @@ class MyApp extends StatelessWidget {
       home: const LoginOrRegister(),
       //home: const LoginOrRegister(),
       theme: Provider.of<ThemeProvider>(context).themeData,
-      
     );
   }
 }
