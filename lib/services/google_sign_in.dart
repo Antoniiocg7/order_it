@@ -1,15 +1,17 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:order_it/pages/login_page.dart';
+
 
 class GoogleSignInService {
   static Future<AuthResponse> googleSignIn() async {
     /// Web Client ID that you registered with Google Cloud.
     const webClientId =
-        '298816426418-bu2jpqqsa7d314vbtj7a3n20o5dnnete.apps.googleusercontent.com';
+        '581750972976-dm2uqljbks5cbij1hb861r311o2ctcdj.apps.googleusercontent.com';
 
     /// iOS Client ID that you registered with Google Cloud.
     const iosClientId =
-        '298816426418-0jbhsjfk02jppbpupb7j5p66j9sspqli.apps.googleusercontent.com';
+        '581750972976-q01j9q71b265n0am7fated10rjdag5t1.apps.googleusercontent.com';
 
     // Google sign in on Android will work without providing the Android
     // Client ID registered on Google Cloud.

@@ -4,7 +4,10 @@ import 'package:order_it/components/login_with_button.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
+import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/services/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -19,6 +22,27 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final LoginController loginController = LoginController();
+
+  final supabase = Supabase.instance.client;
+
+  @override
+  void initState() {
+    _setupAuthListener();
+    super.initState();
+  }
+
+  void _setupAuthListener() {
+    supabase.auth.onAuthStateChange.listen((data) {
+      final event = data.event;
+      if (event == AuthChangeEvent.signedIn) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   LoginWithButton(
                     onTap: () {
-                      GoogleSignInService.googleSignIn();
+                    GoogleSignInService.googleSignIn();
                     },
+                    
                     icon: "assets/icons/google_icon.png",
                   ),
                   const SizedBox(
