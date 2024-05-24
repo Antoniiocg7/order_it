@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:order_it/components/my_receipt.dart';
 
@@ -13,8 +12,8 @@ class DeliveryProgressPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
-      bottomNavigationBar: _buildBottomNavBar(context),
       body: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           MyReceipt(),
         ],
@@ -27,28 +26,21 @@ class DeliveryProgressPage extends StatelessWidget {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40)
-        )
-      ),
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(40), topRight: Radius.circular(40))),
       padding: const EdgeInsets.all(25),
       child: Row(
         children: [
           // PROFILE PICK OF DRIVER
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              shape: BoxShape.circle
-            ),
-            child: IconButton(
-              onPressed: () {}, 
-              icon: const Icon(Icons.person)
-            ),
+                color: Theme.of(context).colorScheme.surface,
+                shape: BoxShape.circle),
+            child: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
           ),
 
-          const SizedBox( width: 10 ),
+          const SizedBox(width: 10),
 
           // DRIVER DETAILS
           Column(
@@ -57,59 +49,51 @@ class DeliveryProgressPage extends StatelessWidget {
               Text(
                 "Antonio Cañizares",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.inversePrimary
-                ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.inversePrimary),
               ),
               Text(
                 "Driver",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary
-                ),
+                    color: Theme.of(context).colorScheme.inversePrimary),
               ),
-
             ],
           ),
 
           const Spacer(),
 
           Row(
-                children: [
-                  // MESSAGE BUTTON
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      shape: BoxShape.circle
-                    ),
-                    child: IconButton(
-                      onPressed: () {}, 
-                      icon: Icon(
-                        Icons.message,
-                        color: Theme.of(context).colorScheme.primary,
-                      )
-                    ),
-                  ),
+            children: [
+              // MESSAGE BUTTON
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    shape: BoxShape.circle),
+                child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.message,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
+              ),
 
-                  const SizedBox( width: 10 ),
+              const SizedBox(width: 10),
 
-                  // CALL BUTTON
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      shape: BoxShape.circle
-                    ),
-                    child: IconButton(
-                      onPressed: () {}, 
-                      icon: const Icon(
-                        Icons.call,
-                        color: Colors.green,
-                      )
-                    ),
-                  ),
-                  
-                ],
-              )
+              // CALL BUTTON
+              Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    shape: BoxShape.circle),
+                child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.call,
+                      color: Colors.green,
+                    )),
+              ),
+            ],
+          )
         ],
       ),
     );

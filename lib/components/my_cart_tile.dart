@@ -31,105 +31,97 @@ class MyCartTile extends StatelessWidget {
                       cartItem.food.imagePath,
                       width: 100,
                       height: 100,
+                      fit: BoxFit.cover,
                     ),
                   ),
 
                   const SizedBox(width: 10),
 
                   // NAME AND PRICE
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 5,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        Text(
+                          cartItem.food.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
-                          Text(
-                            cartItem.food.name,
-                          ),
-                        ],
-                      ),
-                      // NAME
-
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      // INCREMENT OR DECREMENT QUANTITY
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          // PRICE
-                          Text(
-                            "${cartItem.food.price}€",
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-
-                          const SizedBox(
-                            width: 90,
-                          ),
-                          QuantitySelector(
-                            quantity: cartItem.quantity,
-                            food: cartItem.food,
-                            onIncrement: () {
-                              restaurant.addToCart(
-                                  cartItem.food, cartItem.selectedAddons);
-                            },
-                            onDecrement: () {
-                              restaurant.removeFromCart(cartItem);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${cartItem.food.price}€",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
+                            QuantitySelector(
+                              quantity: cartItem.quantity,
+                              food: cartItem.food,
+                              onIncrement: () {
+                                restaurant.addToCart(
+                                    cartItem.food, cartItem.selectedAddons);
+                              },
+                              onDecrement: () {
+                                restaurant.removeFromCart(cartItem);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
 
             // ADDONS
-            SizedBox(
-              height: cartItem.selectedAddons.isEmpty ? 0 : 60,
-              child: ListView(
-                padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
-                scrollDirection: Axis.horizontal,
-                children: cartItem.selectedAddons
-                    .map(
-                      (addon) => Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: FilterChip(
-                          label: Row(
-                            children: [
-                              // ADDON NAME
-                              Text(addon.name),
+            if (cartItem.selectedAddons.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: SizedBox(
+                  height: 60,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: cartItem.selectedAddons
+                        .map(
+                          (addon) => Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: FilterChip(
+                              label: Row(
+                                children: [
+                                  // ADDON NAME
+                                  Text(addon.name),
 
-                              // ADDON PRICE
-                              Text(" (${addon.price.toString()})€")
-                            ],
+                                  // ADDON PRICE
+                                  Text(" (${addon.price.toString()})€")
+                                ],
+                              ),
+                              onSelected: (value) {},
+                              shape: StadiumBorder(
+                                side: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              labelStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
-                          onSelected: (value) {},
-                          shape: StadiumBorder(
-                              side: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.primary)),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          labelStyle: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary,
-                              fontSize: 12),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                        )
+                        .toList(),
+                  ),
+                ),
               ),
-            )
           ],
         ),
       ),

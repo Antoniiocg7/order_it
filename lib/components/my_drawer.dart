@@ -11,7 +11,7 @@ class MyDrawer extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -19,7 +19,7 @@ class MyDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: Image.asset(
-              'lib/images/application/Logo.png',
+              'assets/icons/Logo.png',
               width: size.width * 0.8,
               height: size.height * 0.3,
             ),
