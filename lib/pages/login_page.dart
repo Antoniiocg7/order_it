@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               FadeInDown(
                 duration: const Duration(seconds: 2),
                 child: Image.asset(
-                  'lib/images/application/Logo.png',
+                  'assets/icons/Logo.png',
                   width: 500,
                   height: 300,
                 ),
