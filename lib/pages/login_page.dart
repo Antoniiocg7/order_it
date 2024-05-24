@@ -46,10 +46,11 @@ class _LoginPageState extends State<LoginPage> {
               FadeInRight(
                 duration: const Duration(seconds: 1),
                 child: MyTextField(
-                    controller: emailController,
-                    hintText: "Email",
-                    labelText: "Email",
-                    obscureText: false),
+                  controller: emailController,
+                  hintText: "Email",
+                  labelText: "Email",
+                  obscureText: false,
+                ),
               ),
 
               const SizedBox(
@@ -78,6 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                   linearGradient: LinearGradient(
                       colors: [Colors.green.shade900, Colors.green]),
                   onTap: () {
+                    // ESCONDEMOS EL TECLADO
+                    FocusManager.instance.primaryFocus?.unfocus();
                     loginController.login(
                       context,
                       emailController.text,
