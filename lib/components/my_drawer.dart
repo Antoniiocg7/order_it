@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
+import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -36,14 +37,29 @@ class MyDrawer extends StatelessWidget {
           //HOME LIST TILE
           MyDrawerTile(
             text: "H O M E",
-            icon: Icons.home,
+            icon: Icons.home_rounded,
             onTap: () => Navigator.pop(context),
+          ),
+
+          //HOME LIST TILE
+          MyDrawerTile(
+            text: "C A R T",
+            icon: Icons.shopping_cart_rounded,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartPage(),
+                ),
+              );
+            },
           ),
 
           //SETTINGS LIST TILE
           MyDrawerTile(
             text: "S E T T I N G S",
-            icon: Icons.settings,
+            icon: Icons.settings_rounded,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
