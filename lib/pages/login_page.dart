@@ -1,11 +1,10 @@
-/* import 'package:animate_do/animate_do.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/components/login_with_button.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/first_page.dart';
-import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/services/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -196,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
- */
+/*
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:order_it/pages/first_page.dart';
@@ -290,4 +289,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
+}*/
