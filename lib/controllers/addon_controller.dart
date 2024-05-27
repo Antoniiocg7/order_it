@@ -8,12 +8,9 @@ class AddonController {
     try {
       final List<Map<String, dynamic>> addonData =
           await supabaseApi.getAddons();
-      final List<Addon> addons =
-          addonData.map((addonData) => Addon.fromJson(addonData)).toList();
-      return addons;
+      return addonData.map((data) => Addon.fromJson(data)).toList();
     } catch (error) {
-      // Manejar errores aquí, como registrarlos o lanzar excepciones
-      throw Exception('Failed to fetch food: $error');
+      throw Exception('Failed to fetch addons: $error');
     }
   }
 }

@@ -19,7 +19,7 @@ class Addon {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': int.parse(id),
       'name': name,
       'price': price,
     };

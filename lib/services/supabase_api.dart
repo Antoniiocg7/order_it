@@ -119,4 +119,18 @@ class SupabaseApi {
       throw Exception('Failed to load categories');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getFoodAddons() async {
+    final url = '$baseUrl/rest/v1/food_addon?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load food_addons');
+    }
+  }
 }
