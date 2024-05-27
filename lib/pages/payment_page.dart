@@ -20,6 +20,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   // USER WANTS TO PAY
   void userTappedPay() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (formKey.currentState!.validate()) {
       // ONLY SHOW DIALOG IF YOUR FORM IS VALID
       showDialog(
