@@ -31,11 +31,7 @@ class SupabaseApi {
       body: body,
     );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return response.statusCode == 200;
   }
 
   Future<bool> register(String email, String password) async {
@@ -133,4 +129,5 @@ class SupabaseApi {
       throw Exception('Failed to load food_addons');
     }
   }
+
 }
