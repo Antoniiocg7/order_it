@@ -1,9 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:order_it/components/login_with_button.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
+import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/services/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
@@ -110,8 +112,18 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 children: [
                   LoginWithButton(
-                    onTap: () {
+                    onTap: () async {
                       GoogleSignInService.googleSignIn();
+                      if (await GoogleSignIn.standard().isSignedIn()) {
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FirstPage(),
+                            ),
+                          );
+                        }
+                      }
                     },
                     text: "Continuar con Google     ",
                     icon: "assets/icons/google_icon.png",
