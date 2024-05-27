@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
-import 'package:order_it/pages/cart_page.dart';
+import 'package:order_it/pages/login_page.dart';
 import 'package:order_it/pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -36,8 +36,8 @@ class MyDrawer extends StatelessWidget {
 
           //HOME LIST TILE
           MyDrawerTile(
-            text: "H O M E",
-            icon: Icons.home_rounded,
+            text: "INICIO",
+            icon: Icons.home,
             onTap: () => Navigator.pop(context),
           ),
 
@@ -58,8 +58,8 @@ class MyDrawer extends StatelessWidget {
 
           //SETTINGS LIST TILE
           MyDrawerTile(
-            text: "S E T T I N G S",
-            icon: Icons.settings_rounded,
+            text: "AJUSTES",
+            icon: Icons.settings,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -76,7 +76,7 @@ class MyDrawer extends StatelessWidget {
 
           //LOGGING OUT LIST TILE
           MyDrawerTile(
-            text: "L O G O U T",
+            text: "CERRAR SESION",
             icon: Icons.logout,
             onTap: () {
               Navigator.pop(context);

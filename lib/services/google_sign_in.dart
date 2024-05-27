@@ -8,7 +8,12 @@ class GoogleSignInService {
         '581750972976-dm2uqljbks5cbij1hb861r311o2ctcdj.apps.googleusercontent.com';
 
     /// iOS Client ID that you registered with Google Cloud.
+<<<<<<< HEAD
     const iosClientId = '581750972976-q01j9q71b265n0am7fated10rjdag5t1.apps.googleusercontent.com';
+=======
+    const iosClientId =
+        '581750972976-q01j9q71b265n0am7fated10rjdag5t1.apps.googleusercontent.com';
+>>>>>>> Google_Impl
 
     // Google sign in on Android will work without providing the Android
     // Client ID registered on Google Cloud.

@@ -45,14 +45,19 @@ class _PaymentPageState extends State<PaymentPage> {
 
             // ACCEPT BUTTON
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const DeliveryProgressPage()));
-                },
-                child: const Text("Yes")),
+              onPressed: () {
+                
+                
+
+                /* Navigator.pop(context);
+                Navigator.push(
+                  context, MaterialPageRoute(
+                    builder: (context) => const DeliveryProgressPage()
+                  )
+                ); */
+              },
+              child: const Text("Yes")
+            ),
           ],
         ),
       );

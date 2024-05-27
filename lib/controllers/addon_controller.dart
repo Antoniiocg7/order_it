@@ -8,7 +8,14 @@ class AddonController {
     try {
       final List<Map<String, dynamic>> addonData =
           await supabaseApi.getAddons();
-      return addonData.map((data) => Addon.fromJson(data)).toList();
+
+      final List<Addon> addons = addonData.map((addonData)
+      => Addon
+      .fromJson(addonData))
+      .toList();
+      
+      return addons;
+    
     } catch (error) {
       throw Exception('Failed to fetch addons: $error');
     }

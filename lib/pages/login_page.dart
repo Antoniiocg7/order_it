@@ -112,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 children: [
                   LoginWithButton(
+<<<<<<< HEAD
                     onTap: () async {
                       GoogleSignInService.googleSignIn();
                       if (await GoogleSignIn.standard().isSignedIn()) {
@@ -126,6 +127,12 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     text: "Continuar con Google     ",
+=======
+                    onTap: () {
+                    GoogleSignInService.googleSignIn();
+                    },
+                    
+>>>>>>> Google_Impl
                     icon: "assets/icons/google_icon.png",
                   ),
                   const SizedBox(
