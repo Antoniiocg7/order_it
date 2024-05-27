@@ -31,7 +31,11 @@ class SupabaseApi {
       body: body,
     );
 
-    return response.statusCode == 200;
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<bool> register(String email, String password) async {

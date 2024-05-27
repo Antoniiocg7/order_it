@@ -7,6 +7,8 @@ import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/services/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -112,7 +114,6 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 children: [
                   LoginWithButton(
-<<<<<<< HEAD
                     onTap: () async {
                       GoogleSignInService.googleSignIn();
                       if (await GoogleSignIn.standard().isSignedIn()) {
@@ -127,12 +128,6 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     text: "Continuar con Google     ",
-=======
-                    onTap: () {
-                    GoogleSignInService.googleSignIn();
-                    },
-                    
->>>>>>> Google_Impl
                     icon: "assets/icons/google_icon.png",
                   ),
                   const SizedBox(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
+import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/login_page.dart';
 import 'package:order_it/pages/settings_page.dart';
 
@@ -20,7 +21,7 @@ class MyDrawer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: Image.asset(
-              'assets/icons/Logo.png',
+              'lib/images/application/Logo.png',
               width: size.width * 0.8,
               height: size.height * 0.3,
             ),
@@ -41,9 +42,8 @@ class MyDrawer extends StatelessWidget {
             onTap: () => Navigator.pop(context),
           ),
 
-          //HOME LIST TILE
           MyDrawerTile(
-            text: "C A R T",
+            text: "CARTA",
             icon: Icons.shopping_cart_rounded,
             onTap: () {
               Navigator.pop(context);

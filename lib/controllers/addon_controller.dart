@@ -17,7 +17,8 @@ class AddonController {
       return addons;
     
     } catch (error) {
-      throw Exception('Failed to fetch addons: $error');
+      // Manejar errores aquí, como registrarlos o lanzar excepciones
+      throw Exception('Failed to fetch food: $error');
     }
   }
 }
