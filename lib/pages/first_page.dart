@@ -58,10 +58,10 @@ class FirstPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.network(
+                        Lottie.asset(
                           height: 200,
                           width: 300,
-                          "https://lottie.host/41971476-4e70-415a-84be-f27724801f80/Pr23iBZ13J.json",
+                          "assets/animations/waitress.json",
                         ),
                         const Text(
                           'Llamar a un camarero',
@@ -100,10 +100,10 @@ class FirstPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.network(
+                        Lottie.asset(
                           height: 200,
                           width: 300,
-                          "https://lottie.host/21421179-7764-42b8-8c26-afe8e5c115a9/mr4rrQa9mX.json",
+                          "assets/animations/mobile_scrolling.json",
                         ),
                         const Text(
                           'Pedir Online',

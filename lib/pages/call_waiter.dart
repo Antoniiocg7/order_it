@@ -36,8 +36,8 @@ class CallWaiter extends StatelessWidget {
                 ),
               ),
             ),
-            LottieBuilder.network(
-              "https://lottie.host/e68cfcf9-06a6-41b6-a07b-2af798939f28/W6MR3uvtV7.json",
+            LottieBuilder.asset(
+              "assets/animations/plato_girando.json",
             ),
             ElevatedButton(
               onPressed: () {
