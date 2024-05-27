@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
+import 'package:order_it/pages/login_page.dart';
 import 'package:order_it/pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -11,7 +12,7 @@ class MyDrawer extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -35,14 +36,14 @@ class MyDrawer extends StatelessWidget {
 
           //HOME LIST TILE
           MyDrawerTile(
-            text: "H O M E",
+            text: "INICIO",
             icon: Icons.home,
             onTap: () => Navigator.pop(context),
           ),
 
           //SETTINGS LIST TILE
           MyDrawerTile(
-            text: "S E T T I N G S",
+            text: "AJUSTES",
             icon: Icons.settings,
             onTap: () {
               Navigator.pop(context);
@@ -60,7 +61,7 @@ class MyDrawer extends StatelessWidget {
 
           //LOGGING OUT LIST TILE
           MyDrawerTile(
-            text: "L O G O U T",
+            text: "CERRAR SESION",
             icon: Icons.logout,
             onTap: () {
               Navigator.pop(context);
