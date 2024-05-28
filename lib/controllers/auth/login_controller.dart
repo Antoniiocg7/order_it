@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/pages/first_page.dart';
-import 'package:order_it/pages/home_page.dart';
+import 'package:order_it/pages/waiter_home_page.dart';
 import 'package:order_it/services/snackbar_helper.dart';
 import 'package:order_it/services/supabase_api.dart';
 
@@ -17,7 +17,7 @@ class LoginController {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const HomePage(),
+              builder: (context) => const WaiterHomePage(),
             ),
           );
         } else if (rol == 3) {

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class SupabaseApi {
@@ -130,4 +132,19 @@ class SupabaseApi {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getTables() async {
+    final url = '$baseUrl/rest/v1/tables?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+
+      
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
 }
