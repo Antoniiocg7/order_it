@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
@@ -7,6 +8,10 @@ class SupabaseApi {
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
   final String authorization =
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
+      
+  final SupabaseClient client;
+
+  SupabaseApi() : client = Supabase.instance.client;
 
   Map<String, String> _createHeaders() {
     return {
@@ -60,8 +65,7 @@ class SupabaseApi {
   }
 
   Future<int?> getUserRole(String email) async {
-    final url =
-        '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
+    final url = '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -117,6 +121,29 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load categories');
+    }
+  }
+
+  // Importante sacar tableNumber
+  Future<void> assignTable(String userId, int tableNumber) async {
+    final response = await client
+        .from('tables')
+        .update({'is_occupied': true, 'user_id': userId})
+        .eq('table_number', tableNumber);
+
+    if (response.error != null) {
+      throw response.error!;
+    }
+  }
+
+  Future<void> releaseTable(int tableNumber) async {
+    final response = await client
+        .from('tables')
+        .update({'is_occupied': false, 'user_id': null})
+        .eq('table_number', tableNumber);
+
+    if (response.error != null) {
+      throw response.error!;
     }
   }
 }
