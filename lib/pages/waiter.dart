@@ -54,11 +54,6 @@ class _WaiterState extends State<Waiter> {
                           'Table ${tables[index]['table_number']}',
                           style: TextStyle(color: Colors.white),
                         ),
-                        /*QrImage(
-                          data: 'table:${tables[index]['table_number']}',
-                          version: QrVersions.auto,
-                          size: 50.0,
-                        ),*/
                       ],
                     ),
                   ),

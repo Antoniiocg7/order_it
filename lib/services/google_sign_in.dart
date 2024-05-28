@@ -5,7 +5,7 @@ class GoogleSignInService {
   static Future<AuthResponse> googleSignIn() async {
     /// Web Client ID that you registered with Google Cloud.
     const webClientId =
-        '298816426418-bu2jpqqsa7d314vbtj7a3n20o5dnnete.apps.googleusercontent.com';
+        '581750972976-dm2uqljbks5cbij1hb861r311o2ctcdj.apps.googleusercontent.com';
 
     /// iOS Client ID that you registered with Google Cloud.
     const iosClientId =

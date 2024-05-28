@@ -129,13 +129,27 @@ class SupabaseApi {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      print(response.body);
+      print(jsonResponse[0]);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load tables');
     }
   }
 
+  Future<List<Map<String, dynamic>>> getOrderDetails(int tableNumber) async {
+    final url = '$baseUrl/rest/v1/orders?select=*&table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load order details');
+    }
+  }
+  
   // Importante sacar tableNumber
   Future<void> assignTable(String userId, int tableNumber) async {
     final response = await client
