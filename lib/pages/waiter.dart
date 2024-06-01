@@ -22,7 +22,7 @@ class _WaiterState extends State<Waiter> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Waiter'),
+        title: Text('Mesas'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _tablesFuture,
@@ -35,30 +35,33 @@ class _WaiterState extends State<Waiter> {
             return Center(child: Text('No tables available'));
           } else {
             List<Map<String, dynamic>> tables = snapshot.data!;
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 1.5,
-              ),
-              itemCount: tables.length,
-              itemBuilder: (context, index) {
-                bool isOccupied = tables[index]['is_occupied'];
-                return Container(
-                  margin: EdgeInsets.all(8.0),
-                  color: isOccupied ? Colors.red : Colors.green,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Table ${tables[index]['table_number']}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.5,
+                ),
+                itemCount: tables.length,
+                itemBuilder: (context, index) {
+                  bool isOccupied = tables[index]['is_occupied'];
+                  return Container(
+                    margin: EdgeInsets.all(8.0),
+                    color: isOccupied ? Colors.red : Colors.green,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Mesa ${tables[index]['table_number']}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           }
         },
