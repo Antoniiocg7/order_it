@@ -5,7 +5,6 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
-import 'package:order_it/utils/random_id.dart';
 
 class Restaurant extends ChangeNotifier {
   final supabaseApi = SupabaseApi();
@@ -24,9 +23,11 @@ class Restaurant extends ChangeNotifier {
     try {
       final cartId = await supabaseApi
           .createCart(); // Crear un carrito en la base de datos
+
+      print(cartId);
       if (cartId != false) {
         await supabaseApi.addItemToCart(
-          RandomIds.generateRandomId().toString(),
+          "4089346325183540643",
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );

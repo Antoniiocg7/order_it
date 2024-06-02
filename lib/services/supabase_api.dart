@@ -157,7 +157,7 @@ class SupabaseApi {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return true;
     } else {
       return false;
@@ -170,38 +170,50 @@ class SupabaseApi {
     List<String> addonIds,
   ) async {
     final url = '$baseUrl/rest/v1/cart_item';
+    final url2 = '$baseUrl/rest/v1/cart_item_addon';
     final headers = _createHeadersInsert();
-
+    print("ADDONS IDS LENGTH");
+    print(addonIds.length);
     try {
       final cartItemResponse = await http.post(
         Uri.parse(url),
         headers: headers,
         body: jsonEncode(
           {
+            "id": RandomIds.generateRandomId().toString(),
             "cart_id": int.parse(cartId),
             "food_id": int.parse(foodId),
+            "quantity": "1"
           },
         ),
       );
+      print("CART_ITEM RESPONSE");
+      print(cartItemResponse.body);
 
-      final Map<String, dynamic> cartItemData =
-          jsonDecode(cartItemResponse.body);
-      final cartItemId = cartItemData['id'];
-
+      print("starting to decode caritemdata");
+      // final Map<String, dynamic> cartItemData =
+      //     jsonDecode(cartItemResponse.body);
+      // final cartItemId = cartItemData['id'];
+      // print(cartItemId);
+      print(1);
       try {
         for (var addonId in addonIds) {
+          print("Adding addonId: $addonId");
           final response = await http.post(
-            Uri.parse(url),
+            Uri.parse(url2),
             headers: headers,
             body: jsonEncode(
               {
-                'cart_item_id': cartItemId,
+                'cart_item_id': "1492432484815338235",
                 'addon_id': int.parse(addonId),
               },
             ),
           );
 
-          if (response.statusCode != 200) {
+          print("ADDON RESPONSE for addonId: $addonId");
+          print(response.statusCode);
+
+          if (response.statusCode != 201) {
             throw Exception("Error en la petición de agregar addons al item");
           }
         }
