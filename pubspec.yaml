@@ -11,8 +11,10 @@ environment:
 
 dependencies:
   animate_do: ^3.3.4
+  base64: ^1.0.0
   collection: ^1.18.0
   cupertino_icons: ^1.0.6
+  dio: ^5.4.3+1
   flutter:
     sdk: flutter
   flutter_credit_card: ^4.0.1

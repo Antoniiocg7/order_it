@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/pages/assign_table.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/pages/waiter.dart';
 import 'package:order_it/services/snackbar_helper.dart';
@@ -10,6 +11,7 @@ class LoginController {
 
     bool success = await supabaseApi.login(email, password);
     int? rol = await supabaseApi.getUserRole(email);
+    String? userId = await supabaseApi.getUserUUI(email);
 
     if (context.mounted) {
       if (success) {
@@ -24,7 +26,7 @@ class LoginController {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const FirstPage(),
+              builder: (context) =>  AssignTable(userId: userId ?? ''),
             ),
           );
         }

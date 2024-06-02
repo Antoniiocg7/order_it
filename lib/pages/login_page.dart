@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //logo
+              // LOGO
               FadeInDown(
                 duration: const Duration(seconds: 2),
                 child: Image.asset(

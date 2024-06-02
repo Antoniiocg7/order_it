@@ -61,6 +61,44 @@ class SupabaseApi {
     }
   }
 
+  Future<String?> getUserUUI(String email) async {
+    final url = '$baseUrl/rest/v1/users?select=id&email=eq.${Uri.encodeComponent(email)}';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      print('RESPUESTA: $jsonResponse');
+      if (jsonResponse.isNotEmpty && jsonResponse[0]['id'] != null) {
+        return jsonResponse[0]['id'];
+      } else {
+        return null;
+      }
+    } else {
+      print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      return null;
+    }
+  }
+
+
+  /*Future<String?> getUserUUID(String email) async {
+    final url = '$baseUrl/rest/v1/users?select=user_id&email=eq.${Uri.encodeComponent(email)}';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+
+      if (jsonResponse.isNotEmpty && jsonResponse[0]['user_id'] != null) {
+        return jsonResponse[0]['user_id'];
+      } else {
+        return null;
+      }
+    } else {
+      throw Exception('Error al obtener el UUID del usuario');
+    }
+  }*/
+
   Future<int?> getUserRole(String email) async {
     final url = '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
@@ -121,20 +159,6 @@ class SupabaseApi {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getTables() async {
-    final url = '$baseUrl/rest/v1/tables?select=*';
-    final headers = _createHeaders();
-
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonResponse = json.decode(response.body);
-      print(jsonResponse[0]);
-      return jsonResponse.cast<Map<String, dynamic>>();
-    } else {
-      throw Exception('Failed to load tables');
-    }
-  }
 
   Future<List<Map<String, dynamic>>> getOrderDetails(int tableNumber) async {
     final url = '$baseUrl/rest/v1/orders?select=*&table_number=eq.$tableNumber';
@@ -147,6 +171,20 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load order details');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getTables() async {
+    final url = '$baseUrl/rest/v1/tables?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load tables');
     }
   }
   
