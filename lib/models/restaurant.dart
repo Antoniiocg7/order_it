@@ -1,11 +1,14 @@
-import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
+import 'package:order_it/services/supabase_api.dart';
+import 'package:order_it/utils/random_id.dart';
 
 class Restaurant extends ChangeNotifier {
+  final supabaseApi = SupabaseApi();
   /*
     G E T T E R S
   */
@@ -17,41 +20,38 @@ class Restaurant extends ChangeNotifier {
   final List<CartItem> _cart = [];
 
   // ADD TO CART
-  void addToCart(Food food, List<Addon> selectedAddons) {
-    // See if there is a cart item already with the same food and selected addons
-    CartItem? cartItem = _cart.firstWhereOrNull((item) {
-      // CHECK IF THE FOOD ITEMS ARE THE SAME
-      bool isSameFood = item.food == food;
+  Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
+    try {
+      final cartId = await supabaseApi
+          .createCart(); // Crear un carrito en la base de datos
+      if (cartId != false) {
+        await supabaseApi.addItemToCart(
+          RandomIds.generateRandomId().toString(),
+          food.id,
+          selectedAddons.map((addon) => addon.id).toList(),
+        );
+      } else {
+        return false;
+      }
 
-      //CHECK IF THE LIST OF SELECTED ADDONS ARE THE SAME
-      bool isSameAddons =
-          const ListEquality().equals(item.selectedAddons, selectedAddons);
-
-      return isSameFood && isSameAddons;
-    });
-
-    // IF ITEM ALREADY EXISTS, INCREASE IT´S QUANTITY
-    if (cartItem != null) {
-      cartItem.quantity++;
-    } else {
-      // OTHERWISE, ADD A NEW CART ITEM TO THE CART
-      _cart.add(CartItem(food: food, selectedAddons: selectedAddons));
+      notifyListeners();
+      return true; // Indicar que se agregó correctamente al carrito
+    } catch (e) {
+      return false; // Si hay un error, devolver false
     }
-    notifyListeners();
   }
 
   // REMOVE FROM CART
-  void removeFromCart(CartItem cartItem) {
-    int cartIndex = _cart.indexOf(cartItem);
+  Future<bool> removeFromCart(CartItem cartItem) async {
+    try {
+      // Eliminar el ítem del carrito en la base de datos
+      await supabaseApi.removeFromCart(cartItem.id);
 
-    if (cartIndex != -1) {
-      if (_cart[cartIndex].quantity > 1) {
-        _cart[cartIndex].quantity--;
-      } else {
-        _cart.removeAt(cartIndex);
-      }
+      notifyListeners();
+      return true; // Indicar que se eliminó correctamente del carrito
+    } catch (e) {
+      return false; // Si hay un error, devolver false
     }
-    notifyListeners();
   }
 
   // GET TOTAL PRICE OF CART
@@ -61,7 +61,7 @@ class Restaurant extends ChangeNotifier {
     for (CartItem cartItem in _cart) {
       double itemTotal = cartItem.food.price;
 
-      for (Addon addon in cartItem.selectedAddons) {
+      for (Addon addon in cartItem.addons) {
         itemTotal += addon.price;
       }
 
@@ -109,8 +109,8 @@ class Restaurant extends ChangeNotifier {
     for (final cartItem in _cart) {
       receipt.writeln(
           "${cartItem.quantity} x ${cartItem.food.name} - ${_formatPrice(cartItem.food.price)}");
-      if (cartItem.selectedAddons.isNotEmpty) {
-        receipt.writeln(" Add-ons: ${_formatAddons(cartItem.selectedAddons)}");
+      if (cartItem.addons.isNotEmpty) {
+        receipt.writeln(" Add-ons: ${_formatAddons(cartItem.addons)}");
       }
       receipt.writeln();
     }

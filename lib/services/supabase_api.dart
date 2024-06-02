@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:order_it/utils/random_id.dart';
 
 class SupabaseApi {
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
@@ -13,6 +14,15 @@ class SupabaseApi {
       'Content-Type': 'application/json',
       'apikey': apiKey,
       'Authorization': authorization,
+    };
+  }
+
+  Map<String, String> _createHeadersInsert() {
+    return {
+      'Content-Type': 'application/json',
+      'apikey': apiKey,
+      'Authorization': authorization,
+      "Prefer": "return=minimal"
     };
   }
 
@@ -131,6 +141,150 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load food_addons');
+    }
+  }
+
+  Future<bool> createCart() async {
+    final url = '$baseUrl/rest/v1/cart';
+    final headers = _createHeadersInsert();
+
+    // Convert DateTime.now() to ISO 8601 string
+    final now = DateTime.now().toUtc().toIso8601String();
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode({
+        "id": RandomIds.generateRandomId().toString(),
+        "user_id": "480ed0d0-6d3d-4ad7-8024-72572da28871",
+        "created_at": now
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> addItemToCart(
+    String cartId,
+    String foodId,
+    List<String> addonIds,
+  ) async {
+    final url = '$baseUrl/rest/v1/cart_item';
+    final headers = _createHeadersInsert();
+
+    try {
+      final cartItemResponse = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(
+          {
+            "cart_id": int.parse(cartId),
+            "food_id": int.parse(foodId),
+          },
+        ),
+      );
+
+      final Map<String, dynamic> cartItemData =
+          jsonDecode(cartItemResponse.body);
+      final cartItemId = cartItemData['id'];
+
+      try {
+        for (var addonId in addonIds) {
+          final response = await http.post(
+            Uri.parse(url),
+            headers: headers,
+            body: jsonEncode(
+              {
+                'cart_item_id': cartItemId,
+                'addon_id': int.parse(addonId),
+              },
+            ),
+          );
+
+          if (response.statusCode != 200) {
+            throw Exception("Error en la petición de agregar addons al item");
+          }
+        }
+      } catch (e) {
+        throw Exception("Error al agregar addons al item del carrito");
+      }
+    } catch (e) {
+      throw Exception("Error al insertar el item al carrito");
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getCartItems(String cartId) async {
+    final String url = '$baseUrl/rest/v1/cart_item?cart_id=$cartId';
+    final headers = _createHeaders();
+
+    try {
+      final http.Response response =
+          await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData['error'] == null) {
+          return List<Map<String, dynamic>>.from(responseData['data'] as List);
+        } else {
+          throw Exception(responseData['error']['message']);
+        }
+      } else {
+        throw Exception(
+          'Error al cargar los items del carrito, status code: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Error al cargar los items del carrito: $e');
+    }
+  }
+
+  Future<void> clearCart(String cartId) async {
+    final String url = '$baseUrl/rest/v1/cart_item?cart_id=$cartId';
+    final headers = _createHeaders();
+
+    try {
+      final http.Response response =
+          await http.delete(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData['error'] != null) {
+          throw Exception(responseData['error']['message']);
+        }
+      } else {
+        throw Exception(
+          'Error al limpiar el carrito, status code: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Error al limpiar el carrito: $e');
+    }
+  }
+
+  Future<void> removeFromCart(String cartItemId) async {
+    final String url = '$baseUrl/rest/v1/cart_item/$cartItemId';
+    final headers = _createHeaders();
+
+    try {
+      final http.Response response =
+          await http.delete(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData['error'] != null) {
+          throw Exception(responseData['error']['message']);
+        }
+      } else {
+        throw Exception(
+          'Error al eliminar el item del carrito, status code: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Error al eliminar el item del carrito: $e');
     }
   }
 }
