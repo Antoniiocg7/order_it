@@ -3,7 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/models/user.dart';
-import 'package:order_it/pages/test_hive.dart';
 import 'package:order_it/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,18 +30,10 @@ void main() async {
       create: (context) => ThemeProvider(),
     ),
 
-      // RESTAURANT PROVIDER
-      ChangeNotifierProvider(
-        create: (context) => Restaurant()
-      ),
-
-      ],
-      child: const MyApp()
-    )
-  );
-} 
-
-
+    // RESTAURANT PROVIDER
+    ChangeNotifierProvider(create: (context) => Restaurant()),
+  ], child: const MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
