@@ -187,8 +187,57 @@ class SupabaseApi {
       throw Exception('Failed to load tables');
     }
   }
-  
+
+  Future<void> assignTable(String userId, int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?id=$tableNumber';
+    
+    final headers = {
+      'apikey': apiKey,
+      'Authorization': authorization,
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'user_id': userId,
+      'table_number': tableNumber,
+      'is_occupied': true
+    });
+
+    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print('Table $tableNumber assigned successfully.');
+    } else {
+      print('Failed to assign table $tableNumber: ${response.statusCode} ${response.body}');
+    }
+  }
+
+  Future<void> releaseTable(int tableNumber) async {
+    final url = '$baseUrl/rest/v1/rpc/release_table';
+    
+    final headers = {
+      'apikey': apiKey,
+      'Authorization': authorization,
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'table_number': tableNumber,
+      'is_occupied': false,
+      'user_id': null,
+    });
+
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print('Table $tableNumber released successfully.');
+    } else {
+      print('Failed to release table $tableNumber: ${response.statusCode} ${response.body}');
+    }
+  }
+}
   // Importante sacar tableNumber
+  /*
   Future<void> assignTable(String userId, int tableNumber) async {
     final response = await client
         .from('tables')
@@ -196,7 +245,8 @@ class SupabaseApi {
         .eq('table_number', tableNumber);
 
     if (response.error != null) {
-      throw response.error!;
+      print('Error al hacer la reserva de mesa: ${response.statusCode}');
+      return null;
     }
   }
 
@@ -210,4 +260,5 @@ class SupabaseApi {
       throw response.error!;
     }
   }
-}
+  */
+

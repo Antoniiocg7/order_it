@@ -25,6 +25,8 @@ class _AssignTableState extends State<AssignTable> {
   Barcode? result;
   QRViewController? controller;
   SupabaseApi supabaseApi = SupabaseApi();
+  
+  
 
   @override
   void reassemble() {
@@ -67,9 +69,10 @@ class _AssignTableState extends State<AssignTable> {
     // Extraer el número de mesa del contenido del código QR (asumiendo que es una URL)
     Uri uri = Uri.parse(qrCode);
     final String tableNumberQuery = uri.queryParameters['table_number'] ?? '';
-    String tableNumber = tableNumberQuery.replaceAll("eq.", "");
+    //String tableNumber = tableNumberQuery.replaceAll("eq.", "");
+    int tableNumber = int.tryParse(tableNumberQuery.replaceAll("eq.", "")) ?? 0;
 
-    if (tableNumber.isEmpty) {
+    if (tableNumber == 0) {
       print('No se ha encontrado número de mesa en el QR Code URL.');
       _showDialog('Error', 'No se ha encontrado número de mesa en el QR Code URL.');
       return;
@@ -91,7 +94,7 @@ class _AssignTableState extends State<AssignTable> {
 
     final body = jsonEncode({
       'is_occupied': true,
-      //'user_id': 'example_user_id', // Replace with actual user ID
+      'user_id': widget.userId,
     });
 
     final response = await http.patch(Uri.parse(url), headers: headers, body: body);
@@ -99,7 +102,7 @@ class _AssignTableState extends State<AssignTable> {
     if (response.statusCode == 204) {
       print('Table $tableNumber assigned successfully.');
       _showDialog('Table Assigned', 'Table $tableNumber has been successfully assigned to you.');
-      
+      await supabaseApi.assignTable(widget.userId, tableNumber);
     } else {
       print('***************** tableNumber: $tableNumber *****************');
       print('Failed to assign table $tableNumber: ${response.statusCode} ${response.body}');
