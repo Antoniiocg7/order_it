@@ -22,9 +22,9 @@ class FoodPage extends StatefulWidget {
 
 class _FoodPageState extends State<FoodPage> {
   // METHOD TO ADD TO CART
-  void addToCart(Food food, Map<Addon, bool> selectedAddons) {
+  void addToCart(Food food, Map<Addon, bool> selectedAddons) async {
     // CLOSE THE CURRENT FOOD PAGE TO GO BACK MENU
-    Navigator.pop(context);
+    if (!mounted) return;
 
     // FORMAT THE SELECTED ADDONS
     List<Addon> currentlySelectedAddons = [];
@@ -35,14 +35,20 @@ class _FoodPageState extends State<FoodPage> {
     }
 
     // ADD TO CART
-    context.read<Restaurant>().addToCart(food, currentlySelectedAddons);
+    bool success = await context
+        .read<Restaurant>()
+        .addToCart(food, currentlySelectedAddons);
+
+    if (success && mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        //SCAFFOLD UI
+        // SCAFFOLD UI
         Scaffold(
           body: SingleChildScrollView(
             child: Column(

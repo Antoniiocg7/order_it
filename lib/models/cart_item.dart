@@ -1,22 +1,36 @@
-
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/food.dart';
 
 class CartItem {
-
-  Food food;
-  List<Addon> selectedAddons;
+  final String id; // Si hay un ID específico para el ítem del carrito
+  final Food food;
+  final List<Addon> addons;
   int quantity;
 
   CartItem({
+    required this.id,
     required this.food,
-    required this. selectedAddons,
-    this.quantity = 1
+    required this.addons,
+    required this.quantity,
   });
 
-  double get totalPrice {
-    double addonsPrice = 
-      selectedAddons.fold(0, (sum, addon) => sum + addon.price);
-    return ( food.price + addonsPrice ) * quantity;
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      id: json['id'].toString(), // Ajusta según corresponda
+      food: Food.fromJson(json['food']), // Ajusta según corresponda
+      addons: (json['addons'] as List<dynamic>)
+          .map((addonJson) => Addon.fromJson(addonJson))
+          .toList(),
+      quantity: json['quantity'] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'food': food.toJson(),
+      'addons': addons.map((addon) => addon.toJson()).toList(),
+      'quantity': quantity,
+    };
   }
 }

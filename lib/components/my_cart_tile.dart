@@ -64,7 +64,9 @@ class MyCartTile extends StatelessWidget {
                               food: cartItem.food,
                               onIncrement: () {
                                 restaurant.addToCart(
-                                    cartItem.food, cartItem.selectedAddons);
+                                  cartItem.food,
+                                  cartItem.addons,
+                                );
                               },
                               onDecrement: () {
                                 restaurant.removeFromCart(cartItem);
@@ -80,14 +82,14 @@ class MyCartTile extends StatelessWidget {
             ),
 
             // ADDONS
-            if (cartItem.selectedAddons.isNotEmpty)
+            if (cartItem.addons.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: SizedBox(
                   height: 60,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    children: cartItem.selectedAddons
+                    children: cartItem.addons
                         .map(
                           (addon) => Padding(
                             padding: const EdgeInsets.only(right: 8.0),
