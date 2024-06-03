@@ -1,12 +1,14 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:order_it/components/login_with_button.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/services/google_sign_in.dart';
+import 'package:order_it/services/snackbar_helper.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -80,14 +82,40 @@ class _LoginPageState extends State<LoginPage> {
                   text: "Iniciar Sesión",
                   linearGradient: LinearGradient(
                       colors: [Colors.green.shade900, Colors.green]),
-                  onTap: () {
+                  onTap: () async {
+                    print(1);
                     // ESCONDEMOS EL TECLADO
                     FocusManager.instance.primaryFocus?.unfocus();
-                    loginController.login(
-                      context,
-                      emailController.text,
-                      passwordController.text,
-                    );
+
+                    bool hasConnection =
+                        await InternetConnectionChecker().hasConnection;
+                    if (hasConnection) {
+                      print("TENGHO CONNECTION");
+                      // Esto quiere decir que si el contexto existe.
+                      // La informacion de la aplicación.
+                      if (context.mounted) {
+                        loginController.login(
+                          context,
+                          emailController.text,
+                          passwordController.text,
+                        );
+                      }
+                    } else {
+                      print("No tengo connec");
+                      if (context.mounted) {
+                        bool inicioSesion =
+                            loginController.loginWithoutConnection(context,
+                                emailController.text, passwordController.text);
+
+                        inicioSesion
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const FirstPage()))
+                            : SnackbarHelper.showSnackbar(
+                                context, "Inicio de sesión no válido.");
+                      }
+                    }
                   },
                 ),
               ),
