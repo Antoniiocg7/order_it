@@ -39,6 +39,8 @@ class Order {
   
   get http => null;
 
+  get establecimiento => null;
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

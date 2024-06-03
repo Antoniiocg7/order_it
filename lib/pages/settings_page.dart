@@ -42,11 +42,11 @@ class SettingsPage extends StatelessWidget {
           MyContainer(
               title: "PEDIDOS",
               icon: const Icon(Icons.coffee),
-              routeBuilder: (context) => const MyOrders()),
+              routeBuilder: (context) =>  MyOrders()),
           MyContainer(
               title: "MIS DATOS",
               icon: const Icon(Icons.person),
-              routeBuilder: (context) => const MyProfile()),
+              routeBuilder: (context) => const MyProfile(title: 'Settings',)),
           MyContainer(
               title: "METODOS DE PAGO",
               icon: const Icon(Icons.wallet),
