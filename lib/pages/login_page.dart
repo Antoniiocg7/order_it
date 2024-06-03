@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -83,14 +85,12 @@ class _LoginPageState extends State<LoginPage> {
                   linearGradient: LinearGradient(
                       colors: [Colors.green.shade900, Colors.green]),
                   onTap: () async {
-                    print(1);
                     // ESCONDEMOS EL TECLADO
                     FocusManager.instance.primaryFocus?.unfocus();
 
                     bool hasConnection =
                         await InternetConnectionChecker().hasConnection;
                     if (hasConnection) {
-                      print("TENGHO CONNECTION");
                       // Esto quiere decir que si el contexto existe.
                       // La informacion de la aplicación.
                       if (context.mounted) {
@@ -101,7 +101,6 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       }
                     } else {
-                      print("No tengo connec");
                       if (context.mounted) {
                         bool inicioSesion =
                             loginController.loginWithoutConnection(context,

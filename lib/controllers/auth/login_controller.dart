@@ -8,14 +8,11 @@ import 'package:order_it/services/supabase_api.dart';
 
 class LoginController {
   login(BuildContext context, String email, String password) async {
-    print("LOGEANDO CON CONN");
     Usuario usuario = Usuario(email: email, password: password);
 
     final usuarioBox = Hive.box<Usuario>("userBox");
 
     usuarioBox.add(usuario);
-
-    print(usuarioBox.getAt(0)!.email);
 
     SupabaseApi supabaseApi = SupabaseApi();
 
