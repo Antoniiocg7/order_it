@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/models/restaurant.dart';
+import 'package:order_it/models/user.dart';
+import 'package:order_it/pages/test_hive.dart';
 import 'package:order_it/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+
+  // Registra el adaptador
+  Hive.registerAdapter(UsuarioAdapter());
+
+  // Abre la caja de usuarios
+  await Hive.openBox<Usuario>('userBox');
 
   await Supabase.initialize(
     url: 'https://gapuibdxbmoqjhibirjm.supabase.co',

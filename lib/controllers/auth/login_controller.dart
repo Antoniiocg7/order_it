@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:order_it/models/user.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/services/snackbar_helper.dart';
@@ -6,9 +8,19 @@ import 'package:order_it/services/supabase_api.dart';
 
 class LoginController {
   login(BuildContext context, String email, String password) async {
+    print("LOGEANDO CON CONN");
+    Usuario usuario = Usuario(email: email, password: password);
+
+    final usuarioBox = Hive.box<Usuario>("userBox");
+
+    usuarioBox.add(usuario);
+
+    print(usuarioBox.getAt(0)!.email);
+
     SupabaseApi supabaseApi = SupabaseApi();
 
     bool success = await supabaseApi.login(email, password);
+
     int? rol = await supabaseApi.getUserRole(email);
 
     if (context.mounted) {
@@ -37,7 +49,23 @@ class LoginController {
       }
     }
   }
+
+  bool loginWithoutConnection(
+      BuildContext context, String email, String password) {
+    final usuarioBox = Hive.box<Usuario>("userBox");
+
+    if (email == usuarioBox.getAt(0)!.email) {
+      if (password == usuarioBox.getAt(0)!.password) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
 }
+
+
+
 
 /*
 class LoginController {
