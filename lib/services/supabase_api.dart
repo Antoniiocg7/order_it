@@ -140,27 +140,27 @@ class SupabaseApi {
     }
   }
 
-  Future<bool> createCart() async {
+  Future<String> createCart() async {
     final url = '$baseUrl/rest/v1/cart';
     final headers = _createHeadersInsert();
 
     // Convert DateTime.now() to ISO 8601 string
     final now = DateTime.now().toUtc().toIso8601String();
-
+    final cartId = RandomIds.generateRandomId().toString();
     final response = await http.post(
       Uri.parse(url),
       headers: headers,
       body: jsonEncode({
-        "id": RandomIds.generateRandomId().toString(),
+        "id": cartId,
         "user_id": "480ed0d0-6d3d-4ad7-8024-72572da28871",
         "created_at": now
       }),
     );
 
     if (response.statusCode == 201) {
-      return true;
+      return cartId;
     } else {
-      return false;
+      return "";
     }
   }
 
@@ -171,54 +171,55 @@ class SupabaseApi {
   ) async {
     final url = '$baseUrl/rest/v1/cart_item';
     final url2 = '$baseUrl/rest/v1/cart_item_addon';
+    final url3 = '$baseUrl/rest/v1/cart_item?cart_id=eq.$cartId&select=id';
     final headers = _createHeadersInsert();
-    print("ADDONS IDS LENGTH");
-    print(addonIds.length);
+    final cartItemId = RandomIds.generateRandomId().toString();
+
+    // CREACIÓN DE LOS CART_ITEMS ASIGNADOS AL CART
+    await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(
+        {
+          "id": cartItemId,
+          "cart_id": int.parse(cartId),
+          "food_id": int.parse(foodId),
+          "quantity": "1"
+        },
+      ),
+    );
+
     try {
-      final cartItemResponse = await http.post(
-        Uri.parse(url),
+      // OBTENEMOS EL ID DEL CART_ITEM AL QUE QUEREMOS ASIGNAR EL ADDONS
+      final cartItemResponse = await http.get(
+        Uri.parse(url3),
         headers: headers,
-        body: jsonEncode(
-          {
-            "id": RandomIds.generateRandomId().toString(),
-            "cart_id": int.parse(cartId),
-            "food_id": int.parse(foodId),
-            "quantity": "1"
-          },
-        ),
       );
-      print("CART_ITEM RESPONSE");
-      print(cartItemResponse.body);
 
-      print("starting to decode caritemdata");
-      // final Map<String, dynamic> cartItemData =
-      //     jsonDecode(cartItemResponse.body);
-      // final cartItemId = cartItemData['id'];
-      // print(cartItemId);
-      print(1);
-      try {
-        for (var addonId in addonIds) {
-          print("Adding addonId: $addonId");
-          final response = await http.post(
-            Uri.parse(url2),
-            headers: headers,
-            body: jsonEncode(
-              {
-                'cart_item_id': "1492432484815338235",
-                'addon_id': int.parse(addonId),
-              },
-            ),
-          );
+      final List<dynamic> cartItemData = jsonDecode(cartItemResponse.body);
+      if (cartItemData.isNotEmpty) {
+        final cartItem = cartItemData[0];
+        final cartItemId = cartItem['id'];
+        try {
+          for (var addonId in addonIds) {
+            final response = await http.post(
+              Uri.parse(url2),
+              headers: headers,
+              body: jsonEncode(
+                {
+                  'cart_item_id': cartItemId,
+                  'addon_id': int.parse(addonId),
+                },
+              ),
+            );
 
-          print("ADDON RESPONSE for addonId: $addonId");
-          print(response.statusCode);
-
-          if (response.statusCode != 201) {
-            throw Exception("Error en la petición de agregar addons al item");
+            if (response.statusCode != 201) {
+              throw Exception("Error en la petición de agregar addons al item");
+            }
           }
+        } catch (e) {
+          throw Exception("Error al agregar addons al item del carrito");
         }
-      } catch (e) {
-        throw Exception("Error al agregar addons al item del carrito");
       }
     } catch (e) {
       throw Exception("Error al insertar el item al carrito");

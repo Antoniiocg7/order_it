@@ -24,10 +24,9 @@ class Restaurant extends ChangeNotifier {
       final cartId = await supabaseApi
           .createCart(); // Crear un carrito en la base de datos
 
-      print(cartId);
-      if (cartId != false) {
+      if (cartId != "") {
         await supabaseApi.addItemToCart(
-          "4089346325183540643",
+          cartId,
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );
