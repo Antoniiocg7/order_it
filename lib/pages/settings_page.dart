@@ -50,11 +50,11 @@ class SettingsPage extends StatelessWidget {
           MyContainer(
               title: "METODOS DE PAGO",
               icon: const Icon(Icons.wallet),
-              routeBuilder: (context) => const MyBilingdetails()),
+              routeBuilder: (context) =>  MyBilingdetails()),
           MyContainer(
               title: "ACERCA DE.",
               icon: const Icon(Icons.info_outline),
-              routeBuilder: (context) => const MyBilingdetails()),
+              routeBuilder: (context) =>  MyBilingdetails()),
         ],
       ),
     );

@@ -187,7 +187,7 @@ class _MyProfileState extends State<MyProfile> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(26.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -196,7 +196,7 @@ class _MyProfileState extends State<MyProfile> {
                         alignment: Alignment.bottomRight,
                         children: [
                           const CircleAvatar(
-                            radius: 70,
+                            radius: 50,
                             backgroundImage: NetworkImage(
                               'https://via.placeholder.com/140', // Replace with your image URL
                             ),
@@ -204,6 +204,7 @@ class _MyProfileState extends State<MyProfile> {
                           Container(
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
+                              
                               color: Colors.yellow,
                             ),
                             child: IconButton(
@@ -218,32 +219,36 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const TextField(
+                    TextField(
                       decoration: InputDecoration(
-                        labelText: 'Full Name',
-                        prefixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        labelText: 'Nombre',
+                        prefixIcon: const Icon(LineAwesomeIcons.user),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const TextField(
+                    TextField(
                       decoration: InputDecoration(
-                        labelText: 'E-Mail',
-                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        labelText: 'Correo',
+                        prefixIcon: const Icon(Icons.email_outlined, color: Color.fromARGB(255, 27, 26, 26),),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const TextField(
+                    TextField(
                       decoration: InputDecoration(
-                        labelText: 'Phone No',
-                        prefixIcon: Icon(Icons.phone),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        labelText: 'Telefono',
+                        prefixIcon: const Icon(Icons.phone_outlined),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const TextField(
+                     TextField(
                       obscureText: true,
                       decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
                         labelText: 'Password',
-                        prefixIcon: Icon(Icons.fingerprint),
+                        prefixIcon: const Icon(Icons.fingerprint),
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -257,34 +262,18 @@ class _MyProfileState extends State<MyProfile> {
                           padding: const EdgeInsets.symmetric(horizontal: 86),
                           textStyle: const TextStyle(fontSize: 12),
                         ),
-                        child: const Text('Edit Profile'),
+                        child: const Text('Confirmar Cambios'),
                       ),
                     ),
                     const SizedBox(height: 32),
-                    Row(children: [
+                    const Row(children: [
                       Text(
                         'Joined 31 October 2022',
                         style: TextStyle(
                             fontSize: 14,
                             color: Color.fromARGB(255, 34, 34, 34)),
                       ),
-                      const SizedBox(width: 106),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle Delete button action
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 240, 82, 82),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 12),
-                          textStyle: const TextStyle(fontSize: 56),
-                        ),
-                        child: const Text('Delete',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 34, 34, 34))),
-                      ),
+                      SizedBox(width: 106),
                     ]),
                   ])),
         ));
