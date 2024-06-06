@@ -1,4 +1,8 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
+import 'package:order_it/pages/first_page.dart';
+import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/services/supabase_api.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
@@ -60,7 +64,7 @@ class _AssignTableState extends State<AssignTable> {
     const String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
     const String apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
     const String authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
-    
+    bool isOccupied;
 
     // Imprimir el contenido del código QR para ver cómo está estructurado
     print('QR Code content: $qrCode');
@@ -72,11 +76,15 @@ class _AssignTableState extends State<AssignTable> {
     //String tableNumber = tableNumberQuery.replaceAll("eq.", "");
     int tableNumber = int.tryParse(tableNumberQuery.replaceAll("eq.", "")) ?? 0;
 
+
     if (tableNumber == 0) {
       print('No se ha encontrado número de mesa en el QR Code URL.');
-      _showDialog('Error', 'No se ha encontrado número de mesa en el QR Code URL.');
+      _showDialog('Error', 'No se ha encontrado número de mesa en el QR Code URL.', (){});
       return;
     }
+
+    isOccupied = await supabaseApi.getIsOccupied(tableNumber);
+    print(isOccupied);
 
     // Componer la URL para la petición PATCH
     final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
@@ -100,17 +108,27 @@ class _AssignTableState extends State<AssignTable> {
     final response = await http.patch(Uri.parse(url), headers: headers, body: body);
 
     if (response.statusCode == 204) {
-      print('Table $tableNumber assigned successfully.');
-      _showDialog('Table Assigned', 'Table $tableNumber has been successfully assigned to you.');
-      await supabaseApi.assignTable(widget.userId, tableNumber);
+      if (isOccupied) {
+        print('La mesa $tableNumber está ocupada, escoja otra por favor.');
+        _showDialog('Error', 'La mesa $tableNumber está ocupada, escoja otra por favor.', () {});
+      } else {
+        print('Table $tableNumber assigned successfully.');
+        _showDialog('Table Assigned', 'Table $tableNumber has been successfully assigned to you.', () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        });
+      }
+      //await supabaseApi.assignTable(widget.userId, tableNumber);
     } else {
       print('***************** tableNumber: $tableNumber *****************');
       print('Failed to assign table $tableNumber: ${response.statusCode} ${response.body}');
-      _showDialog('Error', 'Failed to assign table $tableNumber.');
+      _showDialog('Error', 'Failed to assign table $tableNumber.', () {});
     }
   }
 
-  void _showDialog(String title, String content) {
+  void _showDialog(String title, String content, VoidCallback onOkPressed) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -125,6 +143,7 @@ class _AssignTableState extends State<AssignTable> {
                   result = null; // Reset result to allow scanning another QR code
                 });
                 controller?.resumeCamera(); // Resume camera for scanning
+                onOkPressed(); // Ejecutar la función pasada
               },
               child: Text('OK'),
             ),

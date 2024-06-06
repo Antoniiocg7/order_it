@@ -11,7 +11,7 @@ class LoginController {
 
     bool success = await supabaseApi.login(email, password);
     int? rol = await supabaseApi.getUserRole(email);
-    String? userId = await supabaseApi.getUserUUI(email);
+    String? userId = await supabaseApi.getUserUUID(email);
 
     if (context.mounted) {
       if (success) {
@@ -23,12 +23,15 @@ class LoginController {
             ),
           );
         } else if (rol == 3) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>  AssignTable(userId: userId ?? ''),
-            ),
-          );
+          if (userId != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                //builder: (context) =>  AssignTable(userId: userId ?? ''),
+                builder: (context) => AssignTable(userId: userId),
+              ),
+            );
+          }
         }
       } else {
         SnackbarHelper.showSnackbar(

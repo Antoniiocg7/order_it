@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -61,7 +62,7 @@ class SupabaseApi {
     }
   }
 
-  Future<String?> getUserUUI(String email) async {
+  Future<String?> getUserUUID(String email) async {
     final url = '$baseUrl/rest/v1/users?select=id&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
 
@@ -188,6 +189,25 @@ class SupabaseApi {
     }
   }
 
+  Future<bool> getIsOccupied(int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      print('RESPUESTA: $jsonResponse');
+      if (jsonResponse.isNotEmpty && jsonResponse[0]['is_occupied'] != null && jsonResponse[0]['is_occupied'] == true ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      return false;
+    }
+  }
+
   Future<void> assignTable(String userId, int tableNumber) async {
     final url = '$baseUrl/rest/v1/tables?id=$tableNumber';
     
@@ -206,14 +226,14 @@ class SupabaseApi {
     final response = await http.patch(Uri.parse(url), headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      print('Table $tableNumber assigned successfully.');
+      print('Mesa $tableNumber asignada satisfactoriamente.');
     } else {
-      print('Failed to assign table $tableNumber: ${response.statusCode} ${response.body}');
+      print('Hubo un error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
     }
   }
 
-  Future<void> releaseTable(int tableNumber) async {
-    final url = '$baseUrl/rest/v1/rpc/release_table';
+  Future<bool> releaseTable(String userId, int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
     
     final headers = {
       'apikey': apiKey,
@@ -222,17 +242,19 @@ class SupabaseApi {
     };
 
     final body = jsonEncode({
-      'table_number': tableNumber,
-      'is_occupied': false,
       'user_id': null,
+      'table_number': tableNumber,
+      'is_occupied': false
     });
 
-    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
 
-    if (response.statusCode == 200) {
-      print('Table $tableNumber released successfully.');
+    if (response.statusCode == 204) {
+      print('Mesa $tableNumber libre.');
+      return true;
     } else {
-      print('Failed to release table $tableNumber: ${response.statusCode} ${response.body}');
+      print('Hubo un error al desasignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
+      return false;
     }
   }
 }
