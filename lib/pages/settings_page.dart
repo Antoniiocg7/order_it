@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/controllers/order_controller.dart';
+import 'package:order_it/models/order.dart';
 import 'package:order_it/pages/my_bilingDetails.dart';
 import 'package:order_it/pages/my_orders.dart';
 import 'package:order_it/pages/my_profile.dart';
@@ -16,7 +18,7 @@ class SettingsPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         actions: [
           IconButton(
-            onPressed: (){
+            onPressed: () {
               Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
             },
             icon: const Icon(
@@ -32,29 +34,26 @@ class SettingsPage extends StatelessWidget {
           const SizedBox(
             height: 40,
           ),
-          const Icon(
-            Icons.settings,
-            size: 100,
-            color: Colors.green),
+          const CircleAvatar(
+            radius: 50,
+          ),
           const SizedBox(
             height: 40,
           ),
           MyContainer(
-              title: "PEDIDOS",
-              icon: const Icon(Icons.coffee),
-              routeBuilder: (context) =>  MyOrders()),
+            title: "PEDIDOS",
+            icon: const Icon(Icons.coffee),
+            route: (context) =>  const MyOrders()),
           MyContainer(
-              title: "MIS DATOS",
-              icon: const Icon(Icons.person),
-              routeBuilder: (context) => const MyProfile(title: 'Settings',)),
+            title: "MIS DATOS",
+            icon: const Icon(Icons.person),
+            route: (context) =>  const MyProfile(title: "Mis datos",)),
+          
+          MyContainer(title: "METODOS DE PAGO", icon: const Icon(Icons.wallet), route: (context) =>  const MyOrders()),
           MyContainer(
-              title: "METODOS DE PAGO",
-              icon: const Icon(Icons.wallet),
-              routeBuilder: (context) =>  MyBilingdetails()),
-          MyContainer(
-              title: "ACERCA DE.",
-              icon: const Icon(Icons.info_outline),
-              routeBuilder: (context) =>  MyBilingdetails()),
+            title: "ACERCA DE.",
+            icon: const Icon(Icons.info_outline),
+            route: (context) =>  const MyBilingdetails()),
         ],
       ),
     );
@@ -64,13 +63,13 @@ class SettingsPage extends StatelessWidget {
 class MyContainer extends StatefulWidget {
   final String title;
   final Icon icon;
-  final WidgetBuilder routeBuilder;
+  final WidgetBuilder route;
 
   const MyContainer({
     super.key,
     required this.title,
     required this.icon,
-    required this.routeBuilder,
+    required this.route
   });
 
   @override
@@ -78,12 +77,17 @@ class MyContainer extends StatefulWidget {
 }
 
 class _MyContainerState extends State<MyContainer> {
+  final OrderController orderController = OrderController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: ()  {
+      
         Navigator.push(
-            context, MaterialPageRoute(builder: widget.routeBuilder));
+            context,
+            MaterialPageRoute(
+                builder: widget.route ));
       },
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.9,

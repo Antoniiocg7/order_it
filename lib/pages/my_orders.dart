@@ -1,50 +1,23 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:order_it/models/order.dart'; // Importing the Order class
+import 'package:order_it/controllers/order_controller.dart';
+import 'package:order_it/models/order.dart';
 
-class MyOrders extends StatelessWidget {
-  final List<Order> pedidos = [
-    Order(
-      id: 1,
-      restauranteId: 1,
-      clienteId: 1,
-      createdAt: DateTime.now(),
-      lineasPedido: const Array<Int32>(4, 2, 4, 8),
-      addonId: ["1"],
-      addons: null,
-    ),
-    Order(
-      id: 1,
-      restauranteId: 1,
-      clienteId: 1,
-      createdAt: DateTime.now(),
-      lineasPedido: const Array<Int32>(4, 2, 4, 8),
-      addonId: ["1"],
-      addons: null,
-    ),
-    Order(
-      id: 1,
-      restauranteId: 1,
-      clienteId: 1,
-      createdAt: DateTime.now(),
-      lineasPedido: const Array<Int32>(4, 2, 4, 8),
-      addonId: ["1"],
-      addons: null,
-    ),
-    Order(
-      id: 1,
-      restauranteId: 1,
-      clienteId: 1,
-      createdAt: DateTime.now(),
-      lineasPedido: const Array<Int32>(4, 2, 4, 8),
-      addonId: ["1"],
-      addons: null,
-    ),
-    // Add more Order instances here as needed
-  ];
+class MyOrders extends StatefulWidget {
+  const MyOrders({super.key});
 
-  MyOrders({super.key});
+  @override
+  State<MyOrders> createState() => _MyOrdersState();
+}
+
+class _MyOrdersState extends State<MyOrders> {
+  final OrderController orderController = OrderController();
+  late Future<List<Order>> futureOrders;
+
+  @override
+  void initState() {
+    super.initState();
+    futureOrders = orderController.fetchOrders();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +34,9 @@ class MyOrders extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Acción de refrescar la lista
+              setState(() {
+                futureOrders = orderController.fetchOrders();
+              });
             },
           ),
         ],
@@ -77,38 +52,39 @@ class MyOrders extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: pedidos.length,
-              itemBuilder: (context, index) {
-                final pedido = pedidos[index];
-                return GestureDetector(
-                  onTap: () {
-                    // Acción al tocar un pedido
-                    print('Pedido tocado: ${pedido.establecimiento}');
-                  },
-                  child: Card(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 8.0),
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        // Use your own logic to set the image here
-                        // Here I'm just showing the establishment ID as an example
-                        child: Text(""
-                            //pedido.restauranteId.toString()
-                            ),
-                      ),
-                      title: const Text('Alifornia Poke'),
-                      subtitle:
-                          const Text('Importe · 155,85€ \n03 dic · Pendiente'),
-                      trailing: ElevatedButton(
-                        onPressed: () {
-                          // Acción de ver el establecimiento
+            child: FutureBuilder<List<Order>>(
+              future: futureOrders,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator.adaptive());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No hay pedidos disponibles.'));
+                } else {
+                  final orders = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) {
+                      final order = orders[index];
+                      return GestureDetector(
+                        onTap: () {
+                          // Acción al tocar un pedido
                         },
-                        child: const Text('Ver establecim...'),
-                      ),
-                    ),
-                  ),
-                );
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              child: Text(order.restauranteId.toString()),
+                            ),
+                            title: Text('Restaurante ${order.restauranteId}'),
+                            subtitle: Text('Fecha: ${order.createdAt}'),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),

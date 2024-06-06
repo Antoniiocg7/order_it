@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-/*
+import 'package:order_it/controllers/user_controller.dart';
+import 'package:order_it/models/user.dart';
+
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key, required this.title});
 
@@ -11,184 +13,41 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
+  final UserController userController = UserController();
+  late Future<User> user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = userController.getUser("segurajoaquinm@gmail.com");
+    print(user);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Profile'),
-        actions: const [
-          Icon(Icons.more_vert),
-        ],
+        title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  const CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1535713875002-d1d0cf377040?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 15, 156, 22),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Coding with T',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'superAdmin@codingwitht.com',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 15, 156, 50),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 48,
-                    vertical: 16,
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                child: const Text('Edit Profile', style: TextStyle(color: Colors.black),),
-              ),
-              const SizedBox(height: 32),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: const Color.fromARGB(255, 197, 211, 255)
-                  ),
-                  child: const Icon(LineAwesomeIcons.cog_solid, color: Color.fromARGB(255, 0, 80, 253),)),
-                title: const Text('Settings'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: const Color.fromARGB(255, 197, 211, 255)
-                  ),
-                  child: const Icon(LineAwesomeIcons.wallet_solid, color: Color.fromARGB(255, 0, 80, 253),)),
-                title: const Text('Billing Details'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: const Color.fromARGB(255, 197, 211, 255)
-                  ),
-                  child: const Icon(LineAwesomeIcons.user_check_solid, color: Color.fromARGB(255, 0, 80, 253),)),
-                title: const Text('User Management'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: const Color.fromARGB(255, 197, 211, 255)
-                  ),
-                  child: const Icon(LineAwesomeIcons.info_solid, color: Color.fromARGB(255, 0, 80, 253),)),
-                title: const Text('Information'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: const Color.fromARGB(255, 197, 211, 255)
-                  ),
-                  child: const Icon(LineAwesomeIcons.sign_out_alt_solid, color: Color.fromARGB(255, 0, 80, 253),)),
-                title: const Text('User Management'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}*/
-
-//import 'package:flutter/material.dart';
-
-class MyProfile extends StatefulWidget {
-  const MyProfile({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyProfile> createState() => _MyProfileState();
-}
-
-class _MyProfileState extends State<MyProfile> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(widget.title),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(26.0),
-              child: Column(
+      body: FutureBuilder<User>(
+        future: user,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            final userData = snapshot.data!;
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(26.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
@@ -197,14 +56,10 @@ class _MyProfileState extends State<MyProfile> {
                         children: [
                           const CircleAvatar(
                             radius: 50,
-                            backgroundImage: NetworkImage(
-                              'https://via.placeholder.com/140', // Replace with your image URL
-                            ),
                           ),
                           Container(
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              
                               color: Colors.yellow,
                             ),
                             child: IconButton(
@@ -220,33 +75,44 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 24),
                     TextField(
+                      controller: TextEditingController(text: userData.nombre),
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
                         labelText: 'Nombre',
                         prefixIcon: const Icon(LineAwesomeIcons.user),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: TextEditingController(text: userData.email),
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
                         labelText: 'Correo',
-                        prefixIcon: const Icon(Icons.email_outlined, color: Color.fromARGB(255, 27, 26, 26),),
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: Color.fromARGB(255, 27, 26, 26),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller:
+                          TextEditingController(text: userData.telefono),
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
                         labelText: 'Telefono',
                         prefixIcon: const Icon(Icons.phone_outlined),
                       ),
                     ),
                     const SizedBox(height: 16),
-                     TextField(
+                    TextField(
                       obscureText: true,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
                         labelText: 'Password',
                         prefixIcon: const Icon(Icons.fingerprint),
                       ),
@@ -258,11 +124,15 @@ class _MyProfileState extends State<MyProfile> {
                           // Handle Edit Profile button action
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
-                          padding: const EdgeInsets.symmetric(horizontal: 86),
-                          textStyle: const TextStyle(fontSize: 12),
+                          backgroundColor:
+                              const Color.fromARGB(255, 47, 136, 219),
+                          padding: const EdgeInsets.symmetric(horizontal: 31),
+                          textStyle: const TextStyle(fontSize: 16),
                         ),
-                        child: const Text('Confirmar Cambios'),
+                        child: const Text(
+                          'Confirmar Cambios',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -275,7 +145,15 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                       SizedBox(width: 106),
                     ]),
-                  ])),
-        ));
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return const Center(child: Text('No se encontró el usuario.'));
+          }
+        },
+      ),
+    );
   }
 }

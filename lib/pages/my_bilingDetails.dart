@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ffi';
 import 'package:order_it/models/order.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // Importing the Order class
 
@@ -14,23 +13,12 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
   final PageController _pageController = PageController();
   final List<Order> pedidos = [
     Order(
-      id: 1,
-      restauranteId: 1,
-      clienteId: 1,
-      createdAt: DateTime.now(),
-      lineasPedido: const Array<Int32>(4, 2, 4, 8),
-      addonId: ["1"],
-      addons: null,
-    ),
-    Order(
-      id: 1,
-      restauranteId: 1,
-      clienteId: 1,
-      createdAt: DateTime.now(),
-      lineasPedido: const Array<Int32>(4, 2, 4, 8),
-      addonId: ["1"],
-      addons: null,
+        id: 1,
+        restauranteId: 1,
+        clienteId: "1",
+        createdAt: "1"
     )
+        
     // Add more Order instances here as needed
   ];
 
@@ -79,7 +67,6 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                 return GestureDetector(
                   onTap: () {
                     // Acción al tocar un pedido
-                    print('Pedido tocado: ${pedido.establecimiento}');
                   },
                   child: Container(
                     margin: const EdgeInsets.all(16.0),
@@ -180,10 +167,14 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20), // Mismos bordes redondeados que el card
-                        side: const BorderSide(color: Colors.blueAccent, width: 2), // Borde con grosor 2
+                        borderRadius: BorderRadius.circular(
+                            20), // Mismos bordes redondeados que el card
+                        side: const BorderSide(
+                            color: Colors.blueAccent,
+                            width: 2), // Borde con grosor 2
                       ),
                     ),
                     child: const Stack(

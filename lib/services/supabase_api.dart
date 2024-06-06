@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:order_it/models/user.dart';
 
 class SupabaseApi {
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
@@ -31,11 +32,7 @@ class SupabaseApi {
       body: body,
     );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return response.statusCode == 200;
   }
 
   Future<bool> register(String email, String password) async {
@@ -76,6 +73,23 @@ class SupabaseApi {
     } else {
       throw Exception('Error al obtener el rol del usuario');
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getUser(String email) async {
+    final url = '$baseUrl/rest/v1/users?email=eq.${Uri.encodeComponent(email)}';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception('No se pueden cargar los pedidos');
+    }
+
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    print(jsonResponse);
+
+    return jsonResponse.cast<Map<String, dynamic>>();
   }
 
   Future<List<Map<String, dynamic>>> getCategories() async {
@@ -126,14 +140,12 @@ class SupabaseApi {
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    if (response.statusCode == 200) {
-
-      final List<dynamic> jsonResponse = json.decode(response.body);
-      return jsonResponse.cast<Map<String, dynamic>>();
-    
-    } else {
-      throw Exception('Failed to load categories');
+    if (response.statusCode != 200) {
+      throw Exception('No se pueden cargar los pedidos');
     }
-  }
 
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    return jsonResponse.cast<Map<String, dynamic>>();
+  }
 }
