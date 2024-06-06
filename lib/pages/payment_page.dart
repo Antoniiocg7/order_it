@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:order_it/components/my_button.dart';
-import 'package:order_it/pages/delivery_progress_page.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});

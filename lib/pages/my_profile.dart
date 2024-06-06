@@ -85,6 +85,16 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: TextEditingController(text: userData.apellido_1),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        labelText: 'Apellido',
+                        prefixIcon: const Icon(LineAwesomeIcons.user),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
                       controller: TextEditingController(text: userData.email),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -121,7 +131,7 @@ class _MyProfileState extends State<MyProfile> {
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle Edit Profile button action
+                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -145,6 +155,7 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                       SizedBox(width: 106),
                     ]),
+                    
                   ],
                 ),
               ),

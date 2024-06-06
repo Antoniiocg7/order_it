@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
-import 'package:order_it/pages/login_page.dart';
 import 'package:order_it/pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {

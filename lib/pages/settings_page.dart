@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:order_it/controllers/order_controller.dart';
-import 'package:order_it/models/order.dart';
 import 'package:order_it/pages/my_bilingDetails.dart';
 import 'package:order_it/pages/my_orders.dart';
 import 'package:order_it/pages/my_profile.dart';
@@ -41,19 +41,31 @@ class SettingsPage extends StatelessWidget {
             height: 40,
           ),
           MyContainer(
-            title: "PEDIDOS",
-            icon: const Icon(Icons.coffee),
-            route: (context) =>  const MyOrders()),
+              title: "PEDIDOS",
+              icon: const Icon(Icons.coffee),
+              route: (context) => const MyOrders()),
           MyContainer(
-            title: "MIS DATOS",
-            icon: const Icon(Icons.person),
-            route: (context) =>  const MyProfile(title: "Mis datos",)),
-          
-          MyContainer(title: "METODOS DE PAGO", icon: const Icon(Icons.wallet), route: (context) =>  const MyOrders()),
+              title: "MIS DATOS",
+              icon: const Icon(Icons.person),
+              route: (context) => const MyProfile(
+                    title: "Mis datos",
+                  )),
           MyContainer(
-            title: "ACERCA DE.",
-            icon: const Icon(Icons.info_outline),
-            route: (context) =>  const MyBilingdetails()),
+              title: "METODOS DE PAGO",
+              icon: const Icon(Icons.wallet),
+              route: (context) => const MyBilingdetails()),
+          MyContainer(
+              title: "AYUDA",
+              icon: const Icon(LineAwesomeIcons.hands_helping_solid),
+              route: (context) => const MyOrders()),
+          MyContainer(
+              title: "PREFERENCIAS",
+              icon: const Icon(LineAwesomeIcons.eye_slash),
+              route: (context) => const MyOrders()),
+          MyContainer(
+              title: "ACERCA DE.",
+              icon: const Icon(Icons.info_outline),
+              route: (context) => const MyBilingdetails()),
         ],
       ),
     );
@@ -63,13 +75,13 @@ class SettingsPage extends StatelessWidget {
 class MyContainer extends StatefulWidget {
   final String title;
   final Icon icon;
-  final WidgetBuilder route;
+  final WidgetBuilder? route;
 
   const MyContainer({
     super.key,
     required this.title,
     required this.icon,
-    required this.route
+    this.route,
   });
 
   @override
@@ -82,36 +94,59 @@ class _MyContainerState extends State<MyContainer> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()  {
-      
-        Navigator.push(
+      onTap: () {
+        if (widget.route != null) {
+          Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: widget.route ));
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  widget.route!(context),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                const begin = Offset(0.0, 1.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOut;
+
+                final tween = Tween(begin: begin, end: end);
+                final curvedAnimation = CurvedAnimation(
+                  parent: animation,
+                  curve: curve,
+                );
+
+                return SlideTransition(
+                  position: tween.animate(curvedAnimation),
+                  child: child,
+                );
+              },
+            ),
+          );
+        }
       },
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.9,
         height: 55,
         margin: const EdgeInsets.symmetric(horizontal: 18),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(76.0)),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(76.0),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //SWITCH
+              // SWITCH
               widget.icon,
               const SizedBox(
-                width: 15,
+                width: 25,
               ),
               Text(
                 widget.title,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 15),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  fontSize: 17,
+                ),
               ),
             ],
           ),

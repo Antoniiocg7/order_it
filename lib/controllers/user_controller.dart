@@ -15,8 +15,6 @@ class UserController {
 
       final User user = User.fromJson(userData[0]);
 
-      print(user.nombre);
-
       return user;
     } catch (error) {
       throw Exception('Failed to fetch user: $error');

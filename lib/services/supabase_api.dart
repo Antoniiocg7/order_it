@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:order_it/models/user.dart';
 
 class SupabaseApi {
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';

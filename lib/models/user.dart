@@ -6,7 +6,7 @@ class User {
   final DateTime fechaNacimiento;
   final String email;
   final String telefono;
-  final List<String> creditCard;
+  final List<Map<String, dynamic>> creditCard; // Cambiado el tipo de dato aquí
   final int rol;
 
   User({
@@ -30,7 +30,7 @@ class User {
       fechaNacimiento: DateTime.parse(json['fecha_nacimiento']),
       email: json['email'],
       telefono: json['telefono'],
-      creditCard: List<String>.from(json['credit_card']),
+      creditCard: List<Map<String, dynamic>>.from(json['credit_card']), // Cambiado aquí también
       rol: json['rol'],
     );
   }
@@ -44,7 +44,7 @@ class User {
       'fechaNacimiento': fechaNacimiento.toIso8601String(),
       'email': email,
       'telefono': telefono,
-      'creditCard': creditCard,
+      'credit_card': creditCard, // Asegúrate de mapear correctamente el campo aquí también
       'rol': rol,
     };
   }

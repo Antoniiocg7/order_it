@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:order_it/models/order.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // Importing the Order class
+import 'package:order_it/controllers/user_controller.dart';
+import 'package:order_it/models/user.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MyBilingdetails extends StatefulWidget {
   const MyBilingdetails({super.key});
@@ -10,19 +11,20 @@ class MyBilingdetails extends StatefulWidget {
 }
 
 class _MyBilingdetailsState extends State<MyBilingdetails> {
-  final PageController _pageController = PageController();
-  final List<Order> pedidos = [
-    Order(
-        id: 1,
-        restauranteId: 1,
-        clienteId: "1",
-        createdAt: "1"
-    )
-        
-    // Add more Order instances here as needed
-  ];
+  final UserController userController = UserController();
+  late Future<User> user;
 
-  bool _showForm = false;
+  final PageController _pageController = PageController();
+
+  final bool _showForm = false;
+
+  @override
+  void initState() {
+    super.initState();
+    user = userController.getUser('segurajoaquinm@gmail.com');
+    
+    // Obtener datos del usuario al inicializar el estado
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +39,30 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.more_horiz),
             onPressed: () {
               // Acción de refrescar la lista
             },
           ),
         ],
       ),
-      body: _showForm ? _buildForm() : _buildPageView(),
+      body: FutureBuilder<User>(
+        future: user,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _showForm ? _buildForm() : _buildPageView(snapshot.data!);
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 
-  Widget _buildPageView() {
+  Widget _buildPageView(User user) {
     return Column(
       children: [
         Container(
@@ -57,153 +71,105 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
         ),
         SizedBox(
           height: 250,
-          width: 350, // Ajusta la altura del contenedor del PageView
+          width: 350,
           child: PageView.builder(
             controller: _pageController,
-            itemCount: pedidos.length + 1, // Añadir uno para el botón
+            itemCount: 1, // Solo un elemento para los datos del usuario
             itemBuilder: (context, index) {
-              if (index < pedidos.length) {
-                final pedido = pedidos[index];
-                return GestureDetector(
-                  onTap: () {
-                    // Acción al tocar un pedido
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(16.0),
-                    width: 280, // Puedes ajustar el ancho aquí
-                    height: 180, // Puedes ajustar la altura aquí
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.blue.shade900,
-                          const Color.fromARGB(255, 81, 140, 199)
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: const Offset(
-                              0, 3), // Cambia la posición de la sombra
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'VISA',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              Image.asset(
-                                'lib/images/application/visa.png',
-                                width: 60,
-                                height: 35,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '**** 1234',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  letterSpacing: 2,
-                                ),
-                              ),
-                              Text(
-                                '12/25',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Joaquin Segura',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return Container(
+              return GestureDetector(
+                onTap: () {
+                  // Acción al tocar los datos del usuario
+                },
+                child: Container(
                   margin: const EdgeInsets.all(16.0),
-                  width: 280, // Misma anchura que el card
-                  height: 180, // Misma altura que el card
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _showForm = true;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            20), // Mismos bordes redondeados que el card
-                        side: const BorderSide(
-                            color: Colors.blueAccent,
-                            width: 2), // Borde con grosor 2
-                      ),
+                  width: 280,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blue.shade900,
+                        const Color.fromARGB(255, 81, 140, 199)
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    child: const Stack(
-                      alignment: Alignment.center,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Opacity(
-                          opacity: 0.3,
-                          child: Icon(
-                            Icons.add,
-                            size: 48,
-                            color: Colors.white,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            
+                            Text(
+                              user.creditCard[0]["tipo"],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Añadir método de pago',
-                          style: TextStyle(fontSize: 16),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              user.creditCard[0]["numero"],// ${user.cardLast4Digits},
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                            Text(
+                              user.creditCard[0]["vencimiento"],//user.cardExpiration,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 10),
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.creditCard[0]["titular"],//user.cardHolderName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                       
                       ],
                     ),
                   ),
-                );
-              }
+                ),
+              );
             },
           ),
         ),
-        const SizedBox(height: 16), // Espacio entre el PageView y el indicador
+        const SizedBox(height: 16),
         SmoothPageIndicator(
           controller: _pageController,
-          count: pedidos.length + 1, // Número de páginas (pedidos + botón)
+          count: 1,
           effect: WormEffect(
             dotWidth: 12,
             dotHeight: 12,

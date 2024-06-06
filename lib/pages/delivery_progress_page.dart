@@ -39,7 +39,7 @@ class DeliveryProgressPage extends StatelessWidget {
           // PROFILE PICK OF DRIVER
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.surface,
               shape: BoxShape.circle
             ),
             child: IconButton(
@@ -79,7 +79,7 @@ class DeliveryProgressPage extends StatelessWidget {
                   // MESSAGE BUTTON
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.surface,
                       shape: BoxShape.circle
                     ),
                     child: IconButton(
@@ -96,7 +96,7 @@ class DeliveryProgressPage extends StatelessWidget {
                   // CALL BUTTON
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.surface,
                       shape: BoxShape.circle
                     ),
                     child: IconButton(
