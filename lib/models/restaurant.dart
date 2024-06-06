@@ -5,9 +5,11 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Restaurant extends ChangeNotifier {
   final supabaseApi = SupabaseApi();
+  final supabase = Supabase.instance.client;
   /*
     G E T T E R S
   */
@@ -31,7 +33,18 @@ class Restaurant extends ChangeNotifier {
           selectedAddons.map((addon) => addon.id).toList(),
         );
       } else {
-        return false;
+        final existingCart =
+            await supabase.from('cart').select('id').eq('is_finished', false);
+        final existingCartId = existingCart.first['id'];
+        if (existingCart.first.isNotEmpty) {
+          await supabaseApi.addItemToCart(
+            existingCartId.toString(),
+            food.id,
+            selectedAddons.map((addon) => addon.id).toList(),
+          );
+        } else {
+          return false;
+        }
       }
 
       notifyListeners();

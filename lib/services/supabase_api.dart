@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:order_it/utils/random_id.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
+  final supabase = Supabase.instance.client;
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
   final String apiKey =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
@@ -147,18 +149,27 @@ class SupabaseApi {
     // Convert DateTime.now() to ISO 8601 string
     final now = DateTime.now().toUtc().toIso8601String();
     final cartId = RandomIds.generateRandomId().toString();
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: jsonEncode({
-        "id": cartId,
-        "user_id": "480ed0d0-6d3d-4ad7-8024-72572da28871",
-        "created_at": now
-      }),
-    );
+    final supabase = Supabase.instance.client;
+    final UserResponse userResponse = await supabase.auth.getUser();
+    final supabaseApi = SupabaseApi();
+    final checkCart = await supabaseApi.checkCart();
+    if (checkCart.isEmpty || checkCart.first['is_finished'] == true) {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({
+          "id": cartId,
+          "user_id": userResponse.user!.id,
+          "is_finished": false,
+          "created_at": now,
+        }),
+      );
 
-    if (response.statusCode == 201) {
-      return cartId;
+      if (response.statusCode == 201) {
+        return cartId;
+      } else {
+        return '';
+      }
     } else {
       return "";
     }
@@ -174,7 +185,6 @@ class SupabaseApi {
     final url3 = '$baseUrl/rest/v1/cart_item?cart_id=eq.$cartId&select=id';
     final headers = _createHeadersInsert();
     final cartItemId = RandomIds.generateRandomId().toString();
-
     // CREACIÓN DE LOS CART_ITEMS ASIGNADOS AL CART
     await http.post(
       Uri.parse(url),
@@ -294,6 +304,28 @@ class SupabaseApi {
       }
     } catch (e) {
       throw Exception('Error al eliminar el item del carrito: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> checkCart() async {
+    final activeUser = await supabase.auth.getUser();
+
+    try {
+      final List<Map<String, dynamic>> responseData = await supabase
+          .from('cart')
+          .select('is_finished')
+          .eq(
+            'user_id',
+            activeUser.user!.id,
+          )
+          .eq(
+            'is_finished',
+            false,
+          );
+
+      return responseData;
+    } catch (e) {
+      throw Exception('Error al encontrar el carrito asociado al usuario: $e');
     }
   }
 }

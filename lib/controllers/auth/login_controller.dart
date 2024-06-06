@@ -3,8 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:order_it/models/user.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/pages/home_page.dart';
-import 'package:order_it/services/snackbar_helper.dart';
 import 'package:order_it/services/supabase_api.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginController {
   login(BuildContext context, String email, String password) async {
@@ -16,32 +16,29 @@ class LoginController {
 
     SupabaseApi supabaseApi = SupabaseApi();
 
-    bool success = await supabaseApi.login(email, password);
+    final supabase = Supabase.instance.client;
+    supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
 
+    // TODO: PENDIENTE DE IMPLEMENTAR LOGICA MAL LOGIN ????
     int? rol = await supabaseApi.getUserRole(email);
 
     if (context.mounted) {
-      if (success) {
-        if (rol == 2) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ),
-          );
-        } else if (rol == 3) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const FirstPage(),
-            ),
-          );
-        }
-      } else {
-        SnackbarHelper.showSnackbar(
+      if (rol == 2) {
+        Navigator.push(
           context,
-          'Inicio de sesión incorrecto, compruebe las credenciales',
-          backgroundColor: Colors.red,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
+      } else if (rol == 3) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FirstPage(),
+          ),
         );
       }
     }
