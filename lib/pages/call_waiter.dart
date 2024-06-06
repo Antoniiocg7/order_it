@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:order_it/pages/home_page.dart';
 
 class CallWaiter extends StatelessWidget {
+  
   const CallWaiter({super.key});
 
   @override
@@ -44,7 +45,7 @@ class CallWaiter extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const HomePage(),
+                    builder: (context) => const HomePage(ordersAllowed: false),
                   ),
                 );
               },

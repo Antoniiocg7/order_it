@@ -28,7 +28,8 @@ class LoginController {
               context,
               MaterialPageRoute(
                 //builder: (context) =>  AssignTable(userId: userId ?? ''),
-                builder: (context) => AssignTable(userId: userId),
+                //builder: (context) => AssignTable(userId: userId),
+                builder: (context) => FirstPage(userId: userId),
               ),
             );
           }

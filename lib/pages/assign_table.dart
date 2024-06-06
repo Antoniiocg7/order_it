@@ -116,7 +116,7 @@ class _AssignTableState extends State<AssignTable> {
         _showDialog('Table Assigned', 'Table $tableNumber has been successfully assigned to you.', () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => const HomePage(ordersAllowed: true)),
           );
         });
       }
@@ -159,6 +159,42 @@ class _AssignTableState extends State<AssignTable> {
       appBar: AppBar(
         title: Text('Assign Table'),
       ),
+      body: Stack(
+        children: [
+          QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated,
+          ),
+          Center(
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white, width: 2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: EdgeInsets.only(bottom: 20),
+              child: (result != null)
+                  ? Text('Scanned: ${result!.code}')
+                  : Text('Scan a code'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  /*
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Assign Table'),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -179,5 +215,5 @@ class _AssignTableState extends State<AssignTable> {
         ],
       ),
     );
-  }
+  }*/
 }
