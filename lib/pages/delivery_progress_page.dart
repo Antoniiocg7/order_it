@@ -12,11 +12,13 @@ class DeliveryProgressPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
-      body: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          MyReceipt(),
-        ],
+      body: const SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MyReceipt(),
+          ],
+        ),
       ),
     );
   }

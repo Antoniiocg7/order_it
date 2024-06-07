@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/components/my_quantity_selector.dart';
-import 'package:order_it/models/cart_item.dart';
+import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
 class MyCartTile extends StatelessWidget {
-  final CartItem cartItem;
+  final CartFood cartFood;
 
-  const MyCartTile({super.key, required this.cartItem});
+  const MyCartTile({super.key, required this.cartFood});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class MyCartTile extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      cartItem.food.imagePath,
+                      cartFood.food.imagePath,
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
@@ -44,7 +44,7 @@ class MyCartTile extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          cartItem.food.name,
+                          cartFood.food.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -55,21 +55,21 @@ class MyCartTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${cartItem.food.price}€",
+                              "${cartFood.food.price}€",
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.primary),
                             ),
                             QuantitySelector(
-                              quantity: cartItem.quantity,
-                              food: cartItem.food,
+                              quantity: cartFood.quantity,
+                              food: cartFood.food,
                               onIncrement: () {
                                 restaurant.addToCart(
-                                  cartItem.food,
-                                  cartItem.addons,
+                                  cartFood.food,
+                                  cartFood.addons,
                                 );
                               },
                               onDecrement: () {
-                                restaurant.removeFromCart(cartItem);
+                                restaurant.removeFromCart(cartFood);
                               },
                             ),
                           ],
@@ -82,14 +82,14 @@ class MyCartTile extends StatelessWidget {
             ),
 
             // ADDONS
-            if (cartItem.addons.isNotEmpty)
+            if (cartFood.addons.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: SizedBox(
                   height: 60,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    children: cartItem.addons
+                    children: cartFood.addons
                         .map(
                           (addon) => Padding(
                             padding: const EdgeInsets.only(right: 8.0),
