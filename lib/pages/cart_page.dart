@@ -3,6 +3,7 @@ import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_cart_tile.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/payment_page.dart';
+import 'package:order_it/services/supabase_api.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
@@ -10,11 +11,14 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SupabaseApi().getUserCartDetails();
+    SupabaseApi().getCartFood();
+    SupabaseApi().getCartFoodAddons();
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) {
         // CART
         final userCart = restaurant.cart;
-
+        print(userCart.length);
 
         // SCAFFOLD UI
         return Scaffold(
@@ -28,15 +32,15 @@ class CartPage extends StatelessWidget {
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   showDialog(
-                    context: context, 
+                    context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text("Are you sure you want to clear the cart?"),
+                      title: const Text(
+                          "Are you sure you want to clear the cart?"),
                       actions: [
                         // CANCEL BUTTON
                         TextButton(
-                          child: const Text("Cancel"),
-                          onPressed: () => Navigator.pop(context)
-                        ),
+                            child: const Text("Cancel"),
+                            onPressed: () => Navigator.pop(context)),
 
                         // ACCEPT BUTTON
                         TextButton(
@@ -44,50 +48,54 @@ class CartPage extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context);
                             restaurant.clearCart();
-                          } 
+                          },
                         )
                       ],
-                    )
+                    ),
                   );
-                }
+                },
               )
             ],
           ),
           body: Column(
-
             // LIST OF CART
             children: [
               Expanded(
                 child: Column(
                   children: [
-                    (userCart.isEmpty) 
-                    ? const Expanded(child: Center(child: Text("Cart is empty..."))) 
-                    : Expanded(
-                      child: ListView.builder(
-                        itemCount: userCart.length,
-                        itemBuilder: (context, index) {
-                
-                          // GET INDIVIDUAL CART ITEM
-                          final cartItem = userCart[index];
-                
-                          // RETURN CART TILE UI
-                          return MyCartTile(
-                            cartItem: cartItem,
-                          );
-                        }
-                      )
-                    )
+                    (userCart.isEmpty)
+                        ? const Expanded(
+                            child: Center(child: Text("Cart is empty...")))
+                        : Expanded(
+                            child: ListView.builder(
+                              itemCount: userCart.length,
+                              itemBuilder: (context, index) {
+                                // GET INDIVIDUAL CART ITEM
+                                final cartFood = userCart[index];
+
+                                // RETURN CART TILE UI
+                                return MyCartTile(
+                                  cartFood: cartFood,
+                                );
+                              },
+                            ),
+                          )
                   ],
                 ),
               ),
 
               // BUTTON TO PAY
               MyButton(
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentPage())), 
-                text: "Go to checkout"
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PaymentPage(),
+                  ),
+                ),
+                text: "Go to checkout",
               ),
 
-              const SizedBox( height: 25 )
+              const SizedBox(height: 25)
             ],
           ),
         );

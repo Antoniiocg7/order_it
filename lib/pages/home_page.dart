@@ -3,11 +3,13 @@ import 'package:order_it/components/my_drawer.dart';
 import 'package:order_it/components/my_food_tile.dart';
 import 'package:order_it/components/my_tab_bar.dart';
 import 'package:order_it/models/food_category.dart';
+import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/food_page.dart';
 import 'package:order_it/controllers/food_category_controller.dart';
 import 'package:order_it/controllers/food_controller.dart';
 import 'package:order_it/models/food.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,12 +77,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     title: const Text('Order It'),
                     actions: [
                       IconButton(
-                        onPressed: () {
-                          Navigator.push(
+                        onPressed: () async {
+                          final restaurant =
+                              Provider.of<Restaurant>(context, listen: false);
+                          await restaurant.loadCartDetails();
+
+                          if (context.mounted) {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const CartPage(),
-                              ));
+                              ),
+                            );
+                          }
                         },
                         icon: const Icon(Icons.shopping_cart),
                       ),

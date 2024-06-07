@@ -1,5 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:order_it/models/addon.dart';
+import 'package:order_it/models/cart_food.dart';
+import 'package:order_it/models/cart_item.dart';
+import 'package:order_it/models/food.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -208,7 +213,7 @@ class SupabaseApi {
 
       final List<dynamic> cartItemData = jsonDecode(cartItemResponse.body);
       if (cartItemData.isNotEmpty) {
-        final cartItem = cartItemData[0];
+        final cartItem = cartItemData.last;
         final cartItemId = cartItem['id'];
         try {
           for (var addonId in addonIds) {
@@ -237,25 +242,11 @@ class SupabaseApi {
   }
 
   Future<List<Map<String, dynamic>>> getCartItems(String cartId) async {
-    final String url = '$baseUrl/rest/v1/cart_item?cart_id=$cartId';
-    final headers = _createHeaders();
-
     try {
-      final http.Response response =
-          await http.get(Uri.parse(url), headers: headers);
+      final response =
+          await supabase.from('cart_item').select('*').eq('cart_id', cartId);
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData['error'] == null) {
-          return List<Map<String, dynamic>>.from(responseData['data'] as List);
-        } else {
-          throw Exception(responseData['error']['message']);
-        }
-      } else {
-        throw Exception(
-          'Error al cargar los items del carrito, status code: ${response.statusCode}',
-        );
-      }
+      return response;
     } catch (e) {
       throw Exception('Error al cargar los items del carrito: $e');
     }
@@ -329,52 +320,157 @@ class SupabaseApi {
     }
   }
 
-  Future<void> updateCartState() async {
-    final supabase = Supabase.instance.client;
-    final user = await supabase.auth.getUser();
-    final userId = user.user?.id;
+  Future<String> getCart() async {
+    try {
+      final activeUser = await supabase.auth.getUser();
 
-    if (userId == null) {
-      print(userId);
-      return;
+      final cartId = await supabase
+          .from('cart')
+          .select('id')
+          .eq('is_finished', false)
+          .eq('user_id', activeUser.user!.id);
+      return cartId.first['id'].toString();
+    } catch (e) {
+      throw Exception('Error al encontrar el carrito asociado al usuario: $e');
+    }
+  }
+
+  // Future<List<Map<String, dynamic>>> showCartItems(String cartId) async {
+  //   final response = await supabase
+  //       .from('cart_item')
+  //       .select('*, food (*)') // Join con la tabla food
+  //       .eq('cart_id', cartId);
+
+  //   return List<Map<String, dynamic>>.from(response);
+  // }
+
+  Future<List<CartItem>> getUserCartDetails() async {
+    final cart = await getCart();
+
+    final cartItemsJson = await getCartItems(cart);
+    List<CartItem> cartItems =
+        cartItemsJson.map<CartItem>((item) => CartItem.fromJson(item)).toList();
+
+    return cartItems;
+  }
+
+  Future<List<String>> getFoodIdsFromCart() async {
+    // Obtener los detalles del carrito
+    final cartItems = await getUserCartDetails();
+
+    // Extraer los food_id de cada CartItem
+    List<String> foodIds = cartItems.map((item) => item.foodId).toList();
+
+    return foodIds;
+  }
+
+  Future<void> getCartFood() async {
+    // Obtener los food_ids
+    final foodIds = await getFoodIdsFromCart();
+
+    // Realizar otra petición con los food_ids
+    for (String foodId in foodIds) {
+      await getFoodFromId(foodId);
+    }
+  }
+
+  Future<Food> getFoodFromId(String foodId) async {
+    final response =
+        await supabase.from('food').select('*').eq('id', foodId).single();
+    return Food.fromJson(response);
+  }
+
+  Future<List<String>> getFoodAddonsIdsFromCart() async {
+    // Obtener los detalles del carrito
+    final cartItems = await getUserCartDetails();
+
+    // Extraer los food_id de cada CartItem
+    List<String> foodAddonsIds = cartItems.map((item) => item.id).toList();
+
+    return foodAddonsIds;
+  }
+
+  Future<void> getCartFoodAddons() async {
+    // Obtener los ids cart_item
+    final cartItemIds = await getFoodAddonsIdsFromCart();
+
+    // Realizar otra petición con los ids cart_item para obtener los addons
+    for (String cartItemId in cartItemIds) {
+      await getFoodAddonsFromCart(cartItemId);
+    }
+  }
+
+  Future<List<Addon>> getFoodAddonsFromCart(
+    String cartItemId,
+  ) async {
+    final response =
+        await supabase.from('cart_item_addon').select('addon_id').eq(
+              'cart_item_id',
+              cartItemId,
+            );
+
+    // Extraer los addon_id de la respuesta
+    List<int> addonIds =
+        response.map<int>((item) => item['addon_id'] as int).toList();
+
+    if (addonIds.isEmpty) {
+      if (kDebugMode) {
+        print('No addons found for this cart item.');
+      }
+      return [];
     }
 
-    //const bool verd = true;
+    // Construir un array de condiciones para los IDs
+    final conditions = addonIds.map((id) => 'id.eq.$id').join(',');
 
-    // Replace with your actual API key and authorization token
-    const String apiKey =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E';
-    const String authorization =
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E'; // Ensure this is a valid JWT
+    // Obtener los detalles de los addons usando los addon_id
+    final addonDetailsResponse =
+        await supabase.from('addon').select('*').or(conditions);
 
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'apikey': apiKey,
-      'Authorization': authorization, // Assuming you need Bearer token
-    };
+    List<Addon> addonList = addonDetailsResponse
+        .map<Addon>((json) => Addon.fromJson(json))
+        .toList();
 
-    var url =
-        'https://gapuibdxbmoqjhibirjm.supabase.co/rest/v1/cart?user_id=eq.$userId&is_finished=eq.false';
+    return addonList;
 
-    final body = {
-      "is_finished": true,
-    };
+    // Convertir la respuesta en una lista de objetos Addon
+    // List<Addon> addonList = addonDetailsResponse
+    //     .map<Addon>((json) => Addon.fromJson(json))
+    //     .toList();
 
-    try {
-      final response = await http.patch(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(body),
+    // print(addonList);
+    // return addonList;
+  }
+
+  Future<List<CartFood>> getCartFoodDetails() async {
+    // Obtener los detalles del carrito
+    final cartItems = await getUserCartDetails();
+
+    // Lista para almacenar los objetos CartFood
+    List<CartFood> cartFoodList = [];
+
+    // Iterar sobre cada CartItem para obtener los detalles necesarios
+    for (CartItem cartItem in cartItems) {
+      // Obtener el foodId del CartItem
+      String foodId = cartItem.foodId;
+
+      // Obtener los detalles del food
+      Food food = await getFoodFromId(foodId);
+
+      // Obtener los addons para el cartItem
+      List<Addon> addons = await getFoodAddonsFromCart(cartItem.id);
+
+      // Crear un objeto CartFood y agregarlo a la lista
+      CartFood cartFood = CartFood(
+        id: cartItem.id,
+        food: food,
+        addons: addons,
+        quantity: cartItem.quantity,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 204) {
-        print('Cart state updated successfully');
-      } else {
-        print('Failed to update cart state: ${response.statusCode}');
-        print(response.body);
-      }
-    } catch (e) {
-      print('Error occurred: $e');
+      cartFoodList.add(cartFood);
     }
+
+    return cartFoodList;
   }
 }
