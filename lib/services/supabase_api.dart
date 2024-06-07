@@ -328,4 +328,53 @@ class SupabaseApi {
       throw Exception('Error al encontrar el carrito asociado al usuario: $e');
     }
   }
+
+  Future<void> updateCartState() async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+    final userId = user.user?.id;
+
+    if (userId == null) {
+      print(userId);
+      return;
+    }
+
+    //const bool verd = true;
+
+    // Replace with your actual API key and authorization token
+    const String apiKey =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E';
+    const String authorization =
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E'; // Ensure this is a valid JWT
+
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'apikey': apiKey,
+      'Authorization': authorization, // Assuming you need Bearer token
+    };
+
+    var url =
+        'https://gapuibdxbmoqjhibirjm.supabase.co/rest/v1/cart?user_id=eq.$userId&is_finished=eq.false';
+
+    final body = {
+      "is_finished": true,
+    };
+
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('Cart state updated successfully');
+      } else {
+        print('Failed to update cart state: ${response.statusCode}');
+        print(response.body);
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
 }
