@@ -91,6 +91,23 @@ class SupabaseApi {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getUser(String email) async {
+    final url = '$baseUrl/rest/v1/users?email=eq.${Uri.encodeComponent(email)}';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception('No se pueden cargar los pedidos');
+    }
+
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    print(jsonResponse);
+
+    return jsonResponse.cast<Map<String, dynamic>>();
+  }
+
   Future<List<Map<String, dynamic>>> getCategories() async {
     final url = '$baseUrl/rest/v1/category?select=*';
     final headers = _createHeaders();
@@ -520,6 +537,27 @@ class SupabaseApi {
       }
     } catch (e) {
       print('Error occurred: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getOrders() async {
+
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+    final userId = user.user?.id;
+
+    final url =
+        '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load food_addons');
     }
   }
 }

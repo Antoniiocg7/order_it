@@ -40,6 +40,7 @@ class FoodController {
       }
 
       return foods;
+      
     } catch (error) {
       throw Exception('Failed to fetch food: $error');
     }
