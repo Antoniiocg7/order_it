@@ -75,13 +75,13 @@ class SettingsPage extends StatelessWidget {
 class MyContainer extends StatefulWidget {
   final String title;
   final Icon icon;
-  final WidgetBuilder? route;
+  final WidgetBuilder route;
 
   const MyContainer({
     super.key,
     required this.title,
     required this.icon,
-    this.route,
+    required this.route,
   });
 
   @override
@@ -95,32 +95,12 @@ class _MyContainerState extends State<MyContainer> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.route != null) {
           Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  widget.route!(context),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
+              context,
+              MaterialPageRoute(
+                builder:  widget.route,
+              ));
 
-                final tween = Tween(begin: begin, end: end);
-                final curvedAnimation = CurvedAnimation(
-                  parent: animation,
-                  curve: curve,
-                );
-
-                return SlideTransition(
-                  position: tween.animate(curvedAnimation),
-                  child: child,
-                );
-              },
-            ),
-          );
-        }
       },
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.9,

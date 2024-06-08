@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
@@ -134,7 +135,8 @@ class SupabaseApi {
   }
 
   Future<List<Map<String, dynamic>>> getOrders() async {
-    final url = '$baseUrl/rest/v1/orders?select=*';
+    final url =
+        '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
