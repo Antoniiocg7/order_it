@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/pages/my_bilingDetails.dart';
 import 'package:order_it/pages/my_orders.dart';
@@ -55,11 +56,11 @@ class SettingsPage extends StatelessWidget {
               route: (context) => const MyBilingdetails()),
           MyContainer(
               title: "AYUDA",
-              icon: const Icon(LineAwesomeIcons.hands_helping_solid),
+              icon: const Icon(Icons.help),
               route: (context) => const MyOrders()),
           MyContainer(
               title: "PREFERENCIAS",
-              icon: const Icon(LineAwesomeIcons.eye_slash),
+              icon: const Icon(Icons.remove_red_eye),
               route: (context) => const MyOrders()),
           MyContainer(
               title: "ACERCA DE.",

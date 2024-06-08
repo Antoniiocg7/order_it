@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:order_it/controllers/user_controller.dart';
 import 'package:order_it/models/usuario.dart';
 
@@ -80,7 +79,7 @@ class _MyProfileState extends State<MyProfile> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
                         labelText: 'Nombre',
-                        prefixIcon: const Icon(LineAwesomeIcons.user),
+                        prefixIcon: const Icon(Icons.person),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -90,7 +89,7 @@ class _MyProfileState extends State<MyProfile> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
                         labelText: 'Apellido',
-                        prefixIcon: const Icon(LineAwesomeIcons.user),
+                        prefixIcon: const Icon(Icons.person),
                       ),
                     ),
                     const SizedBox(height: 16),
