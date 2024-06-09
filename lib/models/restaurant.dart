@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
@@ -26,11 +25,6 @@ class Restaurant extends ChangeNotifier {
       List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
       _cart.clear();
       _cart.addAll(cartFoodList);
-      print("******************************");
-      print("CARTATAA***");
-      print(_cart[0].food);
-      print(_cart[0].addons);
-      print(_cart[0].quantity);
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -86,7 +80,7 @@ class Restaurant extends ChangeNotifier {
     }
   }
 
-  // GET TOTAL PRICE OF CART
+
   double getTotalPrice() {
     double total = 0.0;
 
@@ -103,7 +97,7 @@ class Restaurant extends ChangeNotifier {
     return total;
   }
 
-  // GET TOTAL NUMBER OF ITEMS IN CART
+
   int getTotalItemCount() {
     int totalItemCount = 0;
 
@@ -114,7 +108,7 @@ class Restaurant extends ChangeNotifier {
     return totalItemCount;
   }
 
-  // CLEAR CART
+
   void clearCart() {
     _cart.clear();
     notifyListeners();
@@ -124,13 +118,13 @@ class Restaurant extends ChangeNotifier {
     H E L P E R S
   */
 
-  // GENERATE A RECEIPT
+
   String displayCartReceipt() {
     final receipt = StringBuffer();
     receipt.writeln("Here's your receipt");
     receipt.writeln();
 
-    // FORMAT THE DATE TO INCLUDE UP TO SECONDS ONLY
+
     String formattedData =
         DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
@@ -155,12 +149,12 @@ class Restaurant extends ChangeNotifier {
     return receipt.toString();
   }
 
-  // FORMAT DOUBLE VALUE INTO MONEY
+
   String _formatPrice(double price) {
     return "${price.toStringAsFixed(2)}€";
   }
 
-  // FORMAT LIST OF ADDONS INTO A STRING SUMMARY
+
   String _formatAddons(List<Addon> addons) {
     return addons
         .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
