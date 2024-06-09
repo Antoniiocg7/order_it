@@ -4,14 +4,14 @@ import 'package:order_it/controllers/user_controller.dart';
 import 'package:order_it/models/usuario.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class MyBilingdetails extends StatefulWidget {
-  const MyBilingdetails({super.key});
+class MyBilingDetails extends StatefulWidget {
+  const MyBilingDetails({super.key});
 
   @override
-  State<MyBilingdetails> createState() => _MyBilingdetailsState();
+  State<MyBilingDetails> createState() => _MyBilingDetailsState();
 }
 
-class _MyBilingdetailsState extends State<MyBilingdetails> {
+class _MyBilingDetailsState extends State<MyBilingDetails> {
   final UserController userController = UserController();
   late Future<User> user;
 

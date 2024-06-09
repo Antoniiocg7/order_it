@@ -52,7 +52,7 @@ class SettingsPage extends StatelessWidget {
           MyContainer(
               title: "METODOS DE PAGO",
               icon: const Icon(Icons.wallet),
-              route: (context) => const MyBilingdetails()),
+              route: (context) => const MyBilingDetails()),
           MyContainer(
               title: "AYUDA",
               icon: const Icon(Icons.help),
@@ -64,7 +64,7 @@ class SettingsPage extends StatelessWidget {
           MyContainer(
               title: "ACERCA DE.",
               icon: const Icon(Icons.info_outline),
-              route: (context) => const MyBilingdetails()),
+              route: (context) => const MyBilingDetails()),
         ],
       ),
     );
