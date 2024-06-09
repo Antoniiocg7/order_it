@@ -52,7 +52,7 @@ class CallWaiter extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Bordes redondeados
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
               child: const Padding(
@@ -60,7 +60,7 @@ class CallWaiter extends StatelessWidget {
                 child: Text(
                   'Ver la carta',
                   style: TextStyle(
-                    color: Colors.white, // Color del texto
+                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),

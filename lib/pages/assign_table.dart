@@ -1,7 +1,4 @@
-import 'dart:isolate';
-
 import 'package:flutter/material.dart';
-import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/services/supabase_api.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -9,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AssignTable extends StatefulWidget {
 
@@ -31,7 +27,7 @@ class _AssignTableState extends State<AssignTable> {
   SupabaseApi supabaseApi = SupabaseApi();
   
   
-
+  // Método para cuando la aplicación se recompone (funcionalidad de la cámara)
   @override
   void reassemble() {
     super.reassemble();
@@ -41,12 +37,14 @@ class _AssignTableState extends State<AssignTable> {
     controller?.resumeCamera();
   }
 
+  // Liberar recursos de la cámara cuando el widget se elimina del árbol de widgets
   @override
   void dispose() {
     controller?.dispose();
     super.dispose();
   }
 
+  // Listener para escuchar los datos escaneados
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
@@ -66,8 +64,7 @@ class _AssignTableState extends State<AssignTable> {
     const String authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
     bool isOccupied;
 
-    // Imprimir el contenido del código QR para ver cómo está estructurado
-    print('QR Code content: $qrCode');
+    //print('QR Code content: $qrCode');
 
 
     // Extraer el número de mesa del contenido del código QR (asumiendo que es una URL)
@@ -78,17 +75,17 @@ class _AssignTableState extends State<AssignTable> {
 
 
     if (tableNumber == 0) {
-      print('No se ha encontrado número de mesa en el QR Code URL.');
+      //print('No se ha encontrado número de mesa en el QR Code URL.');
       _showDialog('Error', 'No se ha encontrado número de mesa en el QR Code URL.', (){});
       return;
     }
 
     isOccupied = await supabaseApi.getIsOccupied(tableNumber);
-    print(isOccupied);
+    //print(isOccupied);
 
     // Componer la URL para la petición PATCH
     final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
-    print('Composed URL: $url');
+    //print('Composed URL: $url');
 
 
     // Extract table ID from the QR code data
@@ -109,10 +106,10 @@ class _AssignTableState extends State<AssignTable> {
 
     if (response.statusCode == 204) {
       if (isOccupied) {
-        print('La mesa $tableNumber está ocupada, escoja otra por favor.');
+        //print('La mesa $tableNumber está ocupada, escoja otra por favor.');
         _showDialog('Error', 'La mesa $tableNumber está ocupada, escoja otra por favor.', () {});
       } else {
-        print('Table $tableNumber assigned successfully.');
+        //print('Table $tableNumber assigned successfully.');
         _showDialog('Table Assigned', 'Table $tableNumber has been successfully assigned to you.', () {
           Navigator.push(
             context,
@@ -122,9 +119,9 @@ class _AssignTableState extends State<AssignTable> {
       }
       //await supabaseApi.assignTable(widget.userId, tableNumber);
     } else {
-      print('***************** tableNumber: $tableNumber *****************');
-      print('Failed to assign table $tableNumber: ${response.statusCode} ${response.body}');
-      _showDialog('Error', 'Failed to assign table $tableNumber.', () {});
+      //print('***************** tableNumber: $tableNumber *****************');
+      //print('Error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
+      _showDialog('Error', 'Error al asignar la mesa $tableNumber.', () {});
     }
   }
 
@@ -140,12 +137,12 @@ class _AssignTableState extends State<AssignTable> {
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
-                  result = null; // Reset result to allow scanning another QR code
+                  result = null; // Resetea el resultado para poder escanear otro QR
                 });
                 controller?.resumeCamera(); // Resume camera for scanning
-                onOkPressed(); // Ejecutar la función pasada
+                onOkPressed(); // Ejecutar la acción del showdialog dinámicamente, (errores/éxito)
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -157,7 +154,7 @@ class _AssignTableState extends State<AssignTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Assign Table'),
+        title: const Text('Elige tu mesa'),
       ),
       body: Stack(
         children: [
@@ -178,10 +175,10 @@ class _AssignTableState extends State<AssignTable> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              margin: EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(bottom: 20),
               child: (result != null)
-                  ? Text('Scanned: ${result!.code}')
-                  : Text('Scan a code'),
+                  ? Text('Escaneado: ${result!.code}')
+                  : const Text('Escanea el código QR'),
             ),
           ),
         ],
