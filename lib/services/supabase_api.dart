@@ -346,6 +346,7 @@ class SupabaseApi {
           .select('id')
           .eq('is_finished', false)
           .eq('user_id', activeUser.user!.id);
+
       return cartId.first['id'].toString();
     } catch (e) {
       throw Exception('Error al encontrar el carrito asociado al usuario: $e');
@@ -491,32 +492,20 @@ class SupabaseApi {
     return cartFoodList;
   }
 
-   Future<void> updateCartState() async {
+  Future<void> updateCartState() async {
     final supabase = Supabase.instance.client;
     final user = await supabase.auth.getUser();
     final userId = user.user?.id;
+    const bool isFinished = false;
 
     if (userId == null) {
-      print(userId);
       return;
     }
 
-    //const bool verd = true;
-
-    // Replace with your actual API key and authorization token
-    const String apiKey =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E';
-    const String authorization =
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E'; // Ensure this is a valid JWT
-
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'apikey': apiKey,
-      'Authorization': authorization, // Assuming you need Bearer token
-    };
+    final headers = _createHeaders();
 
     var url =
-        'https://gapuibdxbmoqjhibirjm.supabase.co/rest/v1/cart?user_id=eq.$userId&is_finished=eq.false';
+        'https://gapuibdxbmoqjhibirjm.supabase.co/rest/v1/cart?user_id=eq.$userId&is_finished=eq.$isFinished';
 
     final body = {
       "is_finished": true,
@@ -533,7 +522,6 @@ class SupabaseApi {
         print('Cart state updated successfully');
       } else {
         print('Failed to update cart state: ${response.statusCode}');
-        print(response.body);
       }
     } catch (e) {
       print('Error occurred: $e');
@@ -541,7 +529,6 @@ class SupabaseApi {
   }
 
   Future<List<Map<String, dynamic>>> getOrders() async {
-
     final supabase = Supabase.instance.client;
     final user = await supabase.auth.getUser();
     final userId = user.user?.id;
@@ -552,9 +539,22 @@ class SupabaseApi {
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    for (var element in jsonResponse) {
+      var id = element['id'];
+
+      var items =
+          await supabase.from('cart_item').select('*').eq('cart_id', id);
+
+      print(items);
+    }
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
+
+      print(jsonResponse);
+
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load food_addons');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/order_controller.dart';
-import 'package:order_it/models/order.dart';
+import 'package:order_it/models/cart.dart';
+import 'package:order_it/pages/my_order_details.dart';
 
 class MyOrders extends StatefulWidget {
   const MyOrders({super.key});
@@ -11,7 +12,7 @@ class MyOrders extends StatefulWidget {
 
 class _MyOrdersState extends State<MyOrders> {
   final OrderController orderController = OrderController();
-  late Future<List<Order>> futureOrders;
+  late Future<List<Cart>> futureOrders;
 
   @override
   void initState() {
@@ -52,33 +53,41 @@ class _MyOrdersState extends State<MyOrders> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<Order>>(
+            child: FutureBuilder<List<Cart>>(
               future: futureOrders,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator.adaptive());
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No hay pedidos disponibles.'));
+                  return const Center(
+                      child: Text('No hay pedidos disponibles.'));
                 } else {
                   final orders = snapshot.data!;
                   return ListView.builder(
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
-                      final order = orders[index];
+                      final cart = orders[index];
                       return GestureDetector(
                         onTap: () {
-                          // Acción al tocar un pedido
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyOrderDetails(),
+                              ));
                         },
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                        child: const Card(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 25.0, vertical: 8.0),
                           child: ListTile(
                             leading: CircleAvatar(
-                              child: Text(order.restauranteId.toString()),
+                              child: Icon(Icons.food_bank),
                             ),
-                            title: Text('Restaurante ${order.restauranteId}'),
-                            subtitle: Text('Fecha: ${order.createdAt}'),
+                            title: Text('Restaurante'),
+                            subtitle: Text('Fecha:'),
+                            trailing: Text("53,86 €"),
                           ),
                         ),
                       );

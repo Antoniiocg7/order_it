@@ -1,39 +1,38 @@
-import 'package:order_it/models/cart_item.dart';
 
 class Cart {
   final String id;
   final String userId;
   final String price;
   final bool isFinished;
-  final List<CartItem> items;
+  //final List<CartItem>? items;
 
   Cart({
     required this.id,
     required this.userId,
     required this.price,
     required this.isFinished,
-    required this.items,
+    //this.items,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     return Cart(
       id: json['id'].toString(),
-      userId: json['userId'].toString(),
+      userId: json['user_id'].toString(),
       price: json['price'].toString(),
-      isFinished: json['isFinished'] as bool,
-      items: (json['items'] as List)
+      isFinished: json['is_finished'] as bool,
+      /* items: (json['items'] as List)
           .map((item) => CartItem.fromJson(item))
-          .toList(),
+          .toList(), */
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': int.parse(id),
-      'userId': userId,
+      'user_id': userId,
       'price': price,
-      'isFinished': isFinished,
-      'items': items.map((item) => item.toJson()).toList(),
+      'is_finished': isFinished,
+      //'items': items?.map((item) => item.toJson()).toList(),
     };
   }
 }
