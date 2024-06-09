@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:order_it/services/supabase_api.dart';
 
 class Waiter extends StatefulWidget {
-  const Waiter({Key? key}) : super(key: key);
+  const Waiter({super.key});
 
   @override
   _WaiterState createState() => _WaiterState();
@@ -31,24 +31,24 @@ class _WaiterState extends State<Waiter> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mesas'),
+        title: const Text('Mesas'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _tablesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No tables available'));
+            return const Center(child: Text('No tables available'));
           } else {
             List<Map<String, dynamic>> tables = snapshot.data!;
             tables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 1.5,
                 ),
@@ -59,7 +59,7 @@ class _WaiterState extends State<Waiter> {
                   return GestureDetector(
                     onTap: () => _navigateToTableDetail(context, tables[index]),
                     child: Container(
-                      margin: EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(8.0),
                       color: isOccupied ? Colors.red : Colors.green,
                       child: Center(
                         child: Column(
@@ -67,7 +67,7 @@ class _WaiterState extends State<Waiter> {
                           children: [
                             Text(
                               'Mesa ${tables[index]['table_number']}',
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
@@ -102,55 +102,56 @@ class TableDetailPage extends StatelessWidget {
           children: [
             Text('Detalles de Mesa: ${table['table_number']}'),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                bool liberada = await supabaseApi.releaseTable(table['user_id'], table['table_number']);
-                if (liberada) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Mesa Liberada'),
-                        content: Text('La mesa ${table['table_number']} ha sido liberada correctamente.'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context); // Cerrar el diálogo
-                              Navigator.pop(context); // Volver a la página anterior
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Error al liberar mesa'),
-                        content: Text('Hubo un error al liberar la mesa ${table['table_number']}'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Waiter(),
-                                ),
-                              );
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text('Liberar Mesa $table')
-            )
+            if(table['is_occupied'])
+              ElevatedButton(
+                onPressed: () async {
+                  bool liberada = await supabaseApi.releaseTable(table['user_id'], table['table_number']);
+                  if (liberada) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Mesa Liberada'),
+                          content: Text('La mesa ${table['table_number']} ha sido liberada correctamente.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Cerrar el diálogo
+                                Navigator.pop(context); // Volver a la página anterior
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Error al liberar mesa'),
+                          content: Text('Hubo un error al liberar la mesa ${table['table_number']}'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Waiter(),
+                                  ),
+                                );
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text('Liberar Mesa ${table['table_number']}')
+              )
           ],
         ),
       ),
