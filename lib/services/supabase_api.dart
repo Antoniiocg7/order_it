@@ -148,7 +148,9 @@ class SupabaseApi {
 
     final List<dynamic> jsonResponse = json.decode(response.body);
 
-    print(jsonResponse);
+    if (kDebugMode) {
+      print(jsonResponse);
+    }
 
     return jsonResponse.cast<Map<String, dynamic>>();
   }

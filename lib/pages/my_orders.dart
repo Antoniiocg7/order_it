@@ -57,11 +57,13 @@ class _MyOrdersState extends State<MyOrders> {
               future: futureOrders,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator.adaptive());
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No hay pedidos disponibles.'));
+                  return const Center(
+                      child: Text('No hay pedidos disponibles.'));
                 } else {
                   final orders = snapshot.data!;
                   return ListView.builder(
@@ -74,12 +76,13 @@ class _MyOrdersState extends State<MyOrders> {
                         },
                         child: Card(
                           color: const Color.fromARGB(223, 253, 253, 252),
-                          margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 8.0),
                           child: ListTile(
                             leading: CircleAvatar(
                               child: Text([index].toString()),
                             ),
-                            title: Text('Restaurante Boccatteria'),
+                            title: const Text('Restaurante Boccatteria'),
                             subtitle: Text('Fecha: ${order.createdAt}'),
                           ),
                         ),
