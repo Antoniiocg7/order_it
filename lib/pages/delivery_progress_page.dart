@@ -37,9 +37,13 @@ class DeliveryProgressPage extends StatelessWidget {
           // PROFILE PICK OF DRIVER
           Container(
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                shape: BoxShape.circle),
-            child: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
+              color: Theme.of(context).colorScheme.surface,
+              shape: BoxShape.circle
+            ),
+            child: IconButton(
+              onPressed: () {}, 
+              icon: const Icon(Icons.person)
+            ),
           ),
 
           const SizedBox(width: 10),
@@ -66,36 +70,41 @@ class DeliveryProgressPage extends StatelessWidget {
           const Spacer(),
 
           Row(
-            children: [
-              // MESSAGE BUTTON
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    shape: BoxShape.circle),
-                child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.message,
-                      color: Theme.of(context).colorScheme.primary,
-                    )),
-              ),
+                children: [
+                  // MESSAGE BUTTON
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: BoxShape.circle
+                    ),
+                    child: IconButton(
+                      onPressed: () {}, 
+                      icon: Icon(
+                        Icons.message,
+                        color: Theme.of(context).colorScheme.primary,
+                      )
+                    ),
+                  ),
 
               const SizedBox(width: 10),
 
-              // CALL BUTTON
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    shape: BoxShape.circle),
-                child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.call,
-                      color: Colors.green,
-                    )),
-              ),
-            ],
-          )
+                  // CALL BUTTON
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: BoxShape.circle
+                    ),
+                    child: IconButton(
+                      onPressed: () {}, 
+                      icon: const Icon(
+                        Icons.call,
+                        color: Colors.green,
+                      )
+                    ),
+                  ),
+                  
+                ],
+              )
         ],
       ),
     );

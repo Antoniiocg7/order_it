@@ -7,6 +7,7 @@ import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
   final supabase = Supabase.instance.client;
@@ -51,6 +52,7 @@ class SupabaseApi {
       body: body,
     );
 
+    return response.statusCode == 200;
     return response.statusCode == 200;
   }
 
@@ -134,6 +136,23 @@ class SupabaseApi {
     } else {
       throw Exception('Error al obtener el rol del usuario');
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getUser(String email) async {
+    final url = '$baseUrl/rest/v1/users?email=eq.${Uri.encodeComponent(email)}';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception('No se pueden cargar los pedidos');
+    }
+
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    print(jsonResponse);
+
+    return jsonResponse.cast<Map<String, dynamic>>();
   }
 
   Future<List<Map<String, dynamic>>> getCategories() async {
@@ -630,5 +649,29 @@ class SupabaseApi {
       }
       return false;
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getOrders() async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+    final userId = user.user?.id;
+
+    final url =
+        '$baseUrl/rest/v1/cart?is_finished=eq.true&user_id=eq.239a511c-7b38-4d96-b62a-af8e1ece1c6d&select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception('No se pueden cargar los pedidos');
+    }
+
+    print(userId);
+
+    print(response.body);
+
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    return jsonResponse.cast<Map<String, dynamic>>();
   }
 }
