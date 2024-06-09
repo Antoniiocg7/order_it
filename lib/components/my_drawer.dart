@@ -3,6 +3,7 @@ import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
 import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/settings_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -78,9 +79,11 @@ class MyDrawer extends StatelessWidget {
           MyDrawerTile(
             text: "CERRAR SESION",
             icon: Icons.logout,
-            onTap: () {
+            onTap: () async {
+              final supabase = Supabase.instance;
+              supabase.client.auth.signOut();
               Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const LoginOrRegister(),
