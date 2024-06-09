@@ -3,12 +3,18 @@ import 'package:hive/hive.dart';
 import 'package:order_it/models/user.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/pages/waiter.dart';
-import 'package:order_it/services/snackbar_helper.dart';
-import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/services/supabase_api.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginController {
+  Supabase supabase = Supabase.instance;
+
+  Future<String> getUserId() async {
+    UserResponse user = await supabase.client.auth.getUser();
+    String userId = user.user!.id;
+    return userId;
+  }
+
   login(BuildContext context, String email, String password) async {
     Usuario usuario = Usuario(email: email, password: password);
 
@@ -25,6 +31,7 @@ class LoginController {
     );
 
     // TODO: PENDIENTE DE IMPLEMENTAR LOGICA MAL LOGIN ????
+    bool success = await supabaseApi.login(email, password);
     int? rol = await supabaseApi.getUserRole(email);
     String? userId = await supabaseApi.getUserUUID(email);
 
@@ -44,31 +51,11 @@ class LoginController {
               MaterialPageRoute(
                 //builder: (context) =>  AssignTable(userId: userId ?? ''),
                 //builder: (context) => AssignTable(userId: userId),
-                builder: (context) => FirstPage(userId: userId),
+                builder: (context) => const FirstPage(),
               ),
             );
           }
         }
-      } else {
-        SnackbarHelper.showSnackbar(
-          context,
-          'Inicio de sesión incorrecto, compruebe las credenciales',
-          backgroundColor: Colors.red,
-        );
-      if (rol == 2) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
-      } else if (rol == 3) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const FirstPage(),
-          ),
-        );
       }
     }
   }

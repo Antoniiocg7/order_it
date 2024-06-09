@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_cart_tile.dart';
@@ -18,7 +19,9 @@ class CartPage extends StatelessWidget {
       builder: (context, restaurant, child) {
         // CART
         final userCart = restaurant.cart;
-        print(userCart.length);
+        if (kDebugMode) {
+          print(userCart.length);
+        }
 
         // SCAFFOLD UI
         return Scaffold(

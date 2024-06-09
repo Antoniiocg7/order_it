@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:order_it/components/my_button.dart';
-import 'package:order_it/models/cart.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
-import 'package:order_it/services/supabase_api.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -48,33 +45,14 @@ class _PaymentPageState extends State<PaymentPage> {
 
             // ACCEPT BUTTON
             TextButton(
-                onPressed: () async {
-                  final SupabaseApi supabase = SupabaseApi();
-                  await supabase.updateCartState();
-                  /* final user = await supabase.auth.getUser();
-                  final userId = user.user!.id;
-
-                  print(userId);
-
-                  final response = await supabase
-                      .from("cart")
-                      .update({'is_finished': true})
-                      .eq('is_finished', false)
-                      .eq('user_id', "239a511c-7b38-4d96-b62a-af8e1ece1c6d")
-                      .single();
-
-                  print(response["id"]);
-
-                  print("Hola tiop"); */
-
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const DeliveryProgressPage()));
-                  }
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DeliveryProgressPage(),
+                    ),
+                  );
                 },
                 child: const Text("Yes")),
           ],

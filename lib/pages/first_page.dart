@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/assign_table.dart';
 import 'package:order_it/pages/call_waiter.dart';
-import 'package:order_it/pages/home_page.dart';
 
 class FirstPage extends StatelessWidget {
-
-  final String userId;
-
-  const FirstPage({super.key, required this.userId});
+  const FirstPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,13 +81,16 @@ class FirstPage extends StatelessWidget {
                 const SizedBox(height: 25),
                 // Contenedor Pedir Online
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AssignTable(userId: userId),
-                      ),
-                    );
+                  onTap: () async {
+                    String userId = await LoginController().getUserId();
+                    if (context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AssignTable(userId: userId),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     decoration: BoxDecoration(

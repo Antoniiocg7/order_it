@@ -6,18 +6,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
-
 class AssignTable extends StatefulWidget {
-
   final String userId;
 
-  const AssignTable({
-    super.key,
-    required this.userId
-  });
+  const AssignTable({super.key, required this.userId});
 
   @override
-  _AssignTableState createState() => _AssignTableState();
+  State<AssignTable> createState() => _AssignTableState();
 }
 
 class _AssignTableState extends State<AssignTable> {
@@ -25,8 +20,7 @@ class _AssignTableState extends State<AssignTable> {
   Barcode? result;
   QRViewController? controller;
   SupabaseApi supabaseApi = SupabaseApi();
-  
-  
+
   // Método para cuando la aplicación se recompone (funcionalidad de la cámara)
   @override
   void reassemble() {
@@ -52,20 +46,20 @@ class _AssignTableState extends State<AssignTable> {
         setState(() {
           result = scanData;
         });
-        await _ScanTableQR(scanData.code!);
+        await _scanTableQR(scanData.code!);
       }
     });
   }
 
-  Future<void> _ScanTableQR(String qrCode) async {
-
+  Future<void> _scanTableQR(String qrCode) async {
     const String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
-    const String apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
-    const String authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
+    const String apiKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
+    const String authorization =
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
     bool isOccupied;
 
     //print('QR Code content: $qrCode');
-
 
     // Extraer el número de mesa del contenido del código QR (asumiendo que es una URL)
     Uri uri = Uri.parse(qrCode);
@@ -73,10 +67,10 @@ class _AssignTableState extends State<AssignTable> {
     //String tableNumber = tableNumberQuery.replaceAll("eq.", "");
     int tableNumber = int.tryParse(tableNumberQuery.replaceAll("eq.", "")) ?? 0;
 
-
     if (tableNumber == 0) {
       //print('No se ha encontrado número de mesa en el QR Code URL.');
-      _showDialog('Error', 'No se ha encontrado número de mesa en el QR Code URL.', (){});
+      _showDialog('Error',
+          'No se ha encontrado número de mesa en el QR Code URL.', () {});
       return;
     }
 
@@ -86,7 +80,6 @@ class _AssignTableState extends State<AssignTable> {
     // Componer la URL para la petición PATCH
     final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
     //print('Composed URL: $url');
-
 
     // Extract table ID from the QR code data
     //final String tableNumber = qrCode.replaceAll('https://gapuibdxbmoqjhibirjm.supabase.co:/rest/v1/tables?table_number=eq.', '');
@@ -102,18 +95,22 @@ class _AssignTableState extends State<AssignTable> {
       'user_id': widget.userId,
     });
 
-    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: body);
 
     if (response.statusCode == 204) {
       if (isOccupied) {
         //print('La mesa $tableNumber está ocupada, escoja otra por favor.');
-        _showDialog('Error', 'La mesa $tableNumber está ocupada, escoja otra por favor.', () {});
+        _showDialog('Error',
+            'La mesa $tableNumber está ocupada, escoja otra por favor.', () {});
       } else {
         //print('Table $tableNumber assigned successfully.');
-        _showDialog('Table Assigned', 'Table $tableNumber has been successfully assigned to you.', () {
+        _showDialog('Table Assigned',
+            'Table $tableNumber has been successfully assigned to you.', () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage(ordersAllowed: true)),
+            MaterialPageRoute(
+                builder: (context) => const HomePage(ordersAllowed: true)),
           );
         });
       }
@@ -137,7 +134,8 @@ class _AssignTableState extends State<AssignTable> {
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
-                  result = null; // Resetea el resultado para poder escanear otro QR
+                  result =
+                      null; // Resetea el resultado para poder escanear otro QR
                 });
                 controller?.resumeCamera(); // Resume camera for scanning
                 onOkPressed(); // Ejecutar la acción del showdialog dinámicamente, (errores/éxito)

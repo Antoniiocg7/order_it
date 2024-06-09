@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
@@ -26,11 +25,6 @@ class Restaurant extends ChangeNotifier {
       List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
       _cart.clear();
       _cart.addAll(cartFoodList);
-      print("******************************");
-      print("CARTATAA***");
-      print(_cart[0].food);
-      print(_cart[0].addons);
-      print(_cart[0].quantity);
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -40,41 +34,50 @@ class Restaurant extends ChangeNotifier {
   }
 
   // ADD TO CART
-  void addToCart(Food food, List<Addon> selectedAddons) {
-    // See if there is a cart item already with the same food and selected addons
-    CartItem? cartItem = _cart.firstWhereOrNull((item) {
-      // CHECK IF THE FOOD ITEMS ARE THE SAME
-      bool isSameFood = item.food == food;
+  Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
+    try {
+      final cartId = await supabaseApi
+          .createCart(); // Crear un carrito en la base de datos
 
-      //CHECK IF THE LIST OF SELECTED ADDONS ARE THE SAME
-      bool isSameAddons =
-          const ListEquality().equals(item.selectedAddons, selectedAddons);
+      if (cartId != "") {
+        await supabaseApi.addItemToCart(
+          cartId,
+          food.id,
+          selectedAddons.map((addon) => addon.id).toList(),
+        );
+      } else {
+        final existingCart =
+            await supabase.from('cart').select('id').eq('is_finished', false);
+        final existingCartId = existingCart.first['id'];
+        if (existingCart.first.isNotEmpty) {
+          await supabaseApi.addItemToCart(
+            existingCartId.toString(),
+            food.id,
+            selectedAddons.map((addon) => addon.id).toList(),
+          );
+        } else {
+          return false;
+        }
+      }
 
-      return isSameFood && isSameAddons;
-    });
-
-    // IF ITEM ALREADY EXISTS, INCREASE IT´S QUANTITY
-    if (cartItem != null) {
-      cartItem.quantity++;
-    } else {
-      // OTHERWISE, ADD A NEW CART ITEM TO THE CART
-      _cart.add(CartItem(food: food, selectedAddons: selectedAddons));
+      notifyListeners();
+      return true; // Indicar que se agregó correctamente al carrito
+    } catch (e) {
+      return false; // Si hay un error, devolver false
     }
-    notifyListeners();
   }
 
   // REMOVE FROM CART
-  void removeFromCart(CartItem cartItem) {
-    int cartIndex = _cart.indexOf(cartItem);
+  Future<bool> removeFromCart(CartFood cartFood) async {
+    try {
+      // Eliminar el ítem del carrito en la base de datos
+      await supabaseApi.removeFromCart(cartFood.id);
 
-    if (cartIndex != -1) {
-      if (_cart[cartIndex].quantity > 1) {
-        _cart[cartIndex].quantity--;
-      } else {
-        _cart.removeAt(cartIndex);
-      }
+      notifyListeners();
+      return true; // Indicar que se eliminó correctamente del carrito
+    } catch (e) {
+      return false; // Si hay un error, devolver false
     }
-    notifyListeners();
   }
 
 

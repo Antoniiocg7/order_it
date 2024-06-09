@@ -3,6 +3,7 @@ import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
 import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/settings_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -36,14 +37,14 @@ class MyDrawer extends StatelessWidget {
 
           //HOME LIST TILE
           MyDrawerTile(
-            text: "H O M E",
-            icon: Icons.home_rounded,
+            text: "INICIO",
+            icon: Icons.home,
             onTap: () => Navigator.pop(context),
           ),
 
           //HOME LIST TILE
           MyDrawerTile(
-            text: "C A R T",
+            text: "CARRRITO",
             icon: Icons.shopping_cart_rounded,
             onTap: () {
               Navigator.pop(context);
@@ -58,8 +59,8 @@ class MyDrawer extends StatelessWidget {
 
           //SETTINGS LIST TILE
           MyDrawerTile(
-            text: "S E T T I N G S",
-            icon: Icons.settings_rounded,
+            text: "AJUSTES",
+            icon: Icons.settings,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -76,11 +77,13 @@ class MyDrawer extends StatelessWidget {
 
           //LOGGING OUT LIST TILE
           MyDrawerTile(
-            text: "L O G O U T",
+            text: "CERRAR SESION",
             icon: Icons.logout,
-            onTap: () {
+            onTap: () async {
+              final supabase = Supabase.instance;
+              supabase.client.auth.signOut();
               Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const LoginOrRegister(),

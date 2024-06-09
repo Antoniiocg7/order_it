@@ -4,7 +4,7 @@ import 'package:order_it/services/supabase_api.dart';
 class OrderDetailsPage extends StatelessWidget {
   final int tableNumber;
 
-  const OrderDetailsPage({Key? key, required this.tableNumber}) : super(key: key);
+  const OrderDetailsPage({super.key, required this.tableNumber});
 
   Future<List<Map<String, dynamic>>> _getOrderDetails() async {
     SupabaseApi supabaseApi = SupabaseApi();
@@ -21,11 +21,12 @@ class OrderDetailsPage extends StatelessWidget {
         future: _getOrderDetails(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No orders found for Table $tableNumber'));
+            return Center(
+                child: Text('No orders found for Table $tableNumber'));
           } else {
             List<Map<String, dynamic>> orders = snapshot.data!;
             return ListView.builder(
