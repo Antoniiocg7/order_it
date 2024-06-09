@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:order_it/controllers/user_controller.dart';
-import 'package:order_it/models/user.dart';
+import 'package:order_it/models/usuario.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key, required this.title});
@@ -20,7 +20,9 @@ class _MyProfileState extends State<MyProfile> {
   void initState() {
     super.initState();
     user = userController.getUser("segurajoaquinm@gmail.com");
-    print(user);
+    if (kDebugMode) {
+      print(user);
+    }
   }
 
   @override
@@ -80,17 +82,18 @@ class _MyProfileState extends State<MyProfile> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
                         labelText: 'Nombre',
-                        prefixIcon: const Icon(LineAwesomeIcons.user),
+                        prefixIcon: const Icon(Icons.person_2_outlined),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
-                      controller: TextEditingController(text: userData.apellido_1),
+                      controller:
+                          TextEditingController(text: userData.apellido_1),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
                         labelText: 'Apellido',
-                        prefixIcon: const Icon(LineAwesomeIcons.user),
+                        prefixIcon: const Icon(Icons.account_circle_outlined),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -130,9 +133,7 @@ class _MyProfileState extends State<MyProfile> {
                     const SizedBox(height: 32),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 47, 136, 219),
@@ -155,7 +156,6 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                       SizedBox(width: 106),
                     ]),
-                    
                   ],
                 ),
               ),

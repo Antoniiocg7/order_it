@@ -1,4 +1,4 @@
-import 'package:order_it/models/user.dart';
+import 'package:order_it/models/usuario.dart';
 import 'package:order_it/services/supabase_api.dart';
 
 class UserController {

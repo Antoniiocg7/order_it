@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/user_controller.dart';
-import 'package:order_it/models/user.dart';
+import 'package:order_it/models/usuario.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MyBilingdetails extends StatefulWidget {
@@ -22,7 +23,7 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
   void initState() {
     super.initState();
     user = userController.getUser('segurajoaquinm@gmail.com');
-    
+
     // Obtener datos del usuario al inicializar el estado
   }
 
@@ -111,7 +112,6 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            
                             Text(
                               user.creditCard[0]["tipo"],
                               style: const TextStyle(
@@ -128,7 +128,8 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              user.creditCard[0]["numero"],// ${user.cardLast4Digits},
+                              user.creditCard[0]
+                                  ["numero"], // ${user.cardLast4Digits},
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -136,7 +137,8 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                               ),
                             ),
                             Text(
-                              user.creditCard[0]["vencimiento"],//user.cardExpiration,
+                              user.creditCard[0]
+                                  ["vencimiento"], //user.cardExpiration,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -145,11 +147,12 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                         Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              user.creditCard[0]["titular"],//user.cardHolderName,
+                              user.creditCard[0]
+                                  ["titular"], //user.cardHolderName,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -157,7 +160,6 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
                             ),
                           ],
                         ),
-                       
                       ],
                     ),
                   ),
@@ -216,7 +218,9 @@ class _MyBilingdetailsState extends State<MyBilingdetails> {
           ElevatedButton(
             onPressed: () {
               // Acción para guardar el método de pago
-              print('Guardar método de pago');
+              if (kDebugMode) {
+                print('Guardar método de pago');
+              }
             },
             child: const Text('Guardar'),
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/order_controller.dart';
-import 'package:order_it/pages/my_bilingDetails.dart';
+import 'package:order_it/pages/my_biling_details.dart';
 import 'package:order_it/pages/my_orders.dart';
 import 'package:order_it/pages/my_profile.dart';
 import 'package:order_it/themes/theme_provider.dart';

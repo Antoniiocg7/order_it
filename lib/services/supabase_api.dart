@@ -7,7 +7,6 @@ import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
   final supabase = Supabase.instance.client;
@@ -52,7 +51,6 @@ class SupabaseApi {
       body: body,
     );
 
-    return response.statusCode == 200;
     return response.statusCode == 200;
   }
 
@@ -666,9 +664,13 @@ class SupabaseApi {
       throw Exception('No se pueden cargar los pedidos');
     }
 
-    print(userId);
+    if (kDebugMode) {
+      print(userId);
+    }
 
-    print(response.body);
+    if (kDebugMode) {
+      print(response.body);
+    }
 
     final List<dynamic> jsonResponse = json.decode(response.body);
 

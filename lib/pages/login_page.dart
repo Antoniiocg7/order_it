@@ -9,7 +9,6 @@ import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/first_page.dart';
-import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/services/google_sign_in.dart';
 import 'package:order_it/services/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
