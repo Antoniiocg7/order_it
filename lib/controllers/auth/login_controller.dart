@@ -3,11 +3,18 @@ import 'package:hive/hive.dart';
 import 'package:order_it/models/user.dart';
 import 'package:order_it/pages/first_page.dart';
 import 'package:order_it/pages/waiter.dart';
-import 'package:order_it/services/snackbar_helper.dart';
 import 'package:order_it/services/supabase_api.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginController {
+  Supabase supabase = Supabase.instance;
+
+  Future<String> getUserId() async {
+    UserResponse user = await supabase.client.auth.getUser();
+    String userId = user.user!.id;
+    return userId;
+  }
+
   login(BuildContext context, String email, String password) async {
     Usuario usuario = Usuario(email: email, password: password);
 
@@ -29,24 +36,26 @@ class LoginController {
     String? userId = await supabaseApi.getUserUUID(email);
 
     if (context.mounted) {
-      if (rol == 2) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Waiter(),
-          ),
-        );
-      } else if (rol == 3) {
-          if (userId != null) {
+      if (success) {
+        if (rol == 2) {
           Navigator.push(
             context,
             MaterialPageRoute(
-                //builder: (context) =>  AssignTable(userId: userId ?? ''),
-                //builder: (context) => AssignTable(userId: userId),
-              builder: (context) => FirstPage(userId: userId),
+              builder: (context) => const Waiter(),
             ),
           );
+        } else if (rol == 3) {
+          if (userId != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                //builder: (context) =>  AssignTable(userId: userId ?? ''),
+                //builder: (context) => AssignTable(userId: userId),
+                builder: (context) => const FirstPage(),
+              ),
+            );
           }
+        }
       }
     }
   }

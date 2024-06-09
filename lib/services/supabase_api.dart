@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
@@ -8,13 +7,14 @@ import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
   final supabase = Supabase.instance.client;
   final String baseUrl = 'https://gapuibdxbmoqjhibirjm.supabase.co';
-  final String apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
-  final String authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
+  final String apiKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
+  final String authorization =
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E";
   final SupabaseClient client;
 
   SupabaseApi() : client = Supabase.instance.client;
@@ -76,24 +76,28 @@ class SupabaseApi {
   }
 
   Future<String?> getUserUUID(String email) async {
-    final url = '$baseUrl/rest/v1/users?select=id&email=eq.${Uri.encodeComponent(email)}';
+    final url =
+        '$baseUrl/rest/v1/users?select=id&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      print('RESPUESTA: $jsonResponse');
+      if (kDebugMode) {
+        print('RESPUESTA: $jsonResponse');
+      }
       if (jsonResponse.isNotEmpty && jsonResponse[0]['id'] != null) {
         return jsonResponse[0]['id'];
       } else {
         return null;
       }
     } else {
-      print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      if (kDebugMode) {
+        print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      }
       return null;
     }
   }
-
 
   /*Future<String?> getUserUUID(String email) async {
     final url = '$baseUrl/rest/v1/users?select=user_id&email=eq.${Uri.encodeComponent(email)}';
@@ -114,7 +118,8 @@ class SupabaseApi {
   }*/
 
   Future<int?> getUserRole(String email) async {
-    final url = '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
+    final url =
+        '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -514,7 +519,6 @@ class SupabaseApi {
     return cartFoodList;
   }
 
-
   Future<List<Map<String, dynamic>>> getOrderDetails(int tableNumber) async {
     final url = '$baseUrl/rest/v1/orders?select=*&table_number=eq.$tableNumber';
     final headers = _createHeaders();
@@ -550,91 +554,81 @@ class SupabaseApi {
     final response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      print('RESPUESTA: $jsonResponse');
-      if (jsonResponse.isNotEmpty && jsonResponse[0]['is_occupied'] != null && jsonResponse[0]['is_occupied'] == true ) {
+      if (kDebugMode) {
+        print('RESPUESTA: $jsonResponse');
+      }
+      if (jsonResponse.isNotEmpty &&
+          jsonResponse[0]['is_occupied'] != null &&
+          jsonResponse[0]['is_occupied'] == true) {
         return true;
       } else {
         return false;
       }
     } else {
-      print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      if (kDebugMode) {
+        print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      }
       return false;
     }
   }
 
   Future<void> assignTable(String userId, int tableNumber) async {
     final url = '$baseUrl/rest/v1/tables?id=$tableNumber';
-    
+
     final headers = {
       'apikey': apiKey,
       'Authorization': authorization,
       'Content-Type': 'application/json',
     };
 
-    final body = jsonEncode({
-      'user_id': userId,
-      'table_number': tableNumber,
-      'is_occupied': true
-    });
+    final body = jsonEncode(
+        {'user_id': userId, 'table_number': tableNumber, 'is_occupied': true});
 
-    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      print('Mesa $tableNumber asignada satisfactoriamente.');
+      if (kDebugMode) {
+        print(
+          'Mesa $tableNumber asignada satisfactoriamente.',
+        );
+      }
     } else {
-      print('Hubo un error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
+      if (kDebugMode) {
+        print(
+          'Hubo un error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
+        );
+      }
     }
   }
 
   Future<bool> releaseTable(String userId, int tableNumber) async {
     final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
-    
+
     final headers = {
       'apikey': apiKey,
       'Authorization': authorization,
       'Content-Type': 'application/json',
     };
 
-    final body = jsonEncode({
-      'user_id': null,
-      'table_number': tableNumber,
-      'is_occupied': false
-    });
+    final body = jsonEncode(
+        {'user_id': null, 'table_number': tableNumber, 'is_occupied': false});
 
-    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: body);
 
     if (response.statusCode == 204) {
-      print('Mesa $tableNumber libre.');
+      if (kDebugMode) {
+        print('Mesa $tableNumber libre.');
+      }
       return true;
     } else {
-      print('Hubo un error al desasignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
+      if (kDebugMode) {
+        print(
+          'Hubo un error al desasignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
+        );
+      }
       return false;
     }
   }
 }
-  // Importante sacar tableNumber
-  /*
-  Future<void> assignTable(String userId, int tableNumber) async {
-    final response = await client
-        .from('tables')
-        .update({'is_occupied': true, 'user_id': userId})
-        .eq('table_number', tableNumber);
-
-    if (response.error != null) {
-      print('Error al hacer la reserva de mesa: ${response.statusCode}');
-      return null;
-    }
-  }
-
-  Future<void> releaseTable(int tableNumber) async {
-    final response = await client
-        .from('tables')
-        .update({'is_occupied': false, 'user_id': null})
-        .eq('table_number', tableNumber);
-
-    if (response.error != null) {
-      throw response.error!;
-    }
-  }
-  */
-
