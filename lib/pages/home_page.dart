@@ -12,7 +12,10 @@ import 'package:order_it/models/food.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+  final bool ordersAllowed;
+
+  const HomePage({super.key, required this.ordersAllowed});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -75,26 +78,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                     ),
                     title: const Text('Order It'),
-                    actions: [
-                      IconButton(
-                        onPressed: () async {
+                    actions: widget.ordersAllowed ? [
+                          IconButton(
+                            onPressed: () async {
                           final restaurant =
                               Provider.of<Restaurant>(context, listen: false);
                           await restaurant.loadCartDetails();
 
                           if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const CartPage(),
-                              ),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CartPage(),
+                                  ),
                             );
                           }
-                        },
-                        icon: const Icon(Icons.shopping_cart),
-                      ),
-                    ],
-                  ),
+                            },
+                            icon: const Icon(Icons.shopping_cart),
+                          ),
+                        ] 
+                      : [],
+                    ),
                   body: Column(
                     children: [
                       MyTabBar(

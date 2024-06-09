@@ -5,7 +5,7 @@ class SnackbarHelper {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: backgroundColor ?? Colors.blue, // Color por defecto: azul
+        backgroundColor: backgroundColor ?? Colors.blue,
       ),
     );
   }

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:order_it/pages/assign_table.dart';
 import 'package:order_it/pages/call_waiter.dart';
 import 'package:order_it/pages/home_page.dart';
 
 class FirstPage extends StatelessWidget {
-  const FirstPage({super.key});
+
+  final String userId;
+
+  const FirstPage({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,7 @@ class FirstPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePage(),
+                        builder: (context) => AssignTable(userId: userId),
                       ),
                     );
                   },

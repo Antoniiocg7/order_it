@@ -40,53 +40,44 @@ class Restaurant extends ChangeNotifier {
   }
 
   // ADD TO CART
-  Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
-    try {
-      final cartId = await supabaseApi
-          .createCart(); // Crear un carrito en la base de datos
+  void addToCart(Food food, List<Addon> selectedAddons) {
+    // See if there is a cart item already with the same food and selected addons
+    CartItem? cartItem = _cart.firstWhereOrNull((item) {
+      // CHECK IF THE FOOD ITEMS ARE THE SAME
+      bool isSameFood = item.food == food;
 
-      if (cartId != "") {
-        await supabaseApi.addItemToCart(
-          cartId,
-          food.id,
-          selectedAddons.map((addon) => addon.id).toList(),
-        );
-      } else {
-        final existingCart =
-            await supabase.from('cart').select('id').eq('is_finished', false);
-        final existingCartId = existingCart.first['id'];
-        if (existingCart.first.isNotEmpty) {
-          await supabaseApi.addItemToCart(
-            existingCartId.toString(),
-            food.id,
-            selectedAddons.map((addon) => addon.id).toList(),
-          );
-        } else {
-          return false;
-        }
-      }
+      //CHECK IF THE LIST OF SELECTED ADDONS ARE THE SAME
+      bool isSameAddons =
+          const ListEquality().equals(item.selectedAddons, selectedAddons);
 
-      notifyListeners();
-      return true; // Indicar que se agregó correctamente al carrito
-    } catch (e) {
-      return false; // Si hay un error, devolver false
+      return isSameFood && isSameAddons;
+    });
+
+    // IF ITEM ALREADY EXISTS, INCREASE IT´S QUANTITY
+    if (cartItem != null) {
+      cartItem.quantity++;
+    } else {
+      // OTHERWISE, ADD A NEW CART ITEM TO THE CART
+      _cart.add(CartItem(food: food, selectedAddons: selectedAddons));
     }
+    notifyListeners();
   }
 
   // REMOVE FROM CART
-  Future<bool> removeFromCart(CartFood cartFood) async {
-    try {
-      // Eliminar el ítem del carrito en la base de datos
-      await supabaseApi.removeFromCart(cartFood.id);
+  void removeFromCart(CartItem cartItem) {
+    int cartIndex = _cart.indexOf(cartItem);
 
-      notifyListeners();
-      return true; // Indicar que se eliminó correctamente del carrito
-    } catch (e) {
-      return false; // Si hay un error, devolver false
+    if (cartIndex != -1) {
+      if (_cart[cartIndex].quantity > 1) {
+        _cart[cartIndex].quantity--;
+      } else {
+        _cart.removeAt(cartIndex);
+      }
     }
+    notifyListeners();
   }
 
-  // GET TOTAL PRICE OF CART
+
   double getTotalPrice() {
     double total = 0.0;
 
@@ -103,7 +94,7 @@ class Restaurant extends ChangeNotifier {
     return total;
   }
 
-  // GET TOTAL NUMBER OF ITEMS IN CART
+
   int getTotalItemCount() {
     int totalItemCount = 0;
 
@@ -114,7 +105,7 @@ class Restaurant extends ChangeNotifier {
     return totalItemCount;
   }
 
-  // CLEAR CART
+
   void clearCart() {
     _cart.clear();
     notifyListeners();
@@ -124,13 +115,13 @@ class Restaurant extends ChangeNotifier {
     H E L P E R S
   */
 
-  // GENERATE A RECEIPT
+
   String displayCartReceipt() {
     final receipt = StringBuffer();
     receipt.writeln("Here's your receipt");
     receipt.writeln();
 
-    // FORMAT THE DATE TO INCLUDE UP TO SECONDS ONLY
+
     String formattedData =
         DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
@@ -155,12 +146,12 @@ class Restaurant extends ChangeNotifier {
     return receipt.toString();
   }
 
-  // FORMAT DOUBLE VALUE INTO MONEY
+
   String _formatPrice(double price) {
     return "${price.toStringAsFixed(2)}€";
   }
 
-  // FORMAT LIST OF ADDONS INTO A STRING SUMMARY
+
   String _formatAddons(List<Addon> addons) {
     return addons
         .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
