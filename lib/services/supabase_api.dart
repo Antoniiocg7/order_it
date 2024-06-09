@@ -135,8 +135,12 @@ class SupabaseApi {
   }
 
   Future<List<Map<String, dynamic>>> getOrders() async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+    final userId = user.user?.id;
+
     final url =
-        '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
+        '$baseUrl/rest/v1/cart?is_finished=eq.true&user_id=eq.239a511c-7b38-4d96-b62a-af8e1ece1c6d&select=*';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -144,6 +148,10 @@ class SupabaseApi {
     if (response.statusCode != 200) {
       throw Exception('No se pueden cargar los pedidos');
     }
+
+    print(userId);
+
+    print(response.body);
 
     final List<dynamic> jsonResponse = json.decode(response.body);
 

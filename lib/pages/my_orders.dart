@@ -23,6 +23,7 @@ class _MyOrdersState extends State<MyOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(202, 85, 143, 52),
         title: const Text('Pedidos'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -72,12 +73,13 @@ class _MyOrdersState extends State<MyOrders> {
                           // Acción al tocar un pedido
                         },
                         child: Card(
+                          color: const Color.fromARGB(223, 253, 253, 252),
                           margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
                           child: ListTile(
                             leading: CircleAvatar(
-                              child: Text(order.restauranteId.toString()),
+                              child: Text([index].toString()),
                             ),
-                            title: Text('Restaurante ${order.restauranteId}'),
+                            title: Text('Restaurante Boccatteria'),
                             subtitle: Text('Fecha: ${order.createdAt}'),
                           ),
                         ),
