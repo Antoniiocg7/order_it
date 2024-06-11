@@ -1,18 +1,19 @@
-import 'package:order_it/models/order.dart';
+import 'package:order_it/models/cart.dart';
 import 'package:order_it/services/supabase_api.dart';
 
 class OrderController {
   final SupabaseApi supabaseApi = SupabaseApi();
 
-  Future<List<Order>> fetchOrders() async {
+  Future<List<Cart>> fetchOrders() async {
     try {
-      final List<Map<String, dynamic>> orderData =
+      final List<Map<String, dynamic>> cartData =
           await supabaseApi.getOrders();
 
-      final List<Order> orders =
-          orderData.map((orderData) => Order.fromJson(orderData)).toList();
+      final List<Cart> carts =
+          cartData.map((cartData) => Cart.fromJson(cartData)).toList();
 
-      return orders;
+      return carts;
+    
     } catch (error) {
       throw Exception('Failed to fetch orders: $error');
     }

@@ -10,11 +10,6 @@ class Usuario extends HiveObject {
   @HiveField(1)
   final String password;
 
-  //Con llaves significa que es posicional:
-  /**
-   * No hace falta ponerlos en orden. Pones el nombre de la variable y :  ej. ( email: "" )
-   * 
-  */
   Usuario(
       {
       required this.email,

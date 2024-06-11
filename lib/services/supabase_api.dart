@@ -657,25 +657,30 @@ class SupabaseApi {
     final userId = user.user?.id;
 
     final url =
-        '$baseUrl/rest/v1/cart?is_finished=eq.true&user_id=eq.239a511c-7b38-4d96-b62a-af8e1ece1c6d&select=*';
+        '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    if (response.statusCode != 200) {
-      throw Exception('No se pueden cargar los pedidos');
-    }
-
-    if (kDebugMode) {
-      print(userId);
-    }
-
-    if (kDebugMode) {
-      print(response.body);
-    }
-
     final List<dynamic> jsonResponse = json.decode(response.body);
 
-    return jsonResponse.cast<Map<String, dynamic>>();
+    for (var element in jsonResponse) {
+      var id = element['id'];
+
+      var items =
+          await supabase.from('cart_item').select('*').eq('cart_id', id);
+
+      print(items);
+    }
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+
+      print(jsonResponse);
+
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load food_addons');
+    }
   }
 }

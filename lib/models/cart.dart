@@ -18,9 +18,9 @@ class Cart {
   factory Cart.fromJson(Map<String, dynamic> json) {
     return Cart(
       id: json['id'].toString(),
-      userId: json['userId'].toString(),
+      userId: json['user_id'].toString(),
       price: json['price'].toString(),
-      isFinished: json['isFinished'] as bool,
+      isFinished: json['is_finished'] as bool,
       items: (json['items'] as List)
           .map((item) => CartItem.fromJson(item))
           .toList(),
@@ -30,9 +30,9 @@ class Cart {
   Map<String, dynamic> toJson() {
     return {
       'id': int.parse(id),
-      'userId': userId,
+      'user_id': userId,
       'price': price,
-      'isFinished': isFinished,
+      'is_finished': isFinished,
       'items': items.map((item) => item.toJson()).toList(),
     };
   }
