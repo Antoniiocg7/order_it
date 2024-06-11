@@ -683,4 +683,41 @@ class SupabaseApi {
       throw Exception('Failed to load food_addons');
     }
   }
+
+  Future<void> updateCartState() async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+    final userId = user.user?.id;
+    const bool isFinished = false;
+
+    if (userId == null) {
+      return;
+    }
+
+    final headers = _createHeaders();
+
+    var url =
+        'https://gapuibdxbmoqjhibirjm.supabase.co/rest/v1/cart?user_id=eq.$userId&is_finished=eq.$isFinished';
+
+    final body = {
+      "is_finished": true,
+    };
+
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('Cart state updated successfully');
+      } else {
+        print('Failed to update cart state: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
 }
