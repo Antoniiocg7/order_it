@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final supabase = Supabase.instance.client;
 
-  @override
+  /*@override
   void initState() {
     _setupAuthListener();
     super.initState();
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
