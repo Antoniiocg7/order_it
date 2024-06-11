@@ -106,7 +106,8 @@ class _AssignTableState extends State<AssignTable> {
       } else {
         //print('Table $tableNumber assigned successfully.');
         _showDialog('Table Assigned',
-            'Table $tableNumber has been successfully assigned to you.', () {
+          'Table $tableNumber has been successfully assigned to you.', () {
+              controller?.resumeCamera();
           Navigator.push(
             context,
             MaterialPageRoute(

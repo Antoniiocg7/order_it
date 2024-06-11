@@ -6,10 +6,12 @@ import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
 class FoodPage extends StatefulWidget {
+  
   final Food food;
+  final bool ordersAllowed;
   final Map<Addon, bool> selectedAddons = {};
 
-  FoodPage({super.key, required this.food}) {
+  FoodPage({super.key, required this.food, required this.ordersAllowed}) {
     // INITIALIZE SELECTED ADDONS TO BE FALSE
     for (Addon addon in food.addons ?? []) {
       selectedAddons[addon] = false;
@@ -109,33 +111,48 @@ class _FoodPageState extends State<FoodPage> {
                           itemBuilder: (context, index) {
                             // GET INDIVIDUAL ADDON
                             Addon addon = widget.food.addons![index];
-                            // RETURN CHECK BOX UI
-                            return CheckboxListTile(
-                              title: Text(addon.name),
-                              subtitle: Text(
-                                "${addon.price}€",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
+
+                            if (widget.ordersAllowed) {
+                              // RETURN CHECK BOX UI
+                              return CheckboxListTile(
+                                title: Text(addon.name),
+                                subtitle: Text(
+                                  "${addon.price}€",
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
-                              ),
-                              value: widget.selectedAddons[addon],
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  widget.selectedAddons[addon] = value!;
-                                });
-                              },
-                            );
+                                value: widget.selectedAddons[addon],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    widget.selectedAddons[addon] = value!;
+                                  });
+                                },
+                              );
+                            } else {
+                              // RETURN SIMPLE LIST ITEM UI
+                              return ListTile(
+                                title: Text(addon.name),
+                                subtitle: Text(
+                                  "${addon.price}€",
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),
                     ],
                   ),
                 ),
-                // BUTTON -> ADD TO CART
-                MyButton(
-                  text: "Add to cart",
-                  onTap: () => addToCart(widget.food, widget.selectedAddons),
-                ),
+                // BUTTON -> ADD TO CART (only if ordersAllowed is true)
+                if (widget.ordersAllowed)
+                  MyButton(
+                    text: "Add to cart",
+                    onTap: () => addToCart(widget.food, widget.selectedAddons),
+                  ),
                 const SizedBox(height: 25),
               ],
             ),

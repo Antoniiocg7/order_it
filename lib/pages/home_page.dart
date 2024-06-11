@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 final foods = foodSnapshot.data ?? [];
                 return Scaffold(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  drawer: const MyDrawer(),
+                  drawer: MyDrawer(ordersAllowed: widget.ordersAllowed),
                   appBar: AppBar(
                     centerTitle: true,
                     elevation: 0,
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            FoodPage(food: food),
+                                            FoodPage(food: food, ordersAllowed: widget.ordersAllowed),
                                       ),
                                     );
                                   },
