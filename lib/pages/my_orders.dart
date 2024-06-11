@@ -78,16 +78,16 @@ class _MyOrdersState extends State<MyOrders> {
                                 builder: (context) => MyOrderDetails( cart: cart  ),
                               ));
                         },
-                        child: const Card(
-                          margin: EdgeInsets.symmetric(
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(
                               horizontal: 25.0, vertical: 8.0),
                           child: ListTile(
-                            leading: CircleAvatar(
+                            leading: const CircleAvatar(
                               child: Icon(Icons.food_bank),
                             ),
-                            title: Text('Restaurante'),
-                            subtitle: Text('Fecha:'),
-                            trailing: Text("53,86 €"),
+                            title: const Text('Restaurante'),
+                            subtitle: const Text('Fecha:'),
+                            trailing: Text( '${cart.price} €', style: TextStyle( fontSize: 16), )
                           ),
                         ),
                       );

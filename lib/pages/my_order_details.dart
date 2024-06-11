@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:order_it/models/cart.dart';
 
 class MyOrderDetails extends StatefulWidget {
@@ -23,11 +24,10 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           title: const Text('Resumen de tu pedido'),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(children: [
+            padding: const EdgeInsets.all(6.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -55,82 +55,41 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   thickness: 2,
                   color: Colors.green,
                 ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                const Card(
+                    child: Column(
                   children: [
-                    Text(
-                      '1',
-                      style: TextStyle(fontSize: 16),
-                    ),
                     SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Menú GRANDE Receta',
-                        style: TextStyle(fontSize: 16),
+                    Text(
+                      'Principal',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(height: 4),
                     Text(
-                      '17,90 €',
-                      style: TextStyle(fontSize: 16),
+                      'Menú Poke - Salmón BBQ Grande 2,00 €',
+                      style: TextStyle(fontSize: 14),
                     ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Extras',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Arroz sushi 0,00 €',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(height: 8),
+                    SizedBox(height: 4),
                   ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Elige 1',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Menú Poke - Salmón BBQ Grande 2,00 €',
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Elige la base de tu poke',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Arroz sushi 0,00 €',
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Elige la bebida para tu menú poke',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Cerveza Levante 0,00 €',
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Elige tu postre para tu menú poke',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Cheese cake 1,00 €',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ]),
-            ],
-          ),
-        ),
+                ))
+              ])
+            ])),
       ),
     );
   }
