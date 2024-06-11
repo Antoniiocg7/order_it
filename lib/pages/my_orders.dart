@@ -75,7 +75,7 @@ class _MyOrdersState extends State<MyOrders> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const MyOrderDetails(),
+                                builder: (context) => MyOrderDetails( cart: cart  ),
                               ));
                         },
                         child: const Card(

@@ -5,14 +5,14 @@ class Cart {
   final String userId;
   final String price;
   final bool isFinished;
-  final List<CartItem> items;
+  //final List<CartItem> items;
 
   Cart({
     required this.id,
     required this.userId,
     required this.price,
     required this.isFinished,
-    required this.items,
+    //this.items,
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
@@ -21,9 +21,9 @@ class Cart {
       userId: json['user_id'].toString(),
       price: json['price'].toString(),
       isFinished: json['is_finished'] as bool,
-      items: (json['items'] as List)
+      /* items: (json['items'] as List)
           .map((item) => CartItem.fromJson(item))
-          .toList(),
+          .toList(), */
     );
   }
 
@@ -33,7 +33,7 @@ class Cart {
       'user_id': userId,
       'price': price,
       'is_finished': isFinished,
-      'items': items.map((item) => item.toJson()).toList(),
+      //'items': items.map((item) => item.toJson()).toList(),
     };
   }
 }
