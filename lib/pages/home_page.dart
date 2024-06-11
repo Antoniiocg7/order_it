@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               TabController(length: categories.length, vsync: this);
 
           return FutureBuilder<List<Food>>(
-            future: _foodController.fetchFood(),
+            future: _foodController.fetchAllFood(),
             builder: (context, foodSnapshot) {
               if (foodSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

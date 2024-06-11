@@ -310,6 +310,8 @@ class SupabaseApi {
       final response =
           await supabase.from('cart_item').select('*').eq('cart_id', cartId);
 
+      print(response[0]);
+
       return response;
     } catch (e) {
       throw Exception('Error al cargar los items del carrito: $e');
@@ -720,4 +722,40 @@ class SupabaseApi {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getCartItems2(String cartId) async {
+    final headers = _createHeaders();
+
+    final url = '$baseUrl/rest/v1/cart_item?select*&cart_id=eq.$cartId';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    print(response.body);
+
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    print(jsonResponse);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load food_addons');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getFood2(foodId) async {
+    final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
 }

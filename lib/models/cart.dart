@@ -1,5 +1,3 @@
-import 'package:order_it/models/cart_item.dart';
-
 class Cart {
   final String id;
   final String userId;
