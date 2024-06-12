@@ -46,8 +46,13 @@ class Restaurant extends ChangeNotifier {
           selectedAddons.map((addon) => addon.id).toList(),
         );
       } else {
+        
+        final supabase = Supabase.instance.client;
+        final user = await supabase.auth.getUser();
+        //final userId = user.user?.id.toString();
+
         final existingCart =
-            await supabase.from('cart').select('id').eq('is_finished', false);
+            await supabase.from('cart').select('id').eq('is_finished', false).eq('user_id', user.user!.id);
         final existingCartId = existingCart.first['id'];
         if (existingCart.first.isNotEmpty) {
           await supabaseApi.addItemToCart(
