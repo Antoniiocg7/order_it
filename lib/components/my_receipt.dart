@@ -31,18 +31,24 @@ class MyReceipt extends StatelessWidget {
             const Text("Estimated delivery time is: 4:10 PM"),
             const SizedBox(height: 50),
             ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(255, 7, 114, 255)),
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(
+                  Color.fromARGB(255, 7, 114, 255),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const HomePage(ordersAllowed: true),
-                      ));
-                },
-                child: const Text('Volver Al Home' , style: TextStyle(color: Colors.white),))
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(ordersAllowed: true),
+                  ),
+                );
+              },
+              child: const Text(
+                'Volver Al Home',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
           ],
         ),
       ),
