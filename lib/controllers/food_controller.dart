@@ -1,5 +1,4 @@
 import 'package:order_it/controllers/addon_controller.dart';
-import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/services/supabase_api.dart';
@@ -41,12 +40,10 @@ class FoodController {
       }
 
       return foods;
-      
     } catch (error) {
       throw Exception('Failed to fetch food: $error');
     }
   }
-
 
   Future<List<Food>> fetchFoodByCart() async {
     try {
@@ -82,7 +79,6 @@ class FoodController {
       }
 
       return foods;
-      
     } catch (error) {
       throw Exception('Failed to fetch food: $error');
     }
@@ -93,16 +89,9 @@ class FoodController {
       final List<Map<String, dynamic>> cartFood =
           await supabaseApi.getCartItems2(cartId);
 
-      final List<CartFood> cartFoods =
-          cartFood.map((cartFood) => CartFood.fromJson(cartFood)).toList();
-
-      print(cartFoods);
-
       return cartFood;
     } catch (error) {
       throw Exception('Failed to fetch orders: $error');
     }
   }
-
-
 }

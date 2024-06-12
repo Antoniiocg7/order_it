@@ -28,23 +28,14 @@ class OrderController {
       final List<CartItem> cartItems =
           cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
 
-      print(cartItems[0].foodId);
-
       final List<Map<String, dynamic>> cartFood =
-          await supabaseApi.getFood2( cartItems[0].foodId );
-
-      final List<Food> cartFoods =
-          cartFood.map((cartFood) => Food.fromJson(cartFood)).toList();
-
-
-      print(cartFoods[0].name);
+          await supabaseApi.getFood2(cartItems[0].foodId);
 
       return cartFood;
     } catch (error) {
       throw Exception('Failed to fetch orders: $error');
     }
   }
-
 
   // Los artículos del pedido
   Future<List<Food>> fetchCartFood2(List<Cart> carts) async {
@@ -75,5 +66,4 @@ class OrderController {
       throw Exception('Failed to fetch cart items: $error');
     }
   }
-
 }

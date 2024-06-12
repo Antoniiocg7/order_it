@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/assign_table.dart';
-import 'package:order_it/pages/call_waiter.dart';
 import 'package:order_it/pages/home_page.dart';
 
 class FirstPage extends StatelessWidget {

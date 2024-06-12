@@ -5,7 +5,6 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
-import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -312,8 +311,6 @@ class SupabaseApi {
       final response =
           await supabase.from('cart_item').select('*').eq('cart_id', cartId);
 
-      print(response[0]);
-
       return response;
     } catch (e) {
       throw Exception('Error al cargar los items del carrito: $e');
@@ -397,9 +394,6 @@ class SupabaseApi {
           .select('id')
           .eq('is_finished', false)
           .eq('user_id', activeUser.user!.id);
-
-      print(cartId[0]['id']);
-      print(cartId.first['id'].toString());
 
       return cartId.first['id'].toString();
     } catch (e) {
@@ -668,26 +662,12 @@ class SupabaseApi {
     final url =
         '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
 
-    print('HOLA: $userId');
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    final List<dynamic> jsonResponse = json.decode(response.body);
-
-    for (var element in jsonResponse) {
-      var id = element['id'];
-
-      var items =
-          await supabase.from('cart_item').select('*').eq('cart_id', id);
-
-      print(items);
-    }
-
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-
-      print(jsonResponse);
 
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
@@ -705,7 +685,6 @@ class SupabaseApi {
       precio += plato.food.price;
     }
 
-    print(precio);
     //final double precio = restaurant.getTotalPrice();
     final userId = user.user?.id;
     const bool isFinished = false;
@@ -729,12 +708,18 @@ class SupabaseApi {
       );
 
       if (response.statusCode == 200 || response.statusCode == 204) {
-        print('Cart state updated successfully');
+        if (kDebugMode) {
+          print('Cart state updated successfully');
+        }
       } else {
-        print('Failed to update cart state: ${response.statusCode}');
+        if (kDebugMode) {
+          print('Failed to update cart state: ${response.statusCode}');
+        }
       }
     } catch (e) {
-      print('Error occurred: $e');
+      if (kDebugMode) {
+        print('Error occurred: $e');
+      }
     }
   }
 
@@ -744,12 +729,6 @@ class SupabaseApi {
     final url = '$baseUrl/rest/v1/cart_item?select&cart_id=eq.$cartId';
 
     final response = await http.get(Uri.parse(url), headers: headers);
-
-    print(response.body);
-
-    final List<dynamic> jsonResponse = json.decode(response.body);
-
-    print(jsonResponse);
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
@@ -766,8 +745,6 @@ class SupabaseApi {
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    print(response.body);
-
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
@@ -782,8 +759,6 @@ class SupabaseApi {
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
-
-    print(response.body);
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);

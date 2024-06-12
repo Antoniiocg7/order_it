@@ -75,7 +75,8 @@ class _MyOrdersState extends State<MyOrders> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MyOrderDetails( cart: cart  ),
+                                builder: (context) =>
+                                    MyOrderDetails(cart: cart),
                               ));
                         },
                         child: Card(
@@ -87,7 +88,12 @@ class _MyOrdersState extends State<MyOrders> {
                             ),
                             title: const Text('Restaurante'),
                             subtitle: const Text('Fecha:'),
-                            trailing: Text( '${cart.price} €', style: TextStyle( fontSize: 16), )
+                            trailing: Text(
+                              '${cart.price} €',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
                         ),
                       );
