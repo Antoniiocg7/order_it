@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/components/my_receipt.dart';
+import 'package:order_it/pages/home_page.dart';
 
 class DeliveryProgressPage extends StatelessWidget {
   const DeliveryProgressPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Delivery in progress..."),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-      ),
-      body: const SingleChildScrollView(
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        // Retorna false para deshabilitar volver atrás
+        return false;
+      },
+    
+    child: const Scaffold(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 100,),
             MyReceipt(),
           ],
         ),
       ),
-    );
+    ));
   }
 
   // CUSTOM BUTTON NAVBAR - MESSAGE / CALL DELIVERY DRIVER
@@ -94,6 +98,8 @@ class DeliveryProgressPage extends StatelessWidget {
                       color: Colors.green,
                     )),
               ),
+
+              
             ],
           )
         ],

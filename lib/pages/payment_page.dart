@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:order_it/components/my_button.dart';
+import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
+import 'package:order_it/services/supabase_api.dart';
+import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -43,9 +46,21 @@ class _PaymentPageState extends State<PaymentPage> {
                 onPressed: () => Navigator.pop(context),
                 child: const Text("Cancel")),
 
-            // ACCEPT BUTTON
             TextButton(
-                onPressed: () {
+              onPressed: () async {
+                
+
+                final SupabaseApi supabase = SupabaseApi();
+                try {
+                  // Asegurarse de que la actualización del estado del carrito se complete antes de continuar
+                  await supabase.updateCartState();
+                } catch (e) {
+                  // Manejar el error si la actualización falla
+                  print("Error al actualizar el estado del carrito: $e");
+                  return; // Salir si hay un error
+                }
+
+                if (context.mounted) {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
@@ -53,8 +68,10 @@ class _PaymentPageState extends State<PaymentPage> {
                       builder: (context) => const DeliveryProgressPage(),
                     ),
                   );
-                },
-                child: const Text("Yes")),
+                }
+              },
+              child: const Text("Yes"),
+            ),
           ],
         ),
       );

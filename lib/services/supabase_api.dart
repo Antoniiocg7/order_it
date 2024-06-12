@@ -5,6 +5,7 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
+import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -279,6 +280,7 @@ class SupabaseApi {
       if (cartItemData.isNotEmpty) {
         final cartItem = cartItemData.last;
         final cartItemId = cartItem['id'];
+
         try {
           for (var addonId in addonIds) {
             final response = await http.post(
@@ -395,6 +397,10 @@ class SupabaseApi {
           .select('id')
           .eq('is_finished', false)
           .eq('user_id', activeUser.user!.id);
+
+      print(cartId[0]['id']);
+      print(cartId.first['id'].toString());
+
       return cartId.first['id'].toString();
     } catch (e) {
       throw Exception('Error al encontrar el carrito asociado al usuario: $e');
@@ -689,6 +695,15 @@ class SupabaseApi {
   Future<void> updateCartState() async {
     final supabase = Supabase.instance.client;
     final user = await supabase.auth.getUser();
+    final items = await getCartFoodDetails();
+    double precio = 0;
+
+    for (var plato in items) {
+      precio += plato.food.price;
+    }
+
+    print(precio);
+    //final double precio = restaurant.getTotalPrice();
     final userId = user.user?.id;
     const bool isFinished = false;
 
@@ -701,9 +716,7 @@ class SupabaseApi {
     var url =
         'https://gapuibdxbmoqjhibirjm.supabase.co/rest/v1/cart?user_id=eq.$userId&is_finished=eq.$isFinished';
 
-    final body = {
-      "is_finished": true,
-    };
+    final body = {"is_finished": true, "price": precio};
 
     try {
       final response = await http.patch(

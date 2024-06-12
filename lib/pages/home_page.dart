@@ -39,7 +39,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<FoodCategory>>(
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        // Retorna false para deshabilitar volver atrás
+        return false;
+      }, 
+
+    child: FutureBuilder<List<FoodCategory>>(
       future: FoodCategoryController().fetchCategories(),
       builder: (context, categorySnapshot) {
         if (categorySnapshot.connectionState == ConnectionState.waiting) {
@@ -141,6 +148,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           );
         }
       },
-    );
+    ));
   }
 }

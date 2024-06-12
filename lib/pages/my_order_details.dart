@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:order_it/controllers/food_controller.dart';
 import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/models/cart.dart';
-import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
 
 class MyOrderDetails extends StatefulWidget {
