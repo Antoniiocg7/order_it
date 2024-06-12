@@ -93,7 +93,8 @@ class TableDetailPage extends StatelessWidget {
   final Map<String, dynamic> table;
   final SupabaseApi supabaseApi;
 
-  const TableDetailPage({super.key, required this.table, required this.supabaseApi});
+  const TableDetailPage(
+      {super.key, required this.table, required this.supabaseApi});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,8 @@ class TableDetailPage extends StatelessWidget {
           if (table['is_occupied'])
             TextButton(
               onPressed: () async {
-                bool liberada = await supabaseApi.releaseTable(table['user_id'], table['table_number']);
+                bool liberada = await supabaseApi.releaseTable(
+                    table['user_id'], table['table_number']);
                 if (liberada) {
                   if (context.mounted) {
                     showDialog(
@@ -112,12 +114,14 @@ class TableDetailPage extends StatelessWidget {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('Mesa Liberada'),
-                          content: Text('La mesa ${table['table_number']} ha sido liberada correctamente.'),
+                          content: Text(
+                              'La mesa ${table['table_number']} ha sido liberada correctamente.'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context); // Cerrar el diálogo
-                                Navigator.pop(context); // Volver a la página anterior
+                                Navigator.pop(
+                                    context); // Volver a la página anterior
                               },
                               child: const Text('OK'),
                             ),
@@ -133,7 +137,8 @@ class TableDetailPage extends StatelessWidget {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('Error al liberar mesa'),
-                          content: Text('Hubo un error al liberar la mesa ${table['table_number']}'),
+                          content: Text(
+                              'Hubo un error al liberar la mesa ${table['table_number']}'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
@@ -174,69 +179,66 @@ class TableDetailPage extends StatelessWidget {
 }
 
 class OrdersList extends StatefulWidget {
-  
-  final userTable;
+  final String? userTable;
 
-  const OrdersList({
-    super.key,
-    required this.userTable
-  });
+  const OrdersList({super.key, required this.userTable});
 
   @override
   State<OrdersList> createState() => _OrdersListState();
 }
 
 class _OrdersListState extends State<OrdersList> {
-  
   final OrderController orderController = OrderController();
   late Future<List<Cart>> futureOrders;
   late Future<List<Food>> futureItems;
 
+  @override
   void initState() {
     super.initState();
     futureOrders = orderController.fetchOrders(widget.userTable);
     futureItems = futureOrders.then((orders) {
-      return orderController.fetchCartFood(orders);
+      return orderController.fetchCartFood2(orders);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-    child: FutureBuilder<List<Food>>(
-      future: futureItems,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator.adaptive());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(
-              child: Text('No hay pedidos disponibles.'));
-        } else {
-          final carts = snapshot.data!;
-          return ListView.builder(
-            itemCount: carts.length,
-            itemBuilder: (context, index) {
-              final cart = carts[index];
-                 child: return Card(
+      child: FutureBuilder<List<Food>>(
+        future: futureItems,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No hay pedidos disponibles.'));
+          } else {
+            final carts = snapshot.data!;
+            return ListView.builder(
+              itemCount: carts.length,
+              itemBuilder: (context, index) {
+                final cart = carts[index];
+
+                return Card(
                   margin: const EdgeInsets.symmetric(
                       horizontal: 25.0, vertical: 8.0),
                   child: ListTile(
-                    leading: const CircleAvatar(
-                      child: Icon(Icons.food_bank),
-                    ),
-                    title: const Text('Restaurante'),
-                    subtitle: const Text('Fecha:'),
-                    trailing: Text( '${cart.name} €', style: TextStyle( fontSize: 16), )
-                  ),
-              );
-            },
-          );
-        }
-      },
-    ),
-  );
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.food_bank),
+                      ),
+                      title: const Text('Restaurante'),
+                      subtitle: const Text('Fecha:'),
+                      trailing: Text(
+                        '${cart.name} €',
+                        style: const TextStyle(fontSize: 16),
+                      )),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }
