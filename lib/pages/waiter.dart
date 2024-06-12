@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/controllers/order_controller.dart';
+import 'package:order_it/models/cart.dart';
+import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
 
 class Waiter extends StatefulWidget {
@@ -90,80 +93,150 @@ class TableDetailPage extends StatelessWidget {
   final Map<String, dynamic> table;
   final SupabaseApi supabaseApi;
 
-  const TableDetailPage(
-      {super.key, required this.table, required this.supabaseApi});
+  const TableDetailPage({super.key, required this.table, required this.supabaseApi});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalles de Mesa ${table['table_number']}'),
+        actions: [
+          if (table['is_occupied'])
+            TextButton(
+              onPressed: () async {
+                bool liberada = await supabaseApi.releaseTable(table['user_id'], table['table_number']);
+                if (liberada) {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Mesa Liberada'),
+                          content: Text('La mesa ${table['table_number']} ha sido liberada correctamente.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // Cerrar el diálogo
+                                Navigator.pop(context); // Volver a la página anterior
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Error al liberar mesa'),
+                          content: Text('Hubo un error al liberar la mesa ${table['table_number']}'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Waiter(),
+                                  ),
+                                );
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                }
+              },
+              child: const Text(
+                'Liberar',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+        ],
       ),
       body: Center(
         child: Column(
           children: [
-            Text('Detalles de Mesa: ${table['table_number']}'),
+            Text('Pedidos de la mesa ${table['table_number']}:'),
             const SizedBox(height: 20),
-            if (table['is_occupied'])
-              ElevatedButton(
-                  onPressed: () async {
-                    bool liberada = await supabaseApi.releaseTable(
-                        table['user_id'], table['table_number']);
-                    if (liberada) {
-                      if (context.mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Mesa Liberada'),
-                              content: Text(
-                                  'La mesa ${table['table_number']} ha sido liberada correctamente.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context); // Cerrar el diálogo
-                                    Navigator.pop(
-                                        context); // Volver a la página anterior
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    } else {
-                      if (context.mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Error al liberar mesa'),
-                              content: Text(
-                                  'Hubo un error al liberar la mesa ${table['table_number']}'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const Waiter(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    }
-                  },
-                  child: Text('Liberar Mesa ${table['table_number']}'))
+            OrdersList(userTable: table['user_id']),
           ],
         ),
       ),
     );
+  }
+}
+
+class OrdersList extends StatefulWidget {
+  
+  final userTable;
+
+  const OrdersList({
+    super.key,
+    required this.userTable
+  });
+
+  @override
+  State<OrdersList> createState() => _OrdersListState();
+}
+
+class _OrdersListState extends State<OrdersList> {
+  
+  final OrderController orderController = OrderController();
+  late Future<List<Cart>> futureOrders;
+  late Future<List<Food>> futureItems;
+
+  void initState() {
+    super.initState();
+    futureOrders = orderController.fetchOrders(widget.userTable);
+    futureItems = futureOrders.then((orders) {
+      return orderController.fetchCartFood(orders);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+    child: FutureBuilder<List<Food>>(
+      future: futureItems,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child: CircularProgressIndicator.adaptive());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+              child: Text('No hay pedidos disponibles.'));
+        } else {
+          final carts = snapshot.data!;
+          return ListView.builder(
+            itemCount: carts.length,
+            itemBuilder: (context, index) {
+              final cart = carts[index];
+                 child: return Card(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 25.0, vertical: 8.0),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      child: Icon(Icons.food_bank),
+                    ),
+                    title: const Text('Restaurante'),
+                    subtitle: const Text('Fecha:'),
+                    trailing: Text( '${cart.name} €', style: TextStyle( fontSize: 16), )
+                  ),
+              );
+            },
+          );
+        }
+      },
+    ),
+  );
   }
 }
