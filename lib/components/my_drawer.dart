@@ -6,7 +6,10 @@ import 'package:order_it/pages/settings_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  
+  final bool ordersAllowed;
+
+  const MyDrawer({super.key, required this.ordersAllowed });
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +45,21 @@ class MyDrawer extends StatelessWidget {
             onTap: () => Navigator.pop(context),
           ),
 
-          //HOME LIST TILE
-          MyDrawerTile(
-            text: "CARRRITO",
-            icon: Icons.shopping_cart_rounded,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CartPage(),
-                ),
-              );
-            },
-          ),
+          if(ordersAllowed)
+            //HOME LIST TILE
+            MyDrawerTile(
+              text: "CARRRITO",
+              icon: Icons.shopping_cart_rounded,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CartPage(),
+                  ),
+                );
+              },
+            ),
 
           //SETTINGS LIST TILE
           MyDrawerTile(

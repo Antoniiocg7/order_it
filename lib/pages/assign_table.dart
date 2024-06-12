@@ -105,8 +105,10 @@ class _AssignTableState extends State<AssignTable> {
             'La mesa $tableNumber está ocupada, escoja otra por favor.', () {});
       } else {
         //print('Table $tableNumber assigned successfully.');
-        _showDialog('Table Assigned',
-            'Table $tableNumber has been successfully assigned to you.', () {
+        
+        _showDialog('Mesa asignada',
+          'La mesa $tableNumber ha sido reservada con éxito.', () {
+            controller?.stopCamera();
           Navigator.push(
             context,
             MaterialPageRoute(

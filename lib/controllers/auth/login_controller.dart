@@ -31,9 +31,14 @@ class LoginController {
     );
 
     // TODO: PENDIENTE DE IMPLEMENTAR LOGICA MAL LOGIN ????
+
+    print('EMAIL: $email');
     bool success = await supabaseApi.login(email, password);
     int? rol = await supabaseApi.getUserRole(email);
     String? userId = await supabaseApi.getUserUUID(email);
+    print('SUCCESS: $success');
+    print('ROL: $rol');
+    print('USERID: $userId');
 
     if (context.mounted) {
       if (success) {

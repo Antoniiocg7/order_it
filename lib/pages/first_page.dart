@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/assign_table.dart';
 import 'package:order_it/pages/call_waiter.dart';
+import 'package:order_it/pages/home_page.dart';
 
 class FirstPage extends StatelessWidget {
   const FirstPage({super.key});
@@ -43,7 +44,7 @@ class FirstPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CallWaiter(),
+                        builder: (context) => const HomePage(ordersAllowed: false),
                       ),
                     );
                   },
@@ -62,10 +63,10 @@ class FirstPage extends StatelessWidget {
                         Lottie.asset(
                           height: 200,
                           width: 300,
-                          "assets/animations/waitress.json",
+                          "assets/animations/plato_girando.json",
                         ),
                         const Text(
-                          'Llamar a un camarero',
+                          'Ver la carta',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.black54,
