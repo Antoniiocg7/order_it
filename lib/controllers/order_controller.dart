@@ -1,8 +1,6 @@
 import 'package:order_it/models/cart.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
-import 'package:order_it/models/cart_item.dart';
-import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
 
 class OrderController {
@@ -31,7 +29,7 @@ class OrderController {
           cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
 
       print(cartItems[0].foodId);
-      
+
       final List<Map<String, dynamic>> cartFood =
           await supabaseApi.getFood2( cartItems[0].foodId );
 
@@ -47,8 +45,9 @@ class OrderController {
     }
   }
 
+
   // Los artículos del pedido
-  Future<List<Food>> fetchCartFood(List<Cart> carts) async {
+  Future<List<Food>> fetchCartFood2(List<Cart> carts) async {
     try {
       final List<Food> allFoods = [];
 
@@ -62,7 +61,7 @@ class OrderController {
         // Sacar el nombre del plato en base al ID del artículo
         for (CartItem cartItem in cartItems) {
           final List<Map<String, dynamic>> cartFoodData =
-              await supabaseApi.getFood3(cartItem.foodId);
+              await supabaseApi.getFood2(cartItem.foodId);
 
           final List<Food> cartFoods =
               cartFoodData.map((food) => Food.fromJson(food)).toList();
@@ -76,4 +75,5 @@ class OrderController {
       throw Exception('Failed to fetch cart items: $error');
     }
   }
+
 }

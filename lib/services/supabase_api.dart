@@ -668,7 +668,7 @@ class SupabaseApi {
     final url =
         '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
 
-        print('HOLA: $userId');
+    print('HOLA: $userId');
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -694,8 +694,6 @@ class SupabaseApi {
       throw Exception('Failed to load food_addons');
     }
   }
-
-
 
   Future<void> updateCartState() async {
     final supabase = Supabase.instance.client;
@@ -761,8 +759,9 @@ class SupabaseApi {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getFood2(List<String> foodIds) async {
-    final url = '$baseUrl/rest/v1/food?id=in.(${foodIds.join(",")})';
+  // Joaquin
+  Future<List<Map<String, dynamic>>> getFood2(foodId) async {
+    final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -777,24 +776,22 @@ class SupabaseApi {
     }
   }
 
+  //xuski
+  Future<List<Map<String, dynamic>>> getFood3(List<String> foodIds) async {
+    final url = '$baseUrl/rest/v1/food?id=in.(${foodIds.join(",")})';
+    final headers = _createHeaders();
 
+    final response = await http.get(Uri.parse(url), headers: headers);
 
+    print(response.body);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to load categories');
+    }
+  }
 
   Future<List<Map<String, dynamic>>> getOrders2([String? userId]) async {
     final supabase = Supabase.instance.client;
@@ -829,20 +826,6 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Failed to load cart items');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getFood3(String foodId) async {
-    final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
-    final headers = _createHeaders();
-
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonResponse = json.decode(response.body);
-      return jsonResponse.cast<Map<String, dynamic>>();
-    } else {
-      throw Exception('Failed to load food');
     }
   }
 }
