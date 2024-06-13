@@ -6,6 +6,7 @@ class QuantitySelector extends StatefulWidget {
   final Food food;
   final VoidCallback onIncrementAction;
   final VoidCallback onDecrementAction;
+  final ValueNotifier<bool> isLoadingNotifier;
 
   const QuantitySelector({
     super.key,
@@ -13,6 +14,7 @@ class QuantitySelector extends StatefulWidget {
     required this.food,
     required this.onIncrementAction,
     required this.onDecrementAction,
+    required this.isLoadingNotifier,
   });
 
   @override
@@ -46,47 +48,54 @@ class _QuantitySelectorState extends State<QuantitySelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // Botón decrementar
-          GestureDetector(
-            onTap: decrement,
-            child: Icon(
-              quantity == 1 ? Icons.delete : Icons.remove,
-              size: 20,
-              color: quantity == 1 ? Colors.red.shade400 : Theme.of(context).colorScheme.primary,
-            ),
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.isLoadingNotifier,
+      builder: (context, isLoading, child) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(25),
           ),
-          // Contador de cantidad
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: SizedBox(
-              height: 20,
-              width: 25,
-              child: Center(
-                child: Text(quantity.toString()),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // Botón decrementar
+              GestureDetector(
+                onTap: isLoading ? null : decrement,
+                child: Icon(
+                  quantity == 1 ? Icons.delete : Icons.remove,
+                  size: 20,
+                  color: quantity == 1
+                      ? Colors.red.shade400
+                      : Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
+              // Contador de cantidad
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: SizedBox(
+                  height: 20,
+                  width: 25,
+                  child: Center(
+                    child: Text(quantity.toString()),
+                  ),
+                ),
+              ),
+              // Botón incrementar
+              GestureDetector(
+                onTap: isLoading ? null : increment,
+                child: Icon(
+                  Icons.add,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ],
           ),
-          // Botón incrementar
-          GestureDetector(
-            onTap: increment,
-            child: Icon(
-              Icons.add,
-              size: 20,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

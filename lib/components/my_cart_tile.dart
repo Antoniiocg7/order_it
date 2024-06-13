@@ -15,26 +15,18 @@ class MyCartTile extends StatefulWidget {
 }
 
 class _MyCartTileState extends State<MyCartTile> {
-  bool isLoading = false;
+  final ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
 
-  void handleIncrement(Restaurant restaurant) {
-    setState(() {
-      isLoading = true;
-    });
-    restaurant.addToCart(widget.cartFood.food, widget.cartFood.addons);
-    setState(() {
-      isLoading = false;
-    });
+  Future<void> handleIncrement(Restaurant restaurant) async {
+    isLoadingNotifier.value = true;
+    await restaurant.addToCart(widget.cartFood.food, widget.cartFood.addons);
+    isLoadingNotifier.value = false;
   }
 
-  void handleDecrement(Restaurant restaurant) {
-    setState(() {
-      isLoading = true;
-    });
-    restaurant.removeFromCart(widget.cartFood);
-    setState(() {
-      isLoading = false;
-    });
+  Future<void> handleDecrement(Restaurant restaurant) async {
+    isLoadingNotifier.value = true;
+    await restaurant.removeFromCart(widget.cartFood);
+    isLoadingNotifier.value = false;
   }
 
   @override
@@ -83,15 +75,17 @@ class _MyCartTileState extends State<MyCartTile> {
                           children: [
                             AnimatedPrice(
                               price: restaurant.formatPrice(
-                                widget.cartFood.food.price * widget.cartFood.quantity,
+                                widget.cartFood.food.price *
+                                    widget.cartFood.quantity,
                               ),
-                              isLoading: isLoading,
+                              isLoading: isLoadingNotifier.value,
                             ),
                             QuantitySelector(
                               initialQuantity: widget.cartFood.quantity,
                               food: widget.cartFood.food,
                               onIncrementAction: () => handleIncrement(restaurant),
                               onDecrementAction: () => handleDecrement(restaurant),
+                              isLoadingNotifier: isLoadingNotifier,
                             ),
                           ],
                         ),
@@ -126,9 +120,12 @@ class _MyCartTileState extends State<MyCartTile> {
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
-                              backgroundColor: Theme.of(context).colorScheme.secondary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
                               labelStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.inversePrimary,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
                                 fontSize: 12,
                               ),
                             ),
