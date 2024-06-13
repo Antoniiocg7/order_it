@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
@@ -49,14 +46,12 @@ class Restaurant extends ChangeNotifier {
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );
-      
       }  
       
       if (cartId.isEmpty) {
 
         final supabase = Supabase.instance.client;
         final user = await supabase.auth.getUser();
-        //final userId = user.user?.id.toString();
 
         final existingCart = await supabase
             .from('cart')
@@ -72,17 +67,12 @@ class Restaurant extends ChangeNotifier {
               .eq('food_id', food.id);
 
           if (itemIsInCart.isNotEmpty) {
-            final response = await supabase
+            await supabase
                 .from('cart_item')
                 .update({'quantity': itemIsInCart[0]['quantity'] + 1})
                 .eq('id', itemIsInCart[0]['id'])
                 .select();
-            print(response);
 
-            /* await supabaseApi.updateItemCart(
-                itemIsInCart[0]["id"],
-                selectedAddons.map((addon) => addon.id).toList(),
-                itemIsInCart[0]['quantity'] + 1); */
           } else {
             await supabaseApi.addItemToCart(
               existingCartId.toString(),
