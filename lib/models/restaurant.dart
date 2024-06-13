@@ -46,13 +46,16 @@ class Restaurant extends ChangeNotifier {
           selectedAddons.map((addon) => addon.id).toList(),
         );
       } else {
-        
         final supabase = Supabase.instance.client;
         final user = await supabase.auth.getUser();
         //final userId = user.user?.id.toString();
 
-        final existingCart =
-            await supabase.from('cart').select('id').eq('is_finished', false).eq('user_id', user.user!.id);
+        final existingCart = await supabase
+            .from('cart')
+            .select('id')
+            .eq('is_finished', false)
+            .eq('user_id', user.user!.id);
+            
         final existingCartId = existingCart.first['id'];
         if (existingCart.first.isNotEmpty) {
           await supabaseApi.addItemToCart(
@@ -85,7 +88,6 @@ class Restaurant extends ChangeNotifier {
     }
   }
 
-
   double getTotalPrice() {
     double total = 0.0;
 
@@ -102,7 +104,6 @@ class Restaurant extends ChangeNotifier {
     return total;
   }
 
-
   int getTotalItemCount() {
     int totalItemCount = 0;
 
@@ -113,9 +114,15 @@ class Restaurant extends ChangeNotifier {
     return totalItemCount;
   }
 
+  void clearCart() async {
 
-  void clearCart() {
+
+    final SupabaseApi supabase = SupabaseApi();
+    final cartId = await supabase.getCart();
+    await supabase.clearCart(cartId);
+
     _cart.clear();
+
     notifyListeners();
   }
 
@@ -123,12 +130,10 @@ class Restaurant extends ChangeNotifier {
     H E L P E R S
   */
 
-
   String displayCartReceipt() {
     final receipt = StringBuffer();
     receipt.writeln("Here's your receipt");
     receipt.writeln();
-
 
     String formattedData =
         DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
@@ -154,11 +159,9 @@ class Restaurant extends ChangeNotifier {
     return receipt.toString();
   }
 
-
   String _formatPrice(double price) {
     return "${price.toStringAsFixed(2)}€";
   }
-
 
   String _formatAddons(List<Addon> addons) {
     return addons

@@ -318,23 +318,12 @@ class SupabaseApi {
   }
 
   Future<void> clearCart(String cartId) async {
-    final String url = '$baseUrl/rest/v1/cart_item?cart_id=$cartId';
+
+    final String url = '$baseUrl/rest/v1/cart_item?cart_id=eq.$cartId';
     final headers = _createHeaders();
 
     try {
-      final http.Response response =
-          await http.delete(Uri.parse(url), headers: headers);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData['error'] != null) {
-          throw Exception(responseData['error']['message']);
-        }
-      } else {
-        throw Exception(
-          'Error al limpiar el carrito, status code: ${response.statusCode}',
-        );
-      }
+      await http.delete(Uri.parse(url), headers: headers);
     } catch (e) {
       throw Exception('Error al limpiar el carrito: $e');
     }
