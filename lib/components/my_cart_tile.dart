@@ -16,7 +16,7 @@ class MyCartTile extends StatelessWidget {
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.circular(8)),
-        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
         child: Column(
           children: [
             Padding(
@@ -29,8 +29,8 @@ class MyCartTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
                       cartFood.food.imagePath,
-                      width: 100,
-                      height: 100,
+                      width: 70,
+                      height: 70,
                       fit: BoxFit.cover,
                     ),
                   ),

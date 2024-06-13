@@ -58,6 +58,9 @@ class Restaurant extends ChangeNotifier {
             
         final existingCartId = existingCart.first['id'];
         if (existingCart.first.isNotEmpty) {
+          
+          
+
           await supabaseApi.addItemToCart(
             existingCartId.toString(),
             food.id,
@@ -159,9 +162,11 @@ class Restaurant extends ChangeNotifier {
     return receipt.toString();
   }
 
+
   String _formatPrice(double price) {
     return "${price.toStringAsFixed(2)}€";
   }
+
 
   String _formatAddons(List<Addon> addons) {
     return addons

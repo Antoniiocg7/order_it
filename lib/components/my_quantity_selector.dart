@@ -9,10 +9,11 @@ class QuantitySelector extends StatelessWidget {
 
   const QuantitySelector(
       {super.key,
-      required this.quantity,
-      required this.food,
-      required this.onIncrement,
-      required this.onDecrement});
+        required this.quantity,
+        required this.food,
+        required this.onIncrement,
+        required this.onDecrement
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,10 @@ class QuantitySelector extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular( 50 ),
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Botón decrementar
           GestureDetector(
@@ -37,10 +39,13 @@ class QuantitySelector extends StatelessWidget {
 
           // Contador de cantidad
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+          
+            padding: const EdgeInsets.symmetric(horizontal: 18),
             child: SizedBox(
-              width: 20,
+              
+              width: 30,
               child: Center(
+              
                 child: Text(quantity.toString()),
               ),
             ),

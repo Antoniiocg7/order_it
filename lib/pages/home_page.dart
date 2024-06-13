@@ -85,7 +85,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       },
                     ),
                     title: const Text('Order It'),
-                    actions: widget.ordersAllowed ? [
+                    actions: 
+                    //widget.ordersAllowed ? 
+                    [
                           IconButton(
                             onPressed: () async {
                           final restaurant =
@@ -104,7 +106,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             icon: const Icon(Icons.shopping_cart),
                           ),
                         ] 
-                      : [],
+                      //: [],
                     ),
                   body: Column(
                     children: [
