@@ -6,7 +6,7 @@ class User {
   final DateTime fechaNacimiento;
   final String email;
   final String telefono;
-  final List<Map<String, dynamic>> creditCard; // Cambiado el tipo de dato aquí
+  List<Map<String, dynamic>> creditCard; // Cambiado el tipo de dato aquí
   final int rol;
 
   User({

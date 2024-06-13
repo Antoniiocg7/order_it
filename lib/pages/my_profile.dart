@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/user_controller.dart';
-import 'package:order_it/models/usuario.dart';
+import 'package:order_it/models/usuario.dart' as order_it;
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key, required this.title});
@@ -14,12 +14,14 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   final UserController userController = UserController();
-  late Future<User> user;
+  late Future<order_it.User> user;
+
+
 
   @override
   void initState() {
     super.initState();
-    user = userController.getUser("segurajoaquinm@gmail.com");
+    user = userController.getUser();
     if (kDebugMode) {
       print(user);
     }
@@ -37,7 +39,7 @@ class _MyProfileState extends State<MyProfile> {
         ),
         title: Text(widget.title),
       ),
-      body: FutureBuilder<User>(
+      body: FutureBuilder<order_it.User>(
         future: user,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

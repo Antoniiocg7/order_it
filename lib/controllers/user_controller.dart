@@ -4,10 +4,10 @@ import 'package:order_it/services/supabase_api.dart';
 class UserController {
   final SupabaseApi supabaseApi = SupabaseApi();
 
-  Future<User> getUser(String email) async {
+  Future<User> getUser([String? email]) async {
     try {
       final List<Map<String, dynamic>> userData =
-          await supabaseApi.getUser(email);
+          await supabaseApi.getUser();
 
       if (userData.isEmpty) {
         throw Exception('No user found with this email');

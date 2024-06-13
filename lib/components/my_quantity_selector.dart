@@ -1,26 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/models/food.dart';
 
-class QuantitySelector extends StatelessWidget {
-  final int quantity;
+class QuantitySelector extends StatefulWidget {
+  final int initialQuantity;
   final Food food;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
+  final VoidCallback onIncrementAction;
+  final VoidCallback onDecrementAction;
 
-  const QuantitySelector(
-      {super.key,
-        required this.quantity,
-        required this.food,
-        required this.onIncrement,
-        required this.onDecrement
+  const QuantitySelector({
+    super.key,
+    required this.initialQuantity,
+    required this.food,
+    required this.onIncrementAction,
+    required this.onDecrementAction,
+  });
+
+  @override
+  State<QuantitySelector> createState() => _QuantitySelectorState();
+}
+
+class _QuantitySelectorState extends State<QuantitySelector> {
+  late int quantity;
+
+  @override
+  void initState() {
+    super.initState();
+    quantity = widget.initialQuantity;
+  }
+
+  void increment() {
+    setState(() {
+      quantity++;
+    });
+    widget.onIncrementAction();
+  }
+
+  void decrement() {
+    if (quantity > 1) {
+      setState(() {
+        quantity--;
       });
+    }
+    widget.onDecrementAction();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular( 25 ),
+        borderRadius: BorderRadius.circular(25),
       ),
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -29,32 +58,27 @@ class QuantitySelector extends StatelessWidget {
         children: [
           // Botón decrementar
           GestureDetector(
-            onTap: onDecrement,
+            onTap: decrement,
             child: Icon(
-              quantity == 1? Icons.delete : Icons.remove,
+              quantity == 1 ? Icons.delete : Icons.remove,
               size: 20,
-              color: quantity == 1? Colors.red.shade400: Theme.of(context).colorScheme.primary,
+              color: quantity == 1 ? Colors.red.shade400 : Theme.of(context).colorScheme.primary,
             ),
           ),
-
           // Contador de cantidad
           Padding(
-          
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: SizedBox(
-              
               height: 20,
               width: 25,
               child: Center(
-              
                 child: Text(quantity.toString()),
               ),
             ),
           ),
-
           // Botón incrementar
           GestureDetector(
-            onTap: onIncrement,
+            onTap: increment,
             child: Icon(
               Icons.add,
               size: 20,

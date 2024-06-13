@@ -9,7 +9,7 @@ class OrderController {
   // Los pedidos del usuario
   Future<List<Cart>> fetchOrders([String? userId]) async {
     try {
-      final List<Map<String, dynamic>> cartData = await supabaseApi.getOrders();
+      final List<Map<String, dynamic>> cartData = await supabaseApi.getOrders(userId);
 
       final List<Cart> carts =
           cartData.map((cartData) => Cart.fromJson(cartData)).toList();

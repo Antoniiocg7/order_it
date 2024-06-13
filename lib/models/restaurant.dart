@@ -20,11 +20,14 @@ class Restaurant extends ChangeNotifier {
   final List<CartFood> _cart = [];
 
   // Método para cargar los detalles del carrito
-  Future<void> loadCartDetails() async {
+  Future<void> loadCartDetails( ) async {
     try {
-      List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
+      List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails( );
+
       _cart.clear();
+
       _cart.addAll(cartFoodList);
+
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -36,50 +39,47 @@ class Restaurant extends ChangeNotifier {
   // Añadir al carrito
   Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
     try {
-      final cartId = await supabaseApi
-          .createCart(); // Crear un carrito en la base de datos
+      String cartId = '';
 
-      if (cartId.isNotEmpty) {
+      final supabase = Supabase.instance.client;
+      final user = await supabase.auth.getUser();
+
+      final existingCart = await supabase
+          .from('cart')
+          .select('id')
+          .eq('is_finished', false)
+          .eq('user_id', user.user!.id);
+
+      if (existingCart.isNotEmpty) {
+        final existingCartId = existingCart.first["id"];
+
+        final itemIsInCart =
+            await supabase.from('cart_item').select('*').eq('food_id', food.id);
+
+        if (itemIsInCart.isNotEmpty) {
+          await supabase
+              .from('cart_item')
+              .update({'quantity': itemIsInCart[0]['quantity'] + 1})
+              .eq('id', itemIsInCart[0]['id']);
+
+        } else {
+
+          await supabaseApi.addItemToCart(
+            existingCartId.toString(),
+            food.id,
+            selectedAddons.map((addon) => addon.id).toList(),
+          );
+        }
+      }
+
+      if (existingCart.isEmpty) {
+        cartId = await supabaseApi.createCart();
+
         await supabaseApi.addItemToCart(
           cartId,
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );
-      }
-
-      if (cartId.isEmpty) {
-        final supabase = Supabase.instance.client;
-        final user = await supabase.auth.getUser();
-
-        final existingCart = await supabase
-            .from('cart')
-            .select('id')
-            .eq('is_finished', false)
-            .eq('user_id', user.user!.id);
-
-        final existingCartId = existingCart.first['id'];
-        if (existingCart.first.isNotEmpty) {
-          final itemIsInCart = await supabase
-              .from('cart_item')
-              .select('*')
-              .eq('food_id', food.id);
-
-          if (itemIsInCart.isNotEmpty) {
-            await supabase
-                .from('cart_item')
-                .update({'quantity': itemIsInCart[0]['quantity'] + 1})
-                .eq('id', itemIsInCart[0]['id'])
-                .select();
-          } else {
-            await supabaseApi.addItemToCart(
-              existingCartId.toString(),
-              food.id,
-              selectedAddons.map((addon) => addon.id).toList(),
-            );
-          }
-        } else {
-          return false;
-        }
       }
 
       await loadCartDetails();

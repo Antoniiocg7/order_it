@@ -136,8 +136,12 @@ class SupabaseApi {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getUser(String email) async {
-    final url = '$baseUrl/rest/v1/users?email=eq.${Uri.encodeComponent(email)}';
+  Future<List<Map<String, dynamic>>> getUser([String? email]) async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+
+    final url =
+        '$baseUrl/rest/v1/users?email=eq.${Uri.encodeComponent(user.user!.email!)}';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -220,28 +224,27 @@ class SupabaseApi {
     final cartId = RandomIds.generateRandomId().toString();
     final supabase = Supabase.instance.client;
     final UserResponse userResponse = await supabase.auth.getUser();
-    final supabaseApi = SupabaseApi();
-    final checkCart = await supabaseApi.checkCart();
-    if (checkCart.isEmpty || checkCart.first['is_finished'] == true) {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode({
-          "id": cartId,
-          "user_id": userResponse.user!.id,
-          "is_finished": false,
-          "created_at": now,
-        }),
-      );
+  
+    try {
 
-      if (response.statusCode == 201) {
-        return cartId;
-      } else {
-        return '';
-      }
-    } else {
-      return "";
+      await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode({
+        "id": cartId,
+        "user_id": userResponse.user!.id,
+        "is_finished": false,
+        "created_at": now,
+      }),
+    );
+
+    return cartId;
+
+
+    } catch (e) {
+      throw Exception("Error al crear el carrito $e");
     }
+  
   }
 
   Future<void> addItemToCart(
@@ -254,7 +257,11 @@ class SupabaseApi {
     final cartItemId = RandomIds.generateRandomId().toString();
     final quantity = quantityParam ?? 1;
     // Creación de los cart_items asignados al cart
-    await http.post(
+    
+
+    try {
+
+      await http.post(
       Uri.parse(url),
       headers: headers,
       body: jsonEncode(
@@ -267,7 +274,6 @@ class SupabaseApi {
       ),
     );
 
-    try {
       // Obtenemos el ID del cart_item al que queremos asignar el complemento
       final cartItemResponse = await http.get(
         Uri.parse(url3),
@@ -275,6 +281,7 @@ class SupabaseApi {
       );
 
       final List<dynamic> cartItemData = jsonDecode(cartItemResponse.body);
+
       if (cartItemData.isNotEmpty) {
         final cartItem = cartItemData.last;
         final cartItemId = cartItem['id'];
@@ -421,6 +428,8 @@ class SupabaseApi {
             false,
           );
 
+      print("supabaseApi - CheckCart - $responseData ");
+
       return responseData;
     } catch (e) {
       throw Exception('Error al encontrar el carrito asociado al usuario: $e');
@@ -453,9 +462,11 @@ class SupabaseApi {
   // }
 
   Future<List<CartItem>> getUserCartDetails() async {
+
     final cart = await getCart();
 
     final cartItemsJson = await getCartItems(cart);
+
     List<CartItem> cartItems =
         cartItemsJson.map<CartItem>((item) => CartItem.fromJson(item)).toList();
 
@@ -483,6 +494,7 @@ class SupabaseApi {
   }
 
   Future<Food> getFoodFromId(String foodId) async {
+    
     final response =
         await supabase.from('food').select('*').eq('id', foodId).single();
     return Food.fromJson(response);

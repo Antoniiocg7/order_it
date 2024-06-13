@@ -1,13 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/components/animated_price.dart';
 import 'package:order_it/components/my_quantity_selector.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
-class MyCartTile extends StatelessWidget {
+class MyCartTile extends StatefulWidget {
   final CartFood cartFood;
 
   const MyCartTile({super.key, required this.cartFood});
+
+  @override
+  _MyCartTileState createState() => _MyCartTileState();
+}
+
+class _MyCartTileState extends State<MyCartTile> {
+  bool isLoading = false;
+
+  void handleIncrement(Restaurant restaurant) {
+    setState(() {
+      isLoading = true;
+    });
+    restaurant.addToCart(widget.cartFood.food, widget.cartFood.addons);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void handleDecrement(Restaurant restaurant) {
+    setState(() {
+      isLoading = true;
+    });
+    restaurant.removeFromCart(widget.cartFood);
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +57,7 @@ class MyCartTile extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      cartFood.food.imagePath,
+                      widget.cartFood.food.imagePath,
                       width: 70,
                       height: 70,
                       fit: BoxFit.cover,
@@ -43,7 +71,7 @@ class MyCartTile extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          cartFood.food.name,
+                          widget.cartFood.food.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -53,24 +81,17 @@ class MyCartTile extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              restaurant.formatPrice(cartFood.food.price * cartFood.quantity),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
+                            AnimatedPrice(
+                              price: restaurant.formatPrice(
+                                widget.cartFood.food.price * widget.cartFood.quantity,
                               ),
+                              isLoading: isLoading,
                             ),
                             QuantitySelector(
-                              quantity: cartFood.quantity,
-                              food: cartFood.food,
-                              onIncrement: () {
-                                restaurant.addToCart(
-                                  cartFood.food,
-                                  cartFood.addons,
-                                );
-                              },
-                              onDecrement: () {
-                                restaurant.removeFromCart(cartFood);
-                              },
+                              initialQuantity: widget.cartFood.quantity,
+                              food: widget.cartFood.food,
+                              onIncrementAction: () => handleIncrement(restaurant),
+                              onDecrementAction: () => handleDecrement(restaurant),
                             ),
                           ],
                         ),
@@ -81,14 +102,14 @@ class MyCartTile extends StatelessWidget {
               ),
             ),
             // Addons
-            if (cartFood.addons.isNotEmpty)
+            if (widget.cartFood.addons.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: SizedBox(
                   height: 60,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    children: cartFood.addons
+                    children: widget.cartFood.addons
                         .map(
                           (addon) => Padding(
                             padding: const EdgeInsets.only(right: 8.0),

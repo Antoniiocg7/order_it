@@ -81,7 +81,7 @@ class CartPage extends StatelessWidget {
                   children: [
                     const SizedBox(height: 35),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         BotonPagar(userCart: userCart),
                         Column(
@@ -129,7 +129,7 @@ class BotonPagar extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all<Color>(
-          const Color.fromARGB(255, 22, 180, 88),
+          const Color.fromARGB(255, 19, 160, 78),
         ),
       ),
       onPressed: userCart.isEmpty
