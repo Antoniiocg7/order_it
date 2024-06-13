@@ -19,7 +19,7 @@ class FoodTile extends StatelessWidget {
             child: Row(
               children: [
             
-                // TEXT FOOD DETAILS
+                // Detalles del plato
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +43,7 @@ class FoodTile extends StatelessWidget {
 
                 const SizedBox( width: 15 ),
             
-                // FOOD IMAGE
+                // Imagen
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.asset(
@@ -58,7 +58,7 @@ class FoodTile extends StatelessWidget {
           ),
         ),
 
-        // DIVIDER LINE
+        // Diver
         Divider(
           color: Theme.of(context).colorScheme.tertiary,
           endIndent: 25,

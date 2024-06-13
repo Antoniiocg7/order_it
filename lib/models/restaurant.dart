@@ -16,7 +16,7 @@ class Restaurant extends ChangeNotifier {
   /*
     O P E R A T I O N S
   */
-  // USER CART
+  // Carrito del usuario
   final List<CartFood> _cart = [];
 
   // Método para cargar los detalles del carrito
@@ -28,12 +28,12 @@ class Restaurant extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
-        print("Error loading cart details: $e");
+        print("Error al cargar los detalles del carrito: $e");
       }
     }
   }
 
-  // ADD TO CART
+  // Añadir al carrito
   Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
     try {
       final cartId = await supabaseApi
@@ -67,7 +67,7 @@ class Restaurant extends ChangeNotifier {
     }
   }
 
-  // REMOVE FROM CART
+  // Eliminar del carrito
   Future<bool> removeFromCart(CartFood cartFood) async {
     try {
       // Eliminar el ítem del carrito en la base de datos
@@ -121,7 +121,7 @@ class Restaurant extends ChangeNotifier {
 
   String displayCartReceipt() {
     final receipt = StringBuffer();
-    receipt.writeln("Here's your receipt");
+    receipt.writeln("Aquí tienes tu recibo");
     receipt.writeln();
 
 
@@ -136,15 +136,15 @@ class Restaurant extends ChangeNotifier {
       receipt.writeln(
           "${cartFood.quantity} x ${cartFood.food.name} - ${_formatPrice(cartFood.food.price)}");
       if (cartFood.addons.isNotEmpty) {
-        receipt.writeln(" Add-ons: ${_formatAddons(cartFood.addons)}");
+        receipt.writeln(" Complementos: ${_formatAddons(cartFood.addons)}");
       }
       receipt.writeln();
     }
 
     receipt.writeln("------------");
     receipt.writeln();
-    receipt.writeln("Total Items: ${getTotalItemCount()}");
-    receipt.writeln("Total Price: ${_formatPrice(getTotalPrice())}");
+    receipt.writeln("Cantidad total: ${getTotalItemCount()}");
+    receipt.writeln("Precio total: ${_formatPrice(getTotalPrice())}");
 
     return receipt.toString();
   }

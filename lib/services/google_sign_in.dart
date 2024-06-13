@@ -11,8 +11,8 @@ class GoogleSignInService {
     const iosClientId =
         '581750972976-q01j9q71b265n0am7fated10rjdag5t1.apps.googleusercontent.com';
 
-    // Google sign in on Android will work without providing the Android
-    // Client ID registered on Google Cloud.
+    // Google sign in en Android funciona sin añadir Android
+    // Cliente ID registrado en Google Cloud
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
       clientId: iosClientId,
@@ -24,10 +24,10 @@ class GoogleSignInService {
     final idToken = googleAuth.idToken;
 
     if (accessToken == null) {
-      throw 'No Access Token found.';
+      throw 'No se encontró Access Token';
     }
     if (idToken == null) {
-      throw 'No ID Token found.';
+      throw 'No se encontró ID Token';
     }
 
     final supabase = Supabase.instance.client;

@@ -165,7 +165,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Error al cargar las categorías');
     }
   }
 
@@ -179,7 +179,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Error al cargar los complementos');
     }
   }
 
@@ -193,7 +193,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Error al cargar los platos');
     }
   }
 
@@ -207,7 +207,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load food_addons');
+      throw Exception('Error al cargar los complementos');
     }
   }
 
@@ -254,7 +254,7 @@ class SupabaseApi {
     final url3 = '$baseUrl/rest/v1/cart_item?cart_id=eq.$cartId&select=id';
     final headers = _createHeadersInsert();
     final cartItemId = RandomIds.generateRandomId().toString();
-    // CREACIÓN DE LOS CART_ITEMS ASIGNADOS AL CART
+    // Creación de los cart_items asignados al cart
     await http.post(
       Uri.parse(url),
       headers: headers,
@@ -269,7 +269,7 @@ class SupabaseApi {
     );
 
     try {
-      // OBTENEMOS EL ID DEL CART_ITEM AL QUE QUEREMOS ASIGNAR EL ADDONS
+      // Obtenemos el ID del cart_item al que queremos asignar el complemento
       final cartItemResponse = await http.get(
         Uri.parse(url3),
         headers: headers,
@@ -294,11 +294,11 @@ class SupabaseApi {
             );
 
             if (response.statusCode != 201) {
-              throw Exception("Error en la petición de agregar addons al item");
+              throw Exception("Error en la petición de agregar complementos al item");
             }
           }
         } catch (e) {
-          throw Exception("Error al agregar addons al item del carrito");
+          throw Exception("Error al agregar complementos al item del carrito");
         }
       }
     } catch (e) {
@@ -481,7 +481,7 @@ class SupabaseApi {
 
     if (addonIds.isEmpty) {
       if (kDebugMode) {
-        print('No addons found for this cart item.');
+        print('No se encontraron complementos para este plato.');
       }
       return [];
     }
@@ -550,7 +550,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load order details');
+      throw Exception('Error al cargar los detalles del pedido');
     }
   }
 
@@ -564,7 +564,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load tables');
+      throw Exception('Error al cargar las mesas');
     }
   }
 
@@ -671,7 +671,7 @@ class SupabaseApi {
 
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load food_addons');
+      throw Exception('Error al cargar food_addons');
     }
   }
 
@@ -709,16 +709,16 @@ class SupabaseApi {
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         if (kDebugMode) {
-          print('Cart state updated successfully');
+          print('Se actualizó el estado del carrito');
         }
       } else {
         if (kDebugMode) {
-          print('Failed to update cart state: ${response.statusCode}');
+          print('Error al actualizar el estado del carrito: ${response.statusCode}');
         }
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error occurred: $e');
+        print('Error: $e');
       }
     }
   }
@@ -734,7 +734,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load food_addons');
+      throw Exception('Error al cargar food_addons');
     }
   }
 
@@ -749,7 +749,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Error al cargar las categorías');
     }
   }
 
@@ -764,7 +764,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Error al cargar las categorías');
     }
   }
 
@@ -785,7 +785,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load orders');
+      throw Exception('Error al cargar los pedidos');
     }
   }
 
@@ -800,7 +800,7 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Failed to load cart items');
+      throw Exception('Error al cargar los items del carrito');
     }
   }
 }

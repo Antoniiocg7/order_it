@@ -17,20 +17,19 @@ class CartPage extends StatelessWidget {
     SupabaseApi().getCartFoodAddons();
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) {
-        // CART
+        // Carrito
         final userCart = restaurant.cart;
         if (kDebugMode) {
           print(userCart.length);
         }
 
-        // SCAFFOLD UI
         return Scaffold(
           appBar: AppBar(
             title: const Text("Cart"),
             backgroundColor: Colors.transparent,
             foregroundColor: Theme.of(context).colorScheme.inversePrimary,
             actions: [
-              // CLEAR CART BUTTON
+              // Vaciar carrito
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
@@ -38,16 +37,14 @@ class CartPage extends StatelessWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text(
-                          "Are you sure you want to clear the cart?"),
+                          "¿Estás seguro de que quieres vaciar el carrito?"),
                       actions: [
-                        // CANCEL BUTTON
                         TextButton(
-                            child: const Text("Cancel"),
+                            child: const Text("No"),
                             onPressed: () => Navigator.pop(context)),
 
-                        // ACCEPT BUTTON
                         TextButton(
-                          child: const Text("Yes"),
+                          child: const Text("Sí"),
                           onPressed: () {
                             Navigator.pop(context);
                             restaurant.clearCart();
@@ -61,22 +58,19 @@ class CartPage extends StatelessWidget {
             ],
           ),
           body: Column(
-            // LIST OF CART
             children: [
               Expanded(
                 child: Column(
                   children: [
                     (userCart.isEmpty)
                         ? const Expanded(
-                            child: Center(child: Text("Cart is empty...")))
+                            child: Center(child: Text("Carrito vacío")))
                         : Expanded(
                             child: ListView.builder(
                               itemCount: userCart.length,
                               itemBuilder: (context, index) {
-                                // GET INDIVIDUAL CART ITEM
-                                final cartFood = userCart[index];
 
-                                // RETURN CART TILE UI
+                                final cartFood = userCart[index];
                                 return MyCartTile(
                                   cartFood: cartFood,
                                 );
@@ -87,7 +81,6 @@ class CartPage extends StatelessWidget {
                 ),
               ),
 
-              // BUTTON TO PAY
               MyButton(
                 onTap: () => Navigator.push(
                   context,
@@ -95,7 +88,7 @@ class CartPage extends StatelessWidget {
                     builder: (context) => const PaymentPage(),
                   ),
                 ),
-                text: "Go to checkout",
+                text: "Pagar",
               ),
 
               const SizedBox(height: 25)

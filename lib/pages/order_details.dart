@@ -15,7 +15,7 @@ class OrderDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Details for Table $tableNumber'),
+        title: Text('Detalles del pedido de la mesa $tableNumber'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _getOrderDetails(),
@@ -26,15 +26,15 @@ class OrderDetailsPage extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
-                child: Text('No orders found for Table $tableNumber'));
+                child: Text('No hay pedidos en la mesa $tableNumber'));
           } else {
             List<Map<String, dynamic>> orders = snapshot.data!;
             return ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text('Order ${orders[index]['id']}'),
-                  subtitle: Text('Details: ${orders[index]['details']}'),
+                  title: Text('Pedido ${orders[index]['id']}'),
+                  subtitle: Text('Detalles: ${orders[index]['details']}'),
                 );
               },
             );

@@ -15,12 +15,12 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
+    // Menú desplegable
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // APP LOGO
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: Image.asset(
@@ -30,7 +30,6 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
-          // Divider
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Divider(
@@ -38,7 +37,6 @@ class MyDrawer extends StatelessWidget {
             ),
           ),
 
-          //HOME LIST TILE
           MyDrawerTile(
             text: "INICIO",
             icon: Icons.home,
@@ -46,7 +44,6 @@ class MyDrawer extends StatelessWidget {
           ),
 
           if(ordersAllowed)
-            //HOME LIST TILE
             MyDrawerTile(
               text: "CARRRITO",
               icon: Icons.shopping_cart_rounded,
@@ -61,7 +58,6 @@ class MyDrawer extends StatelessWidget {
               },
             ),
 
-          //SETTINGS LIST TILE
           MyDrawerTile(
             text: "AJUSTES",
             icon: Icons.settings,
@@ -79,7 +75,6 @@ class MyDrawer extends StatelessWidget {
           // Tirar logout abajo del todo
           const Spacer(),
 
-          //LOGGING OUT LIST TILE
           MyDrawerTile(
             text: "CERRAR SESION",
             icon: Icons.logout,

@@ -17,7 +17,7 @@ class AddonController {
       return addons;
     
     } catch (error) {
-      throw Exception('Failed to fetch addons: $error');
+      throw Exception('Error al traer los complementos: $error');
     }
   }
 }

@@ -27,12 +27,12 @@ void main() async {
   
 
   runApp(MultiProvider(providers: [
-    // THEME PROVIDER
+    // Provider del tema
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
     ),
 
-      // RESTAURANT PROVIDER
+      // Provider del restaurante
       ChangeNotifierProvider(
         create: (context) => Restaurant()
       ),

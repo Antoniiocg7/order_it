@@ -27,21 +27,21 @@ class FoodController {
         for (var addon in addons) addon.id: addon
       };
 
-      // Asignamos cada Addon a su Food
+      // Asignamos cada complemento a su Food
       for (var food in foods) {
-        // Obtenemos los Addons para el elemento Food actual
+        // Obtenemos los complementos para el elemento Food actual
         var addonIds = foodAddonData
             .where((fa) => fa['food_id'].toString() == food.id)
             .map((fa) => fa['addon_id'].toString())
             .toList();
 
-        // Le asignamos los Addon al elemento Food
+        // Le asignamos los complementos al elemento Food
         food.addons = addonIds.map((id) => addonMap[id]!).toList();
       }
 
       return foods;
     } catch (error) {
-      throw Exception('Failed to fetch food: $error');
+      throw Exception('Error al traer el plato: $error');
     }
   }
 
@@ -58,7 +58,7 @@ class FoodController {
       final List<Map<String, dynamic>> foodAddonData =
           await supabaseApi.getFoodAddons();
 
-      // Obtenemos los datos de Addon en formato JSON
+      // Obtenemos los datos del complemento en formato JSON
       final List<Addon> addons = await AddonController().fetchAddons();
 
       // Creamos un mapa para facilitar la búsqueda
@@ -66,21 +66,21 @@ class FoodController {
         for (var addon in addons) addon.id: addon
       };
 
-      // Asignamos cada Addon a su Food
+      // Asignamos cada complemento a su Food
       for (var food in foods) {
-        // Obtenemos los Addons para el elemento Food actual
+        // Obtenemos los complementos para el elemento Food actual
         var addonIds = foodAddonData
             .where((fa) => fa['food_id'].toString() == food.id)
             .map((fa) => fa['addon_id'].toString())
             .toList();
 
-        // Le asignamos los Addon al elemento Food
+        // Le asignamos los complementos al elemento Food
         food.addons = addonIds.map((id) => addonMap[id]!).toList();
       }
 
       return foods;
     } catch (error) {
-      throw Exception('Failed to fetch food: $error');
+      throw Exception('Error al traer el plato: $error');
     }
   }
 
@@ -91,7 +91,7 @@ class FoodController {
 
       return cartFood;
     } catch (error) {
-      throw Exception('Failed to fetch orders: $error');
+      throw Exception('Error al traer los pedidos: $error');
     }
   }
 }

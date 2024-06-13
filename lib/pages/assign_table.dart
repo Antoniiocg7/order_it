@@ -139,7 +139,7 @@ class _AssignTableState extends State<AssignTable> {
                   result =
                       null; // Resetea el resultado para poder escanear otro QR
                 });
-                controller?.resumeCamera(); // Resume camera for scanning
+                controller?.resumeCamera(); // Reactiva la cámara para volver a escanear
                 onOkPressed(); // Ejecutar la acción del showdialog dinámicamente, (errores/éxito)
               },
               child: const Text('OK'),
