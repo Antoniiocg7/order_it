@@ -20,9 +20,9 @@ class QuantitySelector extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular( 50 ),
+        borderRadius: BorderRadius.circular( 25 ),
       ),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -31,19 +31,20 @@ class QuantitySelector extends StatelessWidget {
           GestureDetector(
             onTap: onDecrement,
             child: Icon(
-              Icons.remove,
+              quantity == 1? Icons.delete : Icons.remove,
               size: 20,
-              color: Theme.of(context).colorScheme.primary,
+              color: quantity == 1? Colors.red.shade400: Theme.of(context).colorScheme.primary,
             ),
           ),
 
           // Contador de cantidad
           Padding(
           
-            padding: const EdgeInsets.symmetric(horizontal: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: SizedBox(
               
-              width: 30,
+              height: 20,
+              width: 25,
               child: Center(
               
                 child: Text(quantity.toString()),
@@ -53,8 +54,7 @@ class QuantitySelector extends StatelessWidget {
 
           // Botón incrementar
           GestureDetector(
-            onTap: 
-            onIncrement,
+            onTap: onIncrement,
             child: Icon(
               Icons.add,
               size: 20,

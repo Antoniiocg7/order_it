@@ -54,7 +54,7 @@ class MyCartTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)}",
+                              restaurant.formatPrice(cartFood.food.price * cartFood.quantity),
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                               ),

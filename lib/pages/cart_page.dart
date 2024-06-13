@@ -128,7 +128,7 @@ class BotonPagar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
+        backgroundColor: WidgetStateProperty.all<Color>(
           const Color.fromARGB(255, 22, 180, 88),
         ),
       ),

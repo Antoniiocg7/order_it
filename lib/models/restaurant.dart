@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
@@ -38,16 +39,21 @@ class Restaurant extends ChangeNotifier {
   // Añadir al carrito
   Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
     try {
-      final cartId = await supabaseApi
-          .createCart(); // Crear un carrito en la base de datos
 
-      if (cartId != "") {
+      final cartId = await supabaseApi.createCart(); // Crear un carrito en la base de datos
+
+      if (cartId.isNotEmpty) {
+
         await supabaseApi.addItemToCart(
           cartId,
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );
-      } else {
+      
+      }  
+      
+      if (cartId.isEmpty) {
+
         final supabase = Supabase.instance.client;
         final user = await supabase.auth.getUser();
         //final userId = user.user?.id.toString();
@@ -58,13 +64,13 @@ class Restaurant extends ChangeNotifier {
             .eq('is_finished', false)
             .eq('user_id', user.user!.id);
 
-        final itemIsInCart =
-            await supabase.from('cart_item').select('*').eq('food_id', food.id);
-
-        print(itemIsInCart[0]);
-
         final existingCartId = existingCart.first['id'];
         if (existingCart.first.isNotEmpty) {
+          final itemIsInCart = await supabase
+              .from('cart_item')
+              .select('*')
+              .eq('food_id', food.id);
+
           if (itemIsInCart.isNotEmpty) {
             final response = await supabase
                 .from('cart_item')
@@ -98,15 +104,21 @@ class Restaurant extends ChangeNotifier {
 
   // Eliminar del carrito
   Future<bool> removeFromCart(CartFood cartFood) async {
-    try {
-      // Eliminar el ítem del carrito en la base de datos
-      await supabaseApi.removeFromCart(cartFood.id);
-
-      notifyListeners();
-      return true; // Indicar que se eliminó correctamente del carrito
-    } catch (e) {
-      return false; // Si hay un error, devolver false
+    if (cartFood.quantity == 1) {
+      return await supabaseApi.removeFromCart(cartFood.id);
     }
+
+    if (cartFood.quantity > 1) {
+      await supabase
+          .from("cart_item")
+          .update({'quantity': cartFood.quantity - 1})
+          .eq('id', cartFood.id)
+          .eq('food_id', cartFood.food.id);
+
+      return true;
+    }
+
+    return false;
   }
 
   double getTotalPrice() {

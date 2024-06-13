@@ -372,24 +372,21 @@ class SupabaseApi {
     }
   }
 
-  Future<void> removeFromCart(String cartItemId) async {
-    final String url = '$baseUrl/rest/v1/cart_item/$cartItemId';
+  Future<bool> removeFromCart(String cartItemId) async {
+   
+
+    final String url = '$baseUrl/rest/v1/cart_item?id=eq.$cartItemId';
     final headers = _createHeaders();
 
     try {
       final http.Response response =
           await http.delete(Uri.parse(url), headers: headers);
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData['error'] != null) {
-          throw Exception(responseData['error']['message']);
-        }
-      } else {
-        throw Exception(
-          'Error al eliminar el item del carrito, status code: ${response.statusCode}',
-        );
+      if (kDebugMode) {
+        print(response.statusCode);
       }
+
+      return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       throw Exception('Error al eliminar el item del carrito: $e');
     }
