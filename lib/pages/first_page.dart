@@ -36,6 +36,7 @@ class FirstPage extends StatelessWidget {
       
       ),
       body: Center(
+        
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
