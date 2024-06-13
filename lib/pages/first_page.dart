@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:order_it/components/my_drawer.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/assign_table.dart';
 import 'package:order_it/pages/home_page.dart';
 
 class FirstPage extends StatelessWidget {
+
+
   const FirstPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
+      drawer: const MyDrawer(ordersAllowed: false),
       appBar: AppBar(
-        title: const Text(
-          'Order It!',
-          style: TextStyle(
-            fontSize: 24,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.green,
-        elevation: 0,
         centerTitle: true,
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        leading: 
+          Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
+            },
+          ),
+        title: const Text('Order It!'),
+
+
+      
       ),
       body: Center(
         child: Padding(
@@ -54,11 +65,11 @@ class FirstPage extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 218, 243, 221),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withOpacity(0.2),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: Offset(0, 3),
@@ -104,11 +115,11 @@ class FirstPage extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 218, 243, 221),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withOpacity(0.2),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: Offset(0, 3),

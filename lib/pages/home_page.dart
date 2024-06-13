@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         );
                       },
                     ),
-                    title: const Text('Order It'),
+                    title: const Text('Order It!'),
                     actions: widget.ordersAllowed ? [
                           IconButton(
                             onPressed: () async {
