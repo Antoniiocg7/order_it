@@ -39,35 +39,50 @@ class Restaurant extends ChangeNotifier {
       final cartId = await supabaseApi
           .createCart(); // Crear un carrito en la base de datos
 
-      if (cartId != "") {
+      if (cartId.isNotEmpty) {
         await supabaseApi.addItemToCart(
           cartId,
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );
-      } else {
+      }
+
+      if (cartId.isEmpty) {
         final supabase = Supabase.instance.client;
         final user = await supabase.auth.getUser();
-        //final userId = user.user?.id.toString();
 
         final existingCart = await supabase
             .from('cart')
             .select('id')
             .eq('is_finished', false)
             .eq('user_id', user.user!.id);
-            
+
         final existingCartId = existingCart.first['id'];
         if (existingCart.first.isNotEmpty) {
-          await supabaseApi.addItemToCart(
-            existingCartId.toString(),
-            food.id,
-            selectedAddons.map((addon) => addon.id).toList(),
-          );
+          final itemIsInCart = await supabase
+              .from('cart_item')
+              .select('*')
+              .eq('food_id', food.id);
+
+          if (itemIsInCart.isNotEmpty) {
+            await supabase
+                .from('cart_item')
+                .update({'quantity': itemIsInCart[0]['quantity'] + 1})
+                .eq('id', itemIsInCart[0]['id'])
+                .select();
+          } else {
+            await supabaseApi.addItemToCart(
+              existingCartId.toString(),
+              food.id,
+              selectedAddons.map((addon) => addon.id).toList(),
+            );
+          }
         } else {
           return false;
         }
       }
 
+      await loadCartDetails();
       notifyListeners();
       return true; // Indicar que se agregó correctamente al carrito
     } catch (e) {
@@ -77,15 +92,27 @@ class Restaurant extends ChangeNotifier {
 
   // Eliminar del carrito
   Future<bool> removeFromCart(CartFood cartFood) async {
-    try {
-      // Eliminar el ítem del carrito en la base de datos
+    if (cartFood.quantity == 1) {
+      await supabaseApi.removeAddonsFromCartItem(cartFood.id);
       await supabaseApi.removeFromCart(cartFood.id);
-
+      await loadCartDetails();
       notifyListeners();
-      return true; // Indicar que se eliminó correctamente del carrito
-    } catch (e) {
-      return false; // Si hay un error, devolver false
     }
+
+    if (cartFood.quantity > 1) {
+      await supabase
+          .from("cart_item")
+          .update({'quantity': cartFood.quantity - 1})
+          .eq('id', cartFood.id)
+          .eq('food_id', cartFood.food.id);
+
+      // Actualizamos el carrito
+      await loadCartDetails();
+      notifyListeners();
+      return true;
+    }
+
+    return false;
   }
 
   double getTotalPrice() {
@@ -115,8 +142,6 @@ class Restaurant extends ChangeNotifier {
   }
 
   void clearCart() async {
-
-
     final SupabaseApi supabase = SupabaseApi();
     final cartId = await supabase.getCart();
     await supabase.clearCart(cartId);
@@ -144,7 +169,7 @@ class Restaurant extends ChangeNotifier {
 
     for (final cartFood in _cart) {
       receipt.writeln(
-          "${cartFood.quantity} x ${cartFood.food.name} - ${_formatPrice(cartFood.food.price)}");
+          "${cartFood.quantity} x ${cartFood.food.name} - ${formatPrice(cartFood.food.price)}");
       if (cartFood.addons.isNotEmpty) {
         receipt.writeln(" Complementos: ${_formatAddons(cartFood.addons)}");
       }
@@ -154,18 +179,18 @@ class Restaurant extends ChangeNotifier {
     receipt.writeln("------------");
     receipt.writeln();
     receipt.writeln("Cantidad total: ${getTotalItemCount()}");
-    receipt.writeln("Precio total: ${_formatPrice(getTotalPrice())}");
+    receipt.writeln("Precio total: ${formatPrice(getTotalPrice())}");
 
     return receipt.toString();
   }
 
-  String _formatPrice(double price) {
-    return "${price.toStringAsFixed(2)}€";
+  String formatPrice(double price) {
+    return "${price.toStringAsFixed(2)} €";
   }
 
   String _formatAddons(List<Addon> addons) {
     return addons
-        .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
+        .map((addon) => "${addon.name} (${formatPrice(addon.price)})")
         .join(", ");
   }
 }

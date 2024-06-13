@@ -35,10 +35,12 @@ class _FoodPageState extends State<FoodPage> {
       }
     }
 
+    
+
+
+
     // Añadir al carrito
-    bool success = await context
-        .read<Restaurant>()
-        .addToCart(food, currentlySelectedAddons);
+    bool success = await context.read<Restaurant>().addToCart(food, currentlySelectedAddons);
 
     if (success && mounted) {
       Navigator.pop(context);

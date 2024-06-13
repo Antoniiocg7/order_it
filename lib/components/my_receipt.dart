@@ -31,7 +31,7 @@ class MyReceipt extends StatelessWidget {
             
             ElevatedButton(
               style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(
+                backgroundColor: WidgetStatePropertyAll(
                   Color.fromARGB(255, 7, 114, 255),
                 ),
               ),
@@ -44,7 +44,7 @@ class MyReceipt extends StatelessWidget {
                 );
               },
               child: const Text(
-                'Volver Al Home',
+                'Volver a la carta',
                 style: TextStyle(color: Colors.white),
               ),
             )
