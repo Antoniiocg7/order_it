@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
@@ -55,17 +57,33 @@ class Restaurant extends ChangeNotifier {
             .select('id')
             .eq('is_finished', false)
             .eq('user_id', user.user!.id);
-            
+
+        final itemIsInCart =
+            await supabase.from('cart_item').select('*').eq('food_id', food.id);
+
+        print(itemIsInCart[0]);
+
         final existingCartId = existingCart.first['id'];
         if (existingCart.first.isNotEmpty) {
-          
-          
+          if (itemIsInCart.isNotEmpty) {
+            final response = await supabase
+                .from('cart_item')
+                .update({'quantity': itemIsInCart[0]['quantity'] + 1})
+                .eq('id', itemIsInCart[0]['id'])
+                .select();
+            print(response);
 
-          await supabaseApi.addItemToCart(
-            existingCartId.toString(),
-            food.id,
-            selectedAddons.map((addon) => addon.id).toList(),
-          );
+            /* await supabaseApi.updateItemCart(
+                itemIsInCart[0]["id"],
+                selectedAddons.map((addon) => addon.id).toList(),
+                itemIsInCart[0]['quantity'] + 1); */
+          } else {
+            await supabaseApi.addItemToCart(
+              existingCartId.toString(),
+              food.id,
+              selectedAddons.map((addon) => addon.id).toList(),
+            );
+          }
         } else {
           return false;
         }
@@ -118,8 +136,6 @@ class Restaurant extends ChangeNotifier {
   }
 
   void clearCart() async {
-
-
     final SupabaseApi supabase = SupabaseApi();
     final cartId = await supabase.getCart();
     await supabase.clearCart(cartId);
@@ -147,7 +163,7 @@ class Restaurant extends ChangeNotifier {
 
     for (final cartFood in _cart) {
       receipt.writeln(
-          "${cartFood.quantity} x ${cartFood.food.name} - ${_formatPrice(cartFood.food.price)}");
+          "${cartFood.quantity} x ${cartFood.food.name} - ${formatPrice(cartFood.food.price)}");
       if (cartFood.addons.isNotEmpty) {
         receipt.writeln(" Complementos: ${_formatAddons(cartFood.addons)}");
       }
@@ -157,20 +173,18 @@ class Restaurant extends ChangeNotifier {
     receipt.writeln("------------");
     receipt.writeln();
     receipt.writeln("Cantidad total: ${getTotalItemCount()}");
-    receipt.writeln("Precio total: ${_formatPrice(getTotalPrice())}");
+    receipt.writeln("Precio total: ${formatPrice(getTotalPrice())}");
 
     return receipt.toString();
   }
 
-
-  String _formatPrice(double price) {
-    return "${price.toStringAsFixed(2)}€";
+  String formatPrice(double price) {
+    return "${price.toStringAsFixed(2)} €";
   }
-
 
   String _formatAddons(List<Addon> addons) {
     return addons
-        .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
+        .map((addon) => "${addon.name} (${formatPrice(addon.price)})")
         .join(", ");
   }
 }

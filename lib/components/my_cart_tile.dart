@@ -14,8 +14,9 @@ class MyCartTile extends StatelessWidget {
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) => Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(8)),
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: BorderRadius.circular(8),
+        ),
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
         child: Column(
           children: [
@@ -34,9 +35,7 @@ class MyCartTile extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-
                   const SizedBox(width: 10),
-
                   // Nombre y precio
                   Expanded(
                     child: Column(
@@ -55,9 +54,10 @@ class MyCartTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${cartFood.food.price}€",
+                              "${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)}",
                               style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary),
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                             ),
                             QuantitySelector(
                               quantity: cartFood.quantity,
@@ -80,7 +80,6 @@ class MyCartTile extends StatelessWidget {
                 ],
               ),
             ),
-
             // Addons
             if (cartFood.addons.isNotEmpty)
               Padding(
@@ -106,12 +105,9 @@ class MyCartTile extends StatelessWidget {
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
+                              backgroundColor: Theme.of(context).colorScheme.secondary,
                               labelStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
+                                color: Theme.of(context).colorScheme.inversePrimary,
                                 fontSize: 12,
                               ),
                             ),
