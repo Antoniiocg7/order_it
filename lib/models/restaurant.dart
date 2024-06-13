@@ -36,20 +36,18 @@ class Restaurant extends ChangeNotifier {
   // Añadir al carrito
   Future<bool> addToCart(Food food, List<Addon> selectedAddons) async {
     try {
-
-      final cartId = await supabaseApi.createCart(); // Crear un carrito en la base de datos
+      final cartId = await supabaseApi
+          .createCart(); // Crear un carrito en la base de datos
 
       if (cartId.isNotEmpty) {
-
         await supabaseApi.addItemToCart(
           cartId,
           food.id,
           selectedAddons.map((addon) => addon.id).toList(),
         );
-      }  
-      
-      if (cartId.isEmpty) {
+      }
 
+      if (cartId.isEmpty) {
         final supabase = Supabase.instance.client;
         final user = await supabase.auth.getUser();
 
@@ -72,7 +70,6 @@ class Restaurant extends ChangeNotifier {
                 .update({'quantity': itemIsInCart[0]['quantity'] + 1})
                 .eq('id', itemIsInCart[0]['id'])
                 .select();
-
           } else {
             await supabaseApi.addItemToCart(
               existingCartId.toString(),
@@ -85,6 +82,7 @@ class Restaurant extends ChangeNotifier {
         }
       }
 
+      await loadCartDetails();
       notifyListeners();
       return true; // Indicar que se agregó correctamente al carrito
     } catch (e) {
@@ -95,7 +93,10 @@ class Restaurant extends ChangeNotifier {
   // Eliminar del carrito
   Future<bool> removeFromCart(CartFood cartFood) async {
     if (cartFood.quantity == 1) {
-      return await supabaseApi.removeFromCart(cartFood.id);
+      await supabaseApi.removeAddonsFromCartItem(cartFood.id);
+      await supabaseApi.removeFromCart(cartFood.id);
+      await loadCartDetails();
+      notifyListeners();
     }
 
     if (cartFood.quantity > 1) {
@@ -105,6 +106,9 @@ class Restaurant extends ChangeNotifier {
           .eq('id', cartFood.id)
           .eq('food_id', cartFood.food.id);
 
+      // Actualizamos el carrito
+      await loadCartDetails();
+      notifyListeners();
       return true;
     }
 

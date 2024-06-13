@@ -313,15 +313,13 @@ class SupabaseApi {
     final headers = _createHeaders();
     final quantity = quantityParam ?? 1;
     // Creación de los cart_items asignados al cart
-    final response = await http.patch(
+    await http.patch(
       Uri.parse(url3),
       headers: headers,
       body: jsonEncode(
         {"quantity": quantity},
       ),
     );
-
-    print(response.body);
 
     try {
       //try {
@@ -373,14 +371,29 @@ class SupabaseApi {
   }
 
   Future<bool> removeFromCart(String cartItemId) async {
-   
-
     final String url = '$baseUrl/rest/v1/cart_item?id=eq.$cartItemId';
     final headers = _createHeaders();
 
     try {
-      final http.Response response =
-          await http.delete(Uri.parse(url), headers: headers);
+      final response = await http.delete(Uri.parse(url), headers: headers);
+
+      if (kDebugMode) {
+        print(response.statusCode);
+      }
+
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      throw Exception('Error al eliminar el item del carrito: $e');
+    }
+  }
+
+  Future<bool> removeAddonsFromCartItem(String cartItemId) async {
+    final String url =
+        '$baseUrl/rest/v1/cart_item_addon?cart_item_id=eq.$cartItemId';
+    final headers = _createHeaders();
+
+    try {
+      final response = await http.delete(Uri.parse(url), headers: headers);
 
       if (kDebugMode) {
         print(response.statusCode);
