@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // LOGO
+              // Logo
               FadeInDown(
                 duration: const Duration(seconds: 2),
                 child: Image.asset(
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 0),
 
-              // EMAIL TEXTFIELD
+              // Email
               FadeInRight(
                 duration: const Duration(seconds: 1),
                 child: MyTextField(
@@ -86,13 +86,13 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
 
-              //PASSWORD TEXTFIELD
+              // Contraseña
               FadeInLeft(
                 duration: const Duration(seconds: 1),
                 child: MyTextField(
                     controller: passwordController,
-                    hintText: "Password",
-                    labelText: "Password",
+                    hintText: "Contraseña",
+                    labelText: "Contraseña",
                     obscureText: true),
               ),
 
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 30,
               ),
 
-              //SIGN IN BUTTON
+              // Inicio de sesión
               FadeInUp(
                 duration: const Duration(seconds: 1),
                 child: MyButton(
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   linearGradient: LinearGradient(
                       colors: [Colors.green.shade900, Colors.green]),
                   onTap: () async {
-                    // ESCONDEMOS EL TECLADO
+                    // Esconder el teclado
                     FocusManager.instance.primaryFocus?.unfocus();
 
                     bool hasConnection =
@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 25,
               ),
 
-              // NOT A MEMEBER? REGISTER NOW!
+              // Ir a registro
               FadeInUp(
                 duration: const Duration(seconds: 1),
                 child: Row(

@@ -25,7 +25,7 @@ class QuantitySelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // DECREASE BUTTON
+          // Botón decrementar
           GestureDetector(
             onTap: onDecrement,
             child: Icon(
@@ -35,7 +35,7 @@ class QuantitySelector extends StatelessWidget {
             ),
           ),
 
-          // QUANTITY COUNT
+          // Contador de cantidad
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: SizedBox(
@@ -46,7 +46,7 @@ class QuantitySelector extends StatelessWidget {
             ),
           ),
 
-          // DECREASE COUNT
+          // Botón incrementar
           GestureDetector(
             onTap: onIncrement,
             child: Icon(

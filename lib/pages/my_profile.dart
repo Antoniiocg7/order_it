@@ -66,7 +66,7 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             child: IconButton(
                               onPressed: () {
-                                // Handle camera action
+                                // Acción tras la cámara
                               },
                               icon: const Icon(Icons.camera_alt),
                               color: Colors.black,
@@ -126,7 +126,7 @@ class _MyProfileState extends State<MyProfile> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
-                        labelText: 'Password',
+                        labelText: 'Contraseña',
                         prefixIcon: const Icon(Icons.fingerprint),
                       ),
                     ),
@@ -149,7 +149,7 @@ class _MyProfileState extends State<MyProfile> {
                     const SizedBox(height: 32),
                     const Row(children: [
                       Text(
-                        'Joined 31 October 2022',
+                        'Se unió el 31 de Octubre 2022',
                         style: TextStyle(
                             fontSize: 14,
                             color: Color.fromARGB(255, 34, 34, 34)),

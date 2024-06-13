@@ -28,7 +28,7 @@ class RegisterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //logo
+              // Logo
               FadeInDown(
                 duration: const Duration(seconds: 2),
                 child: Image.asset(
@@ -40,7 +40,6 @@ class RegisterPage extends StatelessWidget {
 
               //const SizedBox(height: 10),
 
-              //message, app slogan
               FadeInLeft(
                 duration: const Duration(seconds: 1),
                 child: Text(
@@ -55,7 +54,7 @@ class RegisterPage extends StatelessWidget {
                 height: 25,
               ),
 
-              // EMAIL TEXTFIELD
+              // Email
               FadeInRight(
                 duration: const Duration(seconds: 1),
                 child: MyTextField(
@@ -70,13 +69,13 @@ class RegisterPage extends StatelessWidget {
                 height: 20,
               ),
 
-              //PASSWORD TEXTFIELD
+              // Contraseña
               FadeInLeft(
                 duration: const Duration(seconds: 1),
                 child: MyTextField(
                     controller: passwordController,
-                    hintText: "Password",
-                    labelText: "Password",
+                    hintText: "Contraseña",
+                    labelText: "Contraseña",
                     obscureText: true,
                     icon: Icons.password),
               ),
@@ -85,13 +84,13 @@ class RegisterPage extends StatelessWidget {
                 height: 20,
               ),
 
-              //CONFIRM PASSWORD TEXTFIELD
+              // Confirmar contraseña
               FadeInRight(
                 duration: const Duration(seconds: 1),
                 child: MyTextField(
                     controller: confirmPasswordController,
-                    hintText: "Confirm password",
-                    labelText: "Confirm password",
+                    hintText: "Confirm contraseña",
+                    labelText: "Confirm contraseña",
                     obscureText: true,
                     icon: Icons.password),
               ),
@@ -100,7 +99,7 @@ class RegisterPage extends StatelessWidget {
                 height: 45,
               ),
 
-              //SIGN Up BUTTON
+              // Inicio de sesión
               FadeInUp(
                 duration: const Duration(seconds: 1),
                 child: MyButton(
@@ -116,7 +115,7 @@ class RegisterPage extends StatelessWidget {
                 height: 25,
               ),
 
-              // ALREADY HAVE AN ACCOUNT? LOGIN HERE
+              // Ir a login
               FadeInUp(
                 duration: const Duration(seconds: 1),
                 child: Row(

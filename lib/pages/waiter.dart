@@ -46,7 +46,7 @@ class _WaiterState extends State<Waiter> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No tables available'));
+            return const Center(child: Text('No hay mesas disponibles'));
           } else {
             List<Map<String, dynamic>> tables = snapshot.data!;
             tables

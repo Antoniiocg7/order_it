@@ -20,30 +20,30 @@ class _PaymentPageState extends State<PaymentPage> {
   String cvvCode = "";
   bool isCvvFocused = false;
 
-  // USER WANTS TO PAY
+
   void userTappedPay() {
     FocusManager.instance.primaryFocus?.unfocus();
     if (formKey.currentState!.validate()) {
-      // ONLY SHOW DIALOG IF YOUR FORM IS VALID
+      // Si el formulario es válido
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Confirm payment"),
+          title: const Text("Confirmar pago"),
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Text("Card Number: $cardNumber"),
-                Text("Expiry Date: $expiryDate"),
-                Text("Card Holder name: $cardHolderName"),
+                Text("Número de tarjeta: $cardNumber"),
+                Text("Validez: $expiryDate"),
+                Text("Titular: $cardHolderName"),
                 Text("CVV: $cvvCode"),
               ],
             ),
           ),
           actions: [
-            // CANCEL BUTTON
+            // Cancelar
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Cancel")),
+                child: const Text("Cancelar")),
 
             TextButton(
               onPressed: () async {
@@ -69,7 +69,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   );
                 }
               },
-              child: const Text("Yes"),
+              child: const Text("Sí"),
             ),
           ],
         ),
@@ -84,14 +84,14 @@ class _PaymentPageState extends State<PaymentPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Checkout"),
+        title: const Text("Confirmar pago"),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // CREDIT CARD
+              // Tarjeta
               CreditCardWidget(
                 cardNumber: cardNumber,
                 expiryDate: expiryDate,
@@ -101,7 +101,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 onCreditCardWidgetChange: (p0) {},
               ),
               const SizedBox(height: 20),
-              // CREDIT CARD FORM
+              // Formulario
               CreditCardForm(
                 cardNumber: cardNumber,
                 expiryDate: expiryDate,
@@ -118,7 +118,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 formKey: formKey,
               ),
               const SizedBox(height: 20),
-              MyButton(onTap: userTappedPay, text: "Pay now!"),
+              MyButton(onTap: userTappedPay, text: "Pagar"),
             ],
           ),
         ),

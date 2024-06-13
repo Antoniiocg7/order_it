@@ -24,7 +24,7 @@ class MyCartTile extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // FOOD IMAGE
+                  // Plato
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
@@ -37,7 +37,7 @@ class MyCartTile extends StatelessWidget {
 
                   const SizedBox(width: 10),
 
-                  // NAME AND PRICE
+                  // Nombre y precio
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class MyCartTile extends StatelessWidget {
               ),
             ),
 
-            // ADDONS
+            // Addons
             if (cartFood.addons.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -96,10 +96,7 @@ class MyCartTile extends StatelessWidget {
                             child: FilterChip(
                               label: Row(
                                 children: [
-                                  // ADDON NAME
                                   Text(addon.name),
-
-                                  // ADDON PRICE
                                   Text(" (${addon.price.toString()})€")
                                 ],
                               ),
