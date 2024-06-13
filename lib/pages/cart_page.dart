@@ -31,9 +31,15 @@ class CartPage extends StatelessWidget {
             foregroundColor: Theme.of(context).colorScheme.inversePrimary,
             actions: [
               // CLEAR CART BUTTON
+          
               IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
+                
+                icon: const Icon(Icons.delete, ),
+                
+                onPressed: userCart.isEmpty ? 
+                null
+                : () {
+                  
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -91,7 +97,7 @@ class CartPage extends StatelessWidget {
 
               // BUTTON TO PAY
               MyButton(
-                onTap: () => Navigator.push(
+                onTap: userCart.isEmpty ? null : () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const PaymentPage(),

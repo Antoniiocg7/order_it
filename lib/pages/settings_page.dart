@@ -113,7 +113,6 @@ class _MyContainerState extends State<MyContainer> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // SWITCH
               widget.icon,
               const SizedBox(
                 width: 25,
