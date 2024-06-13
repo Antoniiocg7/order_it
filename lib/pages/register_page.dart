@@ -30,7 +30,7 @@ class RegisterPage extends StatelessWidget {
             children: [
               // Logo
               FadeInDown(
-                duration: const Duration(seconds: 2),
+                duration: const Duration(seconds: 3),
                 child: Image.asset(
                   'assets/icons/Logo.png',
                   width: size.width * 1.2,
@@ -41,7 +41,7 @@ class RegisterPage extends StatelessWidget {
               //const SizedBox(height: 10),
 
               FadeInLeft(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: Text(
                   "¡Crea tu cuenta ahora!",
                   style: TextStyle(
@@ -56,13 +56,12 @@ class RegisterPage extends StatelessWidget {
 
               // Email
               FadeInRight(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                     controller: emailController,
                     hintText: "Email",
                     labelText: "Email",
-                    obscureText: false,
-                    icon: Icons.email),
+                    obscureText: false),
               ),
 
               const SizedBox(
@@ -71,13 +70,12 @@ class RegisterPage extends StatelessWidget {
 
               // Contraseña
               FadeInLeft(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                     controller: passwordController,
                     hintText: "Contraseña",
                     labelText: "Contraseña",
-                    obscureText: true,
-                    icon: Icons.password),
+                    obscureText: true)
               ),
 
               const SizedBox(
@@ -86,13 +84,12 @@ class RegisterPage extends StatelessWidget {
 
               // Confirmar contraseña
               FadeInRight(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                     controller: confirmPasswordController,
-                    hintText: "Confirm contraseña",
-                    labelText: "Confirm contraseña",
-                    obscureText: true,
-                    icon: Icons.password),
+                    hintText: "Confirmar contraseña",
+                    labelText: "Confirmar contraseña",
+                    obscureText: true),
               ),
 
               const SizedBox(
@@ -101,10 +98,14 @@ class RegisterPage extends StatelessWidget {
 
               // Inicio de sesión
               FadeInUp(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyButton(
                   text: "Registrar",
+                  linearGradient: LinearGradient(
+                      colors: [Colors.green.shade900, Colors.green]),
                   onTap: () {
+                    // Esconder el teclado
+                    FocusManager.instance.primaryFocus?.unfocus();
                     registerController.register(
                         context, emailController.text, passwordController.text);
                   },
@@ -117,7 +118,7 @@ class RegisterPage extends StatelessWidget {
 
               // Ir a login
               FadeInUp(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -134,7 +135,7 @@ class RegisterPage extends StatelessWidget {
                       child: Text(
                         "Inicia sesión",
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
+                            color: Colors.green,
                             fontWeight: FontWeight.bold),
                       ),
                     )

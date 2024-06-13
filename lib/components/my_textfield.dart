@@ -54,7 +54,7 @@ class _MyTextFieldState extends State<MyTextField> {
 
                 ),
                 hintText: _showHint ? widget.hintText : null,
-                hintStyle: const TextStyle(color: Colors.green),
+                hintStyle: const TextStyle(color: Colors.grey),
                 labelText: widget.labelText,
                 labelStyle: const TextStyle(color: Colors.grey),
                 prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.lightGreen) : null
