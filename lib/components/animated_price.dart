@@ -22,7 +22,7 @@ class AnimatedPrice extends StatelessWidget {
       },
       child: isLoading
           ? LinearProgressIndicator(
-              key: ValueKey('loading'),
+              key: const ValueKey('loading'),
               backgroundColor: Colors.grey.shade300,
               color: Colors.grey.shade500,
             )
