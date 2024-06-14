@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               // Logo
               FadeInDown(
-                duration: const Duration(seconds: 2),
+                duration: const Duration(seconds: 3),
                 child: Image.asset(
                   'assets/icons/Logo.png',
                   width: 500,
@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // Email
               FadeInRight(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                   controller: emailController,
                   hintText: "Email",
@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // Contraseña
               FadeInLeft(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                     controller: passwordController,
                     hintText: "Contraseña",
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // Inicio de sesión
               FadeInUp(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyButton(
                   text: "Iniciar Sesión",
                   linearGradient: LinearGradient(
@@ -148,12 +148,15 @@ class _LoginPageState extends State<LoginPage> {
                 height: 25,
               ),
 
-              const Text(
-                "O iniciar sesión con:",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+              FadeInUp(
+                duration: const Duration(seconds: 2),
+                child: const Text(
+                  "O iniciar sesión con:",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
               ),
 
@@ -163,38 +166,47 @@ class _LoginPageState extends State<LoginPage> {
 
               Column(
                 children: [
-                  LoginWithButton(
-                    onTap: () async {
-                      GoogleSignInService.googleSignIn();
-                      if (await GoogleSignIn.standard().isSignedIn()) {
-                        if (mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FirstPage(),
-                            ),
-                          );
+                  FadeInUp(
+                    duration: const Duration(seconds: 2),
+                    child: LoginWithButton(
+                      onTap: () async {
+                        GoogleSignInService.googleSignIn();
+                        if (await GoogleSignIn.standard().isSignedIn()) {
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const FirstPage(),
+                              ),
+                            );
+                          }
                         }
-                      }
-                    },
-                    text: "Continuar con Google     ",
-                    icon: "assets/icons/google_icon.png",
+                      },
+                      text: "Continuar con Google     ",
+                      icon: "assets/icons/google_icon.png",
+                    ),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  LoginWithButton(
-                    onTap: () {},
-                    text: "Continuar con Facebook",
-                    icon: "assets/icons/facebook_icon.png",
+                  FadeInUp(
+                    duration: const Duration(seconds: 2),
+                    child: LoginWithButton(
+                      onTap: () {},
+                      text: "Continuar con Facebook",
+                      icon: "assets/icons/facebook_icon.png",
+                    ),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  LoginWithButton(
-                    onTap: () {},
-                    text: "Continuar con Apple       ",
-                    icon: "assets/icons/apple_icon.png",
+                  FadeInUp(
+                    duration: const Duration(seconds: 2),
+                    child: LoginWithButton(
+                      onTap: () {},
+                      text: "Continuar con Apple       ",
+                      icon: "assets/icons/apple_icon.png",
+                    ),
                   ),
                 ],
               ),
@@ -205,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // Ir a registro
               FadeInUp(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

@@ -21,13 +21,11 @@ class _WaiterState extends State<Waiter> {
     _tablesFuture = _supabaseApi.getTables();
   }
 
-  void _navigateToTableDetail(
-      BuildContext context, Map<String, dynamic> table) {
+  void _navigateToTableDetail(BuildContext context, Map<String, dynamic> table) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            TableDetailPage(table: table, supabaseApi: _supabaseApi),
+        builder: (context) => TableDetailPage(table: table, supabaseApi: _supabaseApi),
       ),
     );
   }
@@ -36,7 +34,8 @@ class _WaiterState extends State<Waiter> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mesas'),
+        backgroundColor: Colors.green,
+        title: const Text('Mesas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _tablesFuture,
@@ -49,14 +48,15 @@ class _WaiterState extends State<Waiter> {
             return const Center(child: Text('No hay mesas disponibles'));
           } else {
             List<Map<String, dynamic>> tables = snapshot.data!;
-            tables
-                .sort((a, b) => a['table_number'].compareTo(b['table_number']));
+            tables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 1.5,
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
                 ),
                 itemCount: tables.length,
                 itemBuilder: (context, index) {
@@ -64,15 +64,34 @@ class _WaiterState extends State<Waiter> {
                   return GestureDetector(
                     onTap: () => _navigateToTableDetail(context, tables[index]),
                     child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      color: isOccupied ? Colors.red : Colors.green,
+                      decoration: BoxDecoration(
+                        color: isOccupied ? Colors.red : Colors.green,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Icon(
+                              isOccupied ? Icons.person : Icons.event_seat,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                            const SizedBox(height: 8),
                             Text(
                               'Mesa ${tables[index]['table_number']}',
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -89,78 +108,111 @@ class _WaiterState extends State<Waiter> {
   }
 }
 
-class TableDetailPage extends StatelessWidget {
+class TableDetailPage extends StatefulWidget {
   final Map<String, dynamic> table;
   final SupabaseApi supabaseApi;
 
-  const TableDetailPage(
-      {super.key, required this.table, required this.supabaseApi});
+  const TableDetailPage({super.key, required this.table, required this.supabaseApi});
+
+  @override
+  _TableDetailPageState createState() => _TableDetailPageState();
+}
+
+class _TableDetailPageState extends State<TableDetailPage> {
+  bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles de Mesa ${table['table_number']}'),
+        title: Text(
+          'Detalles de Mesa ${widget.table['table_number']}',
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.green,
         actions: [
-          if (table['is_occupied'])
-            TextButton(
-              onPressed: () async {
-                bool liberada = await supabaseApi.releaseTable(
-                    table['user_id'], table['table_number']);
-                if (liberada) {
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Mesa Liberada'),
-                          content: Text(
-                              'La mesa ${table['table_number']} ha sido liberada correctamente.'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // Cerrar el diálogo
-                                Navigator.pop(
-                                    context); // Volver a la página anterior
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+          if (widget.table['is_occupied'])
+            MouseRegion(
+              onEnter: (_) => setState(() => _isHovering = true),
+              onExit: (_) => setState(() => _isHovering = false),
+              child: TextButton(
+                onPressed: () async {
+                  bool liberada = await widget.supabaseApi.releaseTable(widget.table['user_id'], widget.table['table_number']);
+                  if (liberada) {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Mesa Liberada'),
+                            content: Text('La mesa ${widget.table['table_number']} ha sido liberada correctamente.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // Cerrar el diálogo
+                                  Navigator.pop(context); // Volver a la página anterior
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error al liberar mesa'),
+                            content: Text('Hubo un error al liberar la mesa ${widget.table['table_number']}'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Waiter(),
+                                    ),
+                                  );
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   }
-                } else {
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Error al liberar mesa'),
-                          content: Text(
-                              'Hubo un error al liberar la mesa ${table['table_number']}'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Waiter(),
-                                  ),
-                                );
-                              },
-                              child: const Text('OK'),
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: _isHovering
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                }
-              },
-              child: const Text(
-                'Liberar',
-                style: TextStyle(color: Colors.white),
+                          ]
+                        : [],
+                  ),
+                  child: const Text(
+                    'Liberar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
         ],
@@ -168,9 +220,9 @@ class TableDetailPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Text('Pedidos de la mesa ${table['table_number']}:'),
-            const SizedBox(height: 20),
-            OrdersList(userTable: table['user_id']),
+            /*Text('Pedidos de la mesa ${widget.table['table_number']}:'),
+            const SizedBox(height: 20),*/
+            OrdersList(userTable: widget.table['user_id']),
           ],
         ),
       ),
@@ -221,18 +273,18 @@ class _OrdersListState extends State<OrdersList> {
                 final cart = carts[index];
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 8.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
                   child: ListTile(
-                      leading: const CircleAvatar(
-                        child: Icon(Icons.food_bank),
-                      ),
-                      title: const Text('Restaurante'),
-                      subtitle: const Text('Fecha:'),
-                      trailing: Text(
-                        '${cart.name} €',
-                        style: const TextStyle(fontSize: 16),
-                      )),
+                    leading: const CircleAvatar(
+                      child: Icon(Icons.food_bank),
+                    ),
+                    title: const Text('Restaurante'),
+                    subtitle: const Text('Fecha:'),
+                    trailing: Text(
+                      '${cart.name} €',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
                 );
               },
             );

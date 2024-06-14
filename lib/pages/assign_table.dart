@@ -154,7 +154,9 @@ class _AssignTableState extends State<AssignTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Elige tu mesa'),
+        backgroundColor: Colors.green,
+        title: const Text('Escanea el QR de tu mesa', style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold)),
+        
       ),
       body: Stack(
         children: [
@@ -172,7 +174,7 @@ class _AssignTableState extends State<AssignTable> {
               ),
             ),
           ),
-          Align(
+          /*Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               margin: const EdgeInsets.only(bottom: 20),
@@ -180,37 +182,9 @@ class _AssignTableState extends State<AssignTable> {
                   ? Text('Escaneado: ${result!.code}')
                   : const Text('Escanea el código QR'),
             ),
-          ),
+          ),*/
         ],
       ),
     );
   }
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Assign Table'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: (result != null)
-                  ? Text('Scanned: ${result!.code}')
-                  : Text('Scan a code'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }*/
 }
