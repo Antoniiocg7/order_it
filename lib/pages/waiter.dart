@@ -35,8 +35,7 @@ class _WaiterState extends State<Waiter> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: const Text('Mesas', style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold)),
-        
+        title: const Text('Mesas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _tablesFuture,
@@ -68,7 +67,7 @@ class _WaiterState extends State<Waiter> {
                       decoration: BoxDecoration(
                         color: isOccupied ? Colors.red : Colors.green,
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
@@ -109,73 +108,111 @@ class _WaiterState extends State<Waiter> {
   }
 }
 
-class TableDetailPage extends StatelessWidget {
+class TableDetailPage extends StatefulWidget {
   final Map<String, dynamic> table;
   final SupabaseApi supabaseApi;
 
   const TableDetailPage({super.key, required this.table, required this.supabaseApi});
 
   @override
+  _TableDetailPageState createState() => _TableDetailPageState();
+}
+
+class _TableDetailPageState extends State<TableDetailPage> {
+  bool _isHovering = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles de Mesa ${table['table_number']}'),
+        title: Text(
+          'Detalles de Mesa ${widget.table['table_number']}',
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.green,
         actions: [
-          if (table['is_occupied'])
-            TextButton(
-              onPressed: () async {
-                bool liberada = await supabaseApi.releaseTable(table['user_id'], table['table_number']);
-                if (liberada) {
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Mesa Liberada'),
-                          content: Text('La mesa ${table['table_number']} ha sido liberada correctamente.'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // Cerrar el diálogo
-                                Navigator.pop(context); // Volver a la página anterior
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+          if (widget.table['is_occupied'])
+            MouseRegion(
+              onEnter: (_) => setState(() => _isHovering = true),
+              onExit: (_) => setState(() => _isHovering = false),
+              child: TextButton(
+                onPressed: () async {
+                  bool liberada = await widget.supabaseApi.releaseTable(widget.table['user_id'], widget.table['table_number']);
+                  if (liberada) {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Mesa Liberada'),
+                            content: Text('La mesa ${widget.table['table_number']} ha sido liberada correctamente.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // Cerrar el diálogo
+                                  Navigator.pop(context); // Volver a la página anterior
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error al liberar mesa'),
+                            content: Text('Hubo un error al liberar la mesa ${widget.table['table_number']}'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Waiter(),
+                                    ),
+                                  );
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   }
-                } else {
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Error al liberar mesa'),
-                          content: Text('Hubo un error al liberar la mesa ${table['table_number']}'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Waiter(),
-                                  ),
-                                );
-                              },
-                              child: const Text('OK'),
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: _isHovering
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3),
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                }
-              },
-              child: const Text(
-                'Liberar',
-                style: TextStyle(color: Colors.white),
+                          ]
+                        : [],
+                  ),
+                  child: const Text(
+                    'Liberar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
         ],
@@ -183,9 +220,9 @@ class TableDetailPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Text('Pedidos de la mesa ${table['table_number']}:'),
-            const SizedBox(height: 20),
-            OrdersList(userTable: table['user_id']),
+            /*Text('Pedidos de la mesa ${widget.table['table_number']}:'),
+            const SizedBox(height: 20),*/
+            OrdersList(userTable: widget.table['user_id']),
           ],
         ),
       ),

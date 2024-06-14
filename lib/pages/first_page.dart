@@ -59,7 +59,7 @@ class FirstPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomePage(ordersAllowed: false),
+                      builder: (context) => const HomePage(ordersAllowed: true),
                     ),
                   );
                 },

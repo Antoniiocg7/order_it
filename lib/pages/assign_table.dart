@@ -154,8 +154,8 @@ class _AssignTableState extends State<AssignTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 117, 228, 121),
-        title: const Text('Escanea el QR de tu mesa', style: TextStyle( color: Colors.black87, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.green,
+        title: const Text('Escanea el QR de tu mesa', style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold)),
         
       ),
       body: Stack(
