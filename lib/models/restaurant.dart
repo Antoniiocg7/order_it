@@ -22,10 +22,11 @@ class Restaurant extends ChangeNotifier {
   // Método para cargar los detalles del carrito
   Future<void> loadCartDetails() async {
     try {
-      List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
 
       _cart.clear();
 
+      List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
+      
       _cart.addAll(cartFoodList);
 
       notifyListeners();
