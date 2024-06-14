@@ -20,9 +20,9 @@ class Restaurant extends ChangeNotifier {
   final List<CartFood> _cart = [];
 
   // Método para cargar los detalles del carrito
-  Future<void> loadCartDetails( ) async {
+  Future<void> loadCartDetails() async {
     try {
-      List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails( );
+      List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
 
       _cart.clear();
 
@@ -44,6 +44,8 @@ class Restaurant extends ChangeNotifier {
       final supabase = Supabase.instance.client;
       final user = await supabase.auth.getUser();
 
+      print(user.user!.id);
+
       final existingCart = await supabase
           .from('cart')
           .select('id')
@@ -53,17 +55,18 @@ class Restaurant extends ChangeNotifier {
       if (existingCart.isNotEmpty) {
         final existingCartId = existingCart.first["id"];
 
+        print(existingCartId.toString());
+
         final itemIsInCart =
-            await supabase.from('cart_item').select('*').eq('food_id', food.id);
+            await supabase.from('cart_item').select('*').eq('food_id', food.id).eq('cart_id', existingCartId);
 
         if (itemIsInCart.isNotEmpty) {
+
           await supabase
               .from('cart_item')
               .update({'quantity': itemIsInCart[0]['quantity'] + 1})
               .eq('id', itemIsInCart[0]['id']);
-
         } else {
-
           await supabaseApi.addItemToCart(
             existingCartId.toString(),
             food.id,
