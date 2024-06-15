@@ -21,7 +21,7 @@ class OrderController {
     }
   }
 
-  Future<List<CartItem>> fetchCartFood(String cartId) async {
+  Future<List<Map<String, dynamic>>> fetchCartFood(String cartId) async {
     try {
       final List<Map<String, dynamic>> cartItem =
           await supabaseApi.getCartItems2(cartId);
@@ -29,17 +29,26 @@ class OrderController {
       print(cartItem);
 
       final List<CartItem> cartItems =
-          cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
+    cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
 
-      print('3 ${cartItems.length}' );
+List<Map<String, dynamic>> cartFood = [];
 
-      /* final List<Map<String, dynamic>> cartFood =
-          await supabaseApi.getFood3(cartItems); */
-      //print(cartFood.length);
+for (var element in cartItems) {
+  // Obtener la lista de alimentos de la API
+  var foodList = await supabaseApi.getFood2(element.foodId);
 
+  // Agregar la cantidad a cada alimento en la lista
+  for (var food in foodList) {
+    food['quantity'] = element.quantity;
+  }
 
+  // Agregar la lista de alimentos con cantidades a cartFood
+  cartFood.addAll(foodList);
+}
 
-      return cartItems;
+print('Hola $cartFood');
+
+      return cartFood;
     } catch (error) {
       throw Exception('Failed to fetch orders: $error');
     }
