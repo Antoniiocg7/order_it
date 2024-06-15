@@ -3,6 +3,7 @@ import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/models/cart.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Waiter extends StatefulWidget {
   const Waiter({super.key});
@@ -12,14 +13,43 @@ class Waiter extends StatefulWidget {
 }
 
 class _WaiterState extends State<Waiter> {
-  late Future<List<Map<String, dynamic>>> _tablesFuture;
   final SupabaseApi _supabaseApi = SupabaseApi();
+  List<Map<String, dynamic>> tables = [];
+  late RealtimeChannel _channel;
 
   @override
   void initState() {
     super.initState();
-    _tablesFuture = _supabaseApi.getTables();
+    _fetchTables();
+    _setupSubscription();
   }
+
+  Future<void> _fetchTables() async {
+
+  List<Map<String, dynamic>> fetchedTables = await _supabaseApi.getTables();
+
+  fetchedTables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
+
+  setState(() {
+    tables = fetchedTables;
+  });
+}
+
+ void _setupSubscription() {
+  
+  _channel = Supabase.instance.client
+      .channel('public:tables')
+      .onPostgresChanges(
+        event: PostgresChangeEvent.all,
+        callback: (payload) {
+          _fetchTables();
+        },
+        schema: 'public',
+        table: 'tables',
+      )
+      .subscribe();
+}
+
 
   void _navigateToTableDetail(BuildContext context, Map<String, dynamic> table) {
     Navigator.push(
@@ -37,19 +67,9 @@ class _WaiterState extends State<Waiter> {
         backgroundColor: Colors.green,
         title: const Text('Mesas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _tablesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay mesas disponibles'));
-          } else {
-            List<Map<String, dynamic>> tables = snapshot.data!;
-            tables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
-            return Padding(
+      body: tables.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -86,7 +106,7 @@ class _WaiterState extends State<Waiter> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Mesa ${tables[index]['table_number']}',
+                              'Mesa${tables[index]['table_number']}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -100,11 +120,14 @@ class _WaiterState extends State<Waiter> {
                   );
                 },
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
+  }
+
+  @override
+  void dispose() {
+    _channel.unsubscribe();
+    super.dispose();
   }
 }
 
