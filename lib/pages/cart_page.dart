@@ -6,19 +6,17 @@ import 'package:order_it/pages/payment_page.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
+  const CartPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) {
-        final userCart = restaurant.cart;
+        final userCart = _sortCartByInsertionOrder(restaurant.cart);
 
         return Scaffold(
           appBar: AppBar(
             title: const Text("Carrito"),
-            backgroundColor: Colors.transparent,
-            foregroundColor: Theme.of(context).colorScheme.inversePrimary,
             actions: [
               IconButton(
                 icon: const Icon(Icons.delete),
@@ -28,7 +26,8 @@ class CartPage extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text("¿Estás seguro de que quieres vaciar el carrito?"),
+                            title: const Text(
+                                "¿Estás seguro de que quieres vaciar el carrito?"),
                             actions: [
                               TextButton(
                                 child: const Text("No"),
@@ -51,26 +50,21 @@ class CartPage extends StatelessWidget {
           body: Column(
             children: [
               Expanded(
-                child: Column(
-                  children: [
-                    (userCart.isEmpty)
-                        ? const Expanded(child: Center(child: Text("Carrito vacío")))
-                        : Expanded(
-                            child: ListView.builder(
-                              itemCount: userCart.length,
-                              itemBuilder: (context, index) {
-                                final cartFood = userCart[index];
-                                return MyCartTile(cartFood: cartFood);
-                              },
-                            ),
-                          ),
-                  ],
-                ),
+                child: userCart.isEmpty
+                    ? const Center(child: Text("Carrito vacío"))
+                    : ListView.builder(
+                        itemCount: userCart.length,
+                        itemBuilder: (context, index) {
+                          final cartFood = userCart[index];
+                          return MyCartTile(cartFood: cartFood);
+                        },
+                      ),
               ),
               Container(
                 height: 150,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 212, 211, 211).withOpacity(0.5),
+                  color: const Color.fromARGB(255, 212, 211, 211)
+                      .withOpacity(0.5),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
@@ -81,13 +75,15 @@ class CartPage extends StatelessWidget {
                   children: [
                     const SizedBox(height: 35),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceAround,
                       children: [
                         BotonPagar(userCart: userCart),
                         Column(
                           children: [
                             Text(
-                              restaurant.formatPrice(restaurant.getTotalPrice()),
+                              restaurant.formatPrice(
+                                  restaurant.getTotalPrice()),
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -114,13 +110,18 @@ class CartPage extends StatelessWidget {
       },
     );
   }
+
+  List<CartFood> _sortCartByInsertionOrder(List<CartFood> cart) {
+    cart.sort((a, b) => a.food.id.compareTo(b.food.id));
+    return cart;
+  }
 }
 
 class BotonPagar extends StatelessWidget {
   const BotonPagar({
-    super.key,
+    Key? key,
     required this.userCart,
-  });
+  }) : super(key: key);
 
   final List<CartFood> userCart;
 
@@ -128,7 +129,7 @@ class BotonPagar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all<Color>(
+        backgroundColor: MaterialStateProperty.all<Color>(
           const Color.fromARGB(255, 19, 160, 78),
         ),
       ),

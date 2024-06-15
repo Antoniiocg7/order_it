@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class MyCartTile extends StatefulWidget {
   final CartFood cartFood;
 
-  const MyCartTile({super.key, required this.cartFood});
+  const MyCartTile({Key? key, required this.cartFood}) : super(key: key);
 
   @override
   _MyCartTileState createState() => _MyCartTileState();
@@ -16,18 +16,6 @@ class MyCartTile extends StatefulWidget {
 
 class _MyCartTileState extends State<MyCartTile> {
   final ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
-
-  Future<void> handleIncrement(Restaurant restaurant) async {
-    isLoadingNotifier.value = true;
-    await restaurant.addToCart(widget.cartFood.food, widget.cartFood.addons);
-    isLoadingNotifier.value = false;
-  }
-
-  Future<void> handleDecrement(Restaurant restaurant) async {
-    isLoadingNotifier.value = true;
-    await restaurant.removeFromCart(widget.cartFood);
-    isLoadingNotifier.value = false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +62,14 @@ class _MyCartTileState extends State<MyCartTile> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AnimatedPrice(
+                              key: ValueKey('price_${widget.cartFood.food.id}'), // Key única para el precio
                               price: restaurant.formatPrice(
-                                widget.cartFood.food.price *
-                                    widget.cartFood.quantity,
+                                widget.cartFood.food.price * widget.cartFood.quantity,
                               ),
                               isLoading: isLoadingNotifier.value,
                             ),
                             QuantitySelector(
+                              key: ValueKey('selector_${widget.cartFood.food.id}'), // Key única para el selector de cantidad
                               initialQuantity: widget.cartFood.quantity,
                               food: widget.cartFood.food,
                               onIncrementAction: () => handleIncrement(restaurant),
@@ -125,7 +114,7 @@ class _MyCartTileState extends State<MyCartTile> {
                               labelStyle: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .inversePrimary,
+                                    .onSecondary,
                                 fontSize: 12,
                               ),
                             ),
@@ -139,5 +128,17 @@ class _MyCartTileState extends State<MyCartTile> {
         ),
       ),
     );
+  }
+
+  Future<void> handleIncrement(Restaurant restaurant) async {
+    isLoadingNotifier.value = true;
+    await restaurant.addToCart(widget.cartFood.food, widget.cartFood.addons);
+    isLoadingNotifier.value = false;
+  }
+
+  Future<void> handleDecrement(Restaurant restaurant) async {
+    isLoadingNotifier.value = true;
+    await restaurant.removeFromCart(widget.cartFood);
+    isLoadingNotifier.value = false;
   }
 }

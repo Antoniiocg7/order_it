@@ -4,7 +4,7 @@ class AnimatedPrice extends StatelessWidget {
   final String price;
   final bool isLoading;
 
-  const AnimatedPrice({super.key, required this.price, required this.isLoading});
+  const AnimatedPrice({Key? key, required this.price, required this.isLoading}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
