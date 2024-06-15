@@ -42,8 +42,8 @@ class _QuantitySelectorState extends State<QuantitySelector> {
       setState(() {
         quantity--;
       });
-      widget.onDecrementAction();
     }
+    widget.onDecrementAction();
   }
 
   @override
