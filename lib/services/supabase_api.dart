@@ -99,6 +99,62 @@ class SupabaseApi {
     }
   }
 
+  Future<bool> getWaiter(int tableNumber) async {
+    final url =
+        '$baseUrl/rest/v1/tables?select=waiter_id&table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      if (kDebugMode) {
+        print('RESPUESTA: $jsonResponse');
+      }
+      if (jsonResponse.isNotEmpty && jsonResponse[0]['waiter_id'] != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (kDebugMode) {
+        print('Error al obtener el UUID del camarero: ${response.statusCode}');
+      }
+      return false;
+    }
+  }
+
+  Future<bool> assignTableWaiter(String waiterId, int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?id=$tableNumber';
+
+    final headers = {
+      'apikey': apiKey,
+      'Authorization': authorization,
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode(
+        {'waiter_id': waiterId});
+
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(
+          'Mesa $tableNumber asignada satisfactoriamente.',
+        );
+      }
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(
+          'Hubo un error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
+        );
+      }
+      return false;
+    }
+  }
+
   /*Future<String?> getUserUUID(String email) async {
     final url = '$baseUrl/rest/v1/users?select=user_id&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();
@@ -858,4 +914,40 @@ class SupabaseApi {
       throw Exception('Error al cargar los items del carrito');
     }
   }
+
+  Future<bool> getReservas(String userId) async {
+
+    final url =
+        '$baseUrl/rest/v1/tables?select*&user_id=eq.$userId';
+
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      if (jsonResponse.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+
+  /*Future<bool> dobleReserva(String userId) async {
+    final response = await supabaseClient
+        .from('tables')
+        .select()
+        .eq('user_id', userId)
+        .eq('is_occupied', true)
+        .execute();
+
+    if (response.error != null) {
+      throw Exception('Error checking user reservation');
+    }
+
+    return response.data.isNotEmpty;
+  }*/
 }

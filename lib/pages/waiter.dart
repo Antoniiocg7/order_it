@@ -120,6 +120,20 @@ class TableDetailPage extends StatefulWidget {
 
 class _TableDetailPageState extends State<TableDetailPage> {
   bool _isHovering = false;
+  bool _isAssigned = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkMesaAsignada();
+  }
+
+  Future<void> _checkMesaAsignada() async {
+    bool assigned = await widget.supabaseApi.getWaiter(widget.table['table_number']);
+    setState(() {
+      _isAssigned = assigned;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,13 +233,30 @@ class _TableDetailPageState extends State<TableDetailPage> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            /*Text('Pedidos de la mesa ${widget.table['table_number']}:'),
-            const SizedBox(height: 20),*/
+            if (_isAssigned != true) 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.person_add),
+                    onPressed: () {
+                      
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Asignar mesa',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 20),
             OrdersList(userTable: widget.table['user_id']),
           ],
         ),
-      ),
+    )
     );
   }
 }
@@ -267,10 +298,20 @@ class _OrdersListState extends State<OrdersList> {
             return const Center(child: Text('No hay pedidos disponibles.'));
           } else {
             final carts = snapshot.data!;
+            final Map<String,int> cantidad = {};
+
+            carts.forEach((food){
+              if (cantidad.containsKey(food.name)){
+                cantidad[food.name] = cantidad[food.name]! + 1;
+              } else {
+                cantidad[food.name] = 1;
+              }
+            });
             return ListView.builder(
               itemCount: carts.length,
               itemBuilder: (context, index) {
                 final cart = carts[index];
+                final int cantidad_int = cantidad[cart.name] ?? 0;
 
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
@@ -278,10 +319,10 @@ class _OrdersListState extends State<OrdersList> {
                     leading: const CircleAvatar(
                       child: Icon(Icons.food_bank),
                     ),
-                    title: const Text('Restaurante'),
-                    subtitle: const Text('Fecha:'),
+                    title: Text('${cart.name}'),
+                    subtitle: Text('Cantidad: ${cantidad_int}'),
                     trailing: Text(
-                      '${cart.name} €',
+                      '${cart.price} €',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),

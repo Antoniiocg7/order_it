@@ -77,6 +77,13 @@ class _AssignTableState extends State<AssignTable> {
     isOccupied = await supabaseApi.getIsOccupied(tableNumber);
     //print(isOccupied);
 
+    bool dobleReserva = await supabaseApi.getReservas(widget.userId);
+    if (dobleReserva) {
+      _showDialog('Error', 'Ya tienes una mesa reservada. No puedes reservar otra.', () {});
+      return;
+    }
+
+
     // Componer la URL para la petición PATCH
     final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
     //print('Composed URL: $url');
@@ -95,7 +102,8 @@ class _AssignTableState extends State<AssignTable> {
       'user_id': widget.userId,
     });
 
-    final response =
+    if(!dobleReserva){
+      final response =
         await http.patch(Uri.parse(url), headers: headers, body: body);
 
     if (response.statusCode == 204) {
@@ -122,6 +130,8 @@ class _AssignTableState extends State<AssignTable> {
       //print('Error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
       _showDialog('Error', 'Error al asignar la mesa $tableNumber.', () {});
     }
+    }
+    
   }
 
   void _showDialog(String title, String content, VoidCallback onOkPressed) {
