@@ -123,8 +123,34 @@ class SupabaseApi {
     }
   }
 
+  Future<String> getName(String uuid) async {
+    final url =
+        '$baseUrl/rest/v1/users?select=nombre&id=eq.$uuid';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      if (kDebugMode) {
+        print('RESPUESTA: $jsonResponse');
+      }
+      if (jsonResponse.isNotEmpty) {
+        return jsonResponse[0]['nombre'];
+      } else {
+        return 'Sin nombre';
+      }
+    } else {
+      if (kDebugMode) {
+        print('Error al obtener el UUID del camarero: ${response.statusCode}');
+      }
+      return 'Error';
+    }
+  }
+
   Future<bool> assignTableWaiter(String waiterId, int tableNumber) async {
-    final url = '$baseUrl/rest/v1/tables?id=$tableNumber';
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
 
     final headers = {
       'apikey': apiKey,
@@ -138,7 +164,7 @@ class SupabaseApi {
     final response =
         await http.patch(Uri.parse(url), headers: headers, body: body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       if (kDebugMode) {
         print(
           'Mesa $tableNumber asignada satisfactoriamente.',

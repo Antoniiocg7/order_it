@@ -144,11 +144,14 @@ class TableDetailPage extends StatefulWidget {
 class _TableDetailPageState extends State<TableDetailPage> {
   bool _isHovering = false;
   bool _isAssigned = false;
+  String? nombre;
 
   @override
   void initState() {
     super.initState();
     _checkMesaAsignada();
+    _getWaiter();
+    _getName();
   }
 
   Future<void> _checkMesaAsignada() async {
@@ -157,6 +160,21 @@ class _TableDetailPageState extends State<TableDetailPage> {
       _isAssigned = assigned;
     });
   }
+
+  Future<String> _getWaiter() async {
+    final activeUser = await widget.supabaseApi.getUser();
+    print(activeUser);
+    return activeUser[0]['id'];
+  }
+
+  Future<void> _getName() async {
+    final waiterId = await _getWaiter();
+    final waiterName = await widget.supabaseApi.getName(waiterId);
+    setState(() {
+      nombre = waiterName;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -258,14 +276,25 @@ class _TableDetailPageState extends State<TableDetailPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_isAssigned != true) 
+            const SizedBox(height: 20),
+            _isAssigned 
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                          nombre != null ? 'Asignada a $nombre' : 'Cargando...',
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                  ],
+              )
+              : 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.person_add),
-                    onPressed: () {
-                      
+                    onPressed: () async {
+                      await widget.supabaseApi.assignTableWaiter(await _getWaiter(), widget.table['table_number']);
                     },
                   ),
                   const SizedBox(width: 10),
