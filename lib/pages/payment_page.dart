@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:order_it/components/my_button.dart';
+import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
 import 'package:order_it/services/supabase_api.dart';
 
@@ -19,7 +20,6 @@ class _PaymentPageState extends State<PaymentPage> {
   String cardHolderName = "";
   String cvvCode = "";
   bool isCvvFocused = false;
-
 
   void userTappedPay() {
     FocusManager.instance.primaryFocus?.unfocus();
@@ -51,6 +51,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 try {
                   // Asegurarse de que la actualización del estado del carrito se complete antes de continuar
                   await supabase.updateCartState();
+                  
                 } catch (e) {
                   // Manejar el error si la actualización falla
                   if (kDebugMode) {

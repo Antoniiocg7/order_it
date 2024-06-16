@@ -2,9 +2,9 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/food.dart';
 
 class CartFood {
-  final String id; // Si hay un ID específico para el ítem del carrito
-  final Food food;
-  final List<Addon> addons;
+  String id; // Si hay un ID específico para el ítem del carrito
+  Food food;
+  List<Addon> addons;
   int quantity;
 
   CartFood({

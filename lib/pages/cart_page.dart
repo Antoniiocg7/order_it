@@ -12,7 +12,7 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) {
-        final userCart = _sortCartByInsertionOrder(restaurant.cart);
+        final userCart = _sortCartByInsertionOrder( restaurant.getUserCart );
 
         return Scaffold(
           appBar: AppBar(
@@ -129,7 +129,7 @@ class BotonPagar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
+        backgroundColor: WidgetStateProperty.all<Color>(
           const Color.fromARGB(255, 19, 160, 78),
         ),
       ),
@@ -138,7 +138,7 @@ class BotonPagar extends StatelessWidget {
           : () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PaymentPage(),
+                  builder: (context) => const PaymentPage(  ),
                 ),
               ),
       child: SizedBox(
