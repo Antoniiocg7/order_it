@@ -1,4 +1,4 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'ckeckout.dart';
 
 void main() {
@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -19,10 +20,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
- */
+ 
 
 
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -62,10 +63,11 @@ class _ChargesPageState extends State<ChargesPage> {
 
   Future<void> fetchCharges() async {
     final response = await http.get(
-      Uri.parse('https://api.stripe.com/v1/charges/ch_3LmjFA2eZvKYlo2C09TLIsrw '),
+      Uri.parse('https://api.stripe.com/v1/prices'),
       headers: {
-        'Authorization': 'Basic ' + base64Encode(utf8.encode('$apiKey:')),
-        'Stripe-Account': 'acct_1032D82eZvKYlo2C'
+        'Authorization': 'Bearer sk_test_51PRMsUDNItGpGPanSipjoAS5aaf0OyH3Yr0MgPNkqMP3CSmxFYyht6ypDU6N9bctRwgOdIxNykZlfu1uY56yRpwn00FK0Esa9f',
+        //'limit': "3"
+        //'Stripe-Account': 'acct_1032D82eZvKYlo2C'
       },
     );
 
@@ -77,7 +79,7 @@ class _ChargesPageState extends State<ChargesPage> {
         isLoading = false;
       });
     } else {
-      print('Request failed with status: ${response.statusCode}');
+      print('Request failed with status: ${response.body}');
       setState(() {
         isLoading = false;
       });
@@ -106,3 +108,4 @@ class _ChargesPageState extends State<ChargesPage> {
     );
   }
 }
+ */

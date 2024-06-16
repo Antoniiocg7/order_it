@@ -25,8 +25,7 @@ class StripeService {
             "&line_items[$index][price_data][product_data][name]=${val['productName']}";
         lineItems +=
             "&line_items[$index][price_data][unit_amount]=$productPrice";
-        lineItems +=
-            "&line_items[$index][price_data][currency]=EUR";
+        lineItems += "&line_items[$index][price_data][currency]=EUR";
         lineItems += "&line_items[$index][quantity]=${val['qty'].toString()}";
         index++;
       },
@@ -34,11 +33,14 @@ class StripeService {
 
     final response = await http.post(url,
         body:
-            'success-url=https://checkout.stripe.dev/success&mode=payment$lineItems',
+            'success_url=https://checkout.stripe.dev/success&mode=payment$lineItems',
         headers: {
           'Authorization': 'Bearer $secretKey',
-          'Content-Type': 'application/x-www-form'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'locale':'ES-es'
         });
+
+    print(response.body);
 
     return json.decode(response.body)["id"];
   }
@@ -52,7 +54,6 @@ class StripeService {
     onCancel,
     onError,
   }) async {
-    
     final String sessionId = await createCheckoutSession(
       productItems,
       subTotal,
