@@ -47,8 +47,6 @@ class Restaurant extends ChangeNotifier {
 
       if (_cart.isNotEmpty) {
         for (var foodInCart in _cart) {
-          print('foodCart ${foodInCart.food.id}');
-          print('foodCart ${food.id}');
           if (foodInCart.food.id == food.id) {
             foodIsInCart = true;
             foodInCart.quantity++;
@@ -82,18 +80,6 @@ class Restaurant extends ChangeNotifier {
     }
   }
 
-  void crearNuevoCarrito() async {
-    final supabase = Supabase.instance.client;
-    final user = await supabase.auth.getUser();
-
-    carta = (
-      Cart(
-        id: RandomIds.generateRandomId().toString(),
-        userId: user.user!.id,
-        price: "",
-        isFinished: false));
-  }
-
   void nuevoCartItem(Food food, List<Addon>? selectedAddons) {
     _cart.add(CartFood(
         id: RandomIds.generateRandomId().toString(),
@@ -104,6 +90,7 @@ class Restaurant extends ChangeNotifier {
 
   // Eliminar del carrito
   Future<bool> removeFromCart(CartFood cartFood) async {
+    
     if (cartFood.quantity < 1) return false;
 
     if (cartFood.quantity == 1) {
