@@ -37,6 +37,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   qr_flutter: ^4.1.0
   smooth_page_indicator: ^1.1.0
+  stripe_checkout: ^1.0.2
   supabase_flutter: ^2.5.2
 
 dev_dependencies:

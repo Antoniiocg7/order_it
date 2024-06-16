@@ -99,8 +99,8 @@ class _MyCartTileState extends State<MyCartTile> {
                             child: FilterChip(
                               label: Row(
                                 children: [
-                                  Text(addon.name),
-                                  Text(" (${addon.price.toString()})€")
+                                  Text(addon.name, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+                                  Text(" (${addon.price.toString()})€", style: TextStyle(color: Theme.of(context).colorScheme.primary))
                                 ],
                               ),
                               onSelected: (value) {},

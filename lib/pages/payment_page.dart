@@ -1,129 +1,278 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:order_it/components/my_button.dart';
-import 'package:order_it/models/restaurant.dart';
-import 'package:order_it/pages/delivery_progress_page.dart';
-import 'package:order_it/services/supabase_api.dart';
+import 'dart:ffi';
 
-class PaymentPage3 extends StatefulWidget {
-  const PaymentPage3({super.key});
+import 'package:flutter/material.dart';
+import 'package:order_it/models/cart_food.dart';
+import 'package:order_it/models/restaurant.dart';
+import 'package:order_it/pages/checkout.dart';
+import 'package:order_it/pages/delivery_progress_page.dart';
+import 'package:order_it/pages/home_page.dart';
+import 'package:order_it/pages/stripe_services.dart';
+import 'package:order_it/services/supabase_api.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class PaymentPage extends StatefulWidget {
+  final List<CartFood> userCart;
+  static const double iva = 0.10;
+
+  const PaymentPage({super.key, required this.userCart});
 
   @override
-  State<PaymentPage3> createState() => _PaymentPageState();
+  _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage3> {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String cardNumber = "";
-  String expiryDate = "";
-  String cardHolderName = "";
-  String cvvCode = "";
-  bool isCvvFocused = false;
+class _PaymentPageState extends State<PaymentPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Restaurant>(
+      builder: (context, restaurant, child) {
+        final List<CartFood> userCart = restaurant.getUserCart;
+        final subtotal = (restaurant.getTotalPrice());
+        final total = restaurant.formatPrice(subtotal * 1.10);
 
-  void userTappedPay() {
-    FocusManager.instance.primaryFocus?.unfocus();
-    if (formKey.currentState!.validate()) {
-      // Si el formulario es válido
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Confirmar pago"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text("Número de tarjeta: $cardNumber"),
-                Text("Validez: $expiryDate"),
-                Text("Titular: $cardHolderName"),
-                Text("CVV: $cvvCode"),
-              ],
-            ),
-          ),
-          actions: [
-            // Cancelar
-            TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Cancelar")),
-
-            TextButton(
-              onPressed: () async {
-                final SupabaseApi supabase = SupabaseApi();
-                try {
-                  // Asegurarse de que la actualización del estado del carrito se complete antes de continuar
-                  await supabase.updateCartState();
-                  
-                } catch (e) {
-                  // Manejar el error si la actualización falla
-                  if (kDebugMode) {
-                    print("Error al actualizar el estado del carrito: $e");
-                  }
-                  return; // Salir si hay un error
-                }
-
-                if (context.mounted) {
-                  Navigator.pop(context);
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Confirma tu pago'),
+            actions: [
+              IconButton(
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const DeliveryProgressPage(),
+                      builder: (context) => const HomePage(ordersAllowed: true),
                     ),
                   );
-                }
-              },
-              child: const Text("Sí"),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Confirmar pago"),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              // Tarjeta
-              CreditCardWidget(
-                cardNumber: cardNumber,
-                expiryDate: expiryDate,
-                cardHolderName: cardHolderName,
-                cvvCode: cvvCode,
-                showBackView: isCvvFocused,
-                onCreditCardWidgetChange: (p0) {},
-              ),
-              const SizedBox(height: 20),
-              // Formulario
-              CreditCardForm(
-                cardNumber: cardNumber,
-                expiryDate: expiryDate,
-                cardHolderName: cardHolderName,
-                cvvCode: cvvCode,
-                onCreditCardModelChange: (data) {
-                  setState(() {
-                    cardNumber = data.cardNumber;
-                    expiryDate = data.expiryDate;
-                    cardHolderName = data.cardHolderName;
-                    cvvCode = data.cvvCode;
-                  });
                 },
-                formKey: formKey,
-              ),
-              const SizedBox(height: 20),
-              MyButton(onTap: userTappedPay, text: "Pagar"),
+                icon: const Icon(
+                  Icons.cancel_rounded,
+                  size: 25,
+                ),
+              )
             ],
+            titleSpacing: 5.2,
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Tu carrito',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: userCart.map((cartFood) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.asset(
+                                        cartFood.food.imagePath,
+                                        width: 45,
+                                        height: 45,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Text(
+                                      cartFood.food.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)} (${cartFood.quantity} uds.) ',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (cartFood.addons.isNotEmpty)
+                                SizedBox(
+                                  height: 50,
+                                  child: cartFood.addons.isEmpty
+                                      ? null
+                                      : ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: cartFood.addons
+                                              .map(
+                                                (addon) => Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0),
+                                                  child: FilterChip(
+                                                    label: Row(
+                                                      children: [
+                                                        Text(addon.name, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                                                        Text(
+                                                            " (${addon.price.toString()}) €", style: TextStyle(color: Theme.of(context).colorScheme.primary))
+                                                      ],
+                                                    ),
+                                                    onSelected: (value) {},
+                                                    shape: StadiumBorder(
+                                                      side: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
+                                                      ),
+                                                    ),
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
+                                                    labelStyle: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSecondary,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
+                                ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Text(
+                        'Subtotal',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${restaurant.formatPrice(subtotal)} ',
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        'Impuestos',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        '10 %',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Divider(height: 2),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Total',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      Text(
+                        restaurant.formatPrice(subtotal * 1.10),
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 225),
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          print(userCart);
+
+                          await StripeService.stripePaymentCheckout(
+                              userCart, total, context, mounted,
+                              onSuccess: () async {
+
+                            final SupabaseApi supabaseApi = SupabaseApi();
+                            await supabaseApi.createCart(
+                                restaurant.getUserCart, toDouble(total)! );
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DeliveryProgressPage()));
+                          }, onCancel: () {
+                            print("Cancel");
+                          }, onError: (e) {
+                            print("Error:" + e.toString());
+                          });
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                            const Color.fromARGB(255, 14, 80, 44),
+                          ),
+                          foregroundColor: WidgetStateProperty.all<Color>(
+                            Colors.white,
+                          ),
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
+                        ),
+                        child: const Text('Finalizar compra'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
