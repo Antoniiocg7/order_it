@@ -8,13 +8,13 @@ import 'package:provider/provider.dart';
 class MyCartTile extends StatefulWidget {
   final CartFood cartFood;
 
-  const MyCartTile({Key? key, required this.cartFood}) : super(key: key);
+  const MyCartTile({super.key, required this.cartFood});
 
   @override
-  _MyCartTileState createState() => _MyCartTileState();
+  MyCartTileState createState() => MyCartTileState();
 }
 
-class _MyCartTileState extends State<MyCartTile> {
+class MyCartTileState extends State<MyCartTile> {
   final ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
 
   @override
@@ -62,18 +62,23 @@ class _MyCartTileState extends State<MyCartTile> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AnimatedPrice(
-                              key: ValueKey('price_${widget.cartFood.food.id}'), // Key única para el precio
+                              key: ValueKey(
+                                  'price_${widget.cartFood.food.id}'), // Key única para el precio
                               price: restaurant.formatPrice(
-                                widget.cartFood.food.price * widget.cartFood.quantity,
+                                widget.cartFood.food.price *
+                                    widget.cartFood.quantity,
                               ),
                               isLoading: isLoadingNotifier.value,
                             ),
                             QuantitySelector(
-                              key: ValueKey('selector_${widget.cartFood.food.id}'), // Key única para el selector de cantidad
+                              key: ValueKey(
+                                  'selector_${widget.cartFood.food.id}'), // Key única para el selector de cantidad
                               initialQuantity: widget.cartFood.quantity,
                               food: widget.cartFood.food,
-                              onIncrementAction: () => handleIncrement(restaurant),
-                              onDecrementAction: () => handleDecrement(restaurant),
+                              onIncrementAction: () =>
+                                  handleIncrement(restaurant),
+                              onDecrementAction: () =>
+                                  handleDecrement(restaurant),
                               isLoadingNotifier: isLoadingNotifier,
                             ),
                           ],
@@ -112,9 +117,8 @@ class _MyCartTileState extends State<MyCartTile> {
                               backgroundColor:
                                   Theme.of(context).colorScheme.secondary,
                               labelStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSecondary,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                                 fontSize: 12,
                               ),
                             ),

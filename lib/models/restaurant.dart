@@ -90,7 +90,6 @@ class Restaurant extends ChangeNotifier {
 
   // Eliminar del carrito
   Future<bool> removeFromCart(CartFood cartFood) async {
-    
     if (cartFood.quantity < 1) return false;
 
     if (cartFood.quantity == 1) {

@@ -9,13 +9,13 @@ class QuantitySelector extends StatefulWidget {
   final ValueNotifier<bool> isLoadingNotifier;
 
   const QuantitySelector({
-    Key? key,
+    super.key,
     required this.initialQuantity,
     required this.food,
     required this.onIncrementAction,
     required this.onDecrementAction,
     required this.isLoadingNotifier,
-  }) : super(key: key);
+  });
 
   @override
   State<QuantitySelector> createState() => _QuantitySelectorState();

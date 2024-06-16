@@ -6,8 +6,6 @@ import 'package:order_it/pages/assign_table.dart';
 import 'package:order_it/pages/home_page.dart';
 
 class FirstPage extends StatelessWidget {
-
-
   const FirstPage({super.key});
 
   @override
@@ -19,24 +17,19 @@ class FirstPage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.secondary,
-        leading: 
-          Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            },
-          ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
         title: const Text('Order It!'),
-
-
-      
       ),
       body: Center(
-        
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(

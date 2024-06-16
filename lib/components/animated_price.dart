@@ -4,7 +4,8 @@ class AnimatedPrice extends StatelessWidget {
   final String price;
   final bool isLoading;
 
-  const AnimatedPrice({Key? key, required this.price, required this.isLoading}) : super(key: key);
+  const AnimatedPrice(
+      {super.key, required this.price, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class AnimatedPrice extends StatelessWidget {
       },
       child: isLoading
           ? LinearProgressIndicator(
-              key: ValueKey('loading'),
+              key: const ValueKey('loading'),
               backgroundColor: Colors.grey.shade300,
               color: Colors.grey.shade500,
             )

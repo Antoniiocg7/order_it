@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/models/cart.dart';
@@ -24,38 +25,39 @@ class _WaiterState extends State<Waiter> {
     _setupSubscription();
   }
 
+  // Método para obtener las mesas desde la API de Supabase
   Future<void> _fetchTables() async {
+    List<Map<String, dynamic>> fetchedTables = await _supabaseApi.getTables();
+    fetchedTables
+        .sort((a, b) => a['table_number'].compareTo(b['table_number']));
+    setState(() {
+      tables = fetchedTables;
+    });
+  }
 
-  List<Map<String, dynamic>> fetchedTables = await _supabaseApi.getTables();
+  // Configura la suscripción para recibir actualizaciones en tiempo real sobre las mesas
+  void _setupSubscription() {
+    _channel = Supabase.instance.client
+        .channel('public:tables')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          callback: (payload) {
+            _fetchTables();
+          },
+          schema: 'public',
+          table: 'tables',
+        )
+        .subscribe();
+  }
 
-  fetchedTables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
-
-  setState(() {
-    tables = fetchedTables;
-  });
-}
-
- void _setupSubscription() {
-  
-  _channel = Supabase.instance.client
-      .channel('public:tables')
-      .onPostgresChanges(
-        event: PostgresChangeEvent.all,
-        callback: (payload) {
-          _fetchTables();
-        },
-        schema: 'public',
-        table: 'tables',
-      )
-      .subscribe();
-}
-
-
-  void _navigateToTableDetail(BuildContext context, Map<String, dynamic> table) {
+  // Navega a la página de detalles de la mesa
+  void _navigateToTableDetail(
+      BuildContext context, Map<String, dynamic> table) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TableDetailPage(table: table, supabaseApi: _supabaseApi),
+        builder: (context) =>
+            TableDetailPage(table: table, supabaseApi: _supabaseApi),
       ),
     );
   }
@@ -65,7 +67,8 @@ class _WaiterState extends State<Waiter> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: const Text('Mesas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('Mesas',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: tables.isEmpty
           ? const Center(child: CircularProgressIndicator())
@@ -106,7 +109,7 @@ class _WaiterState extends State<Waiter> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Mesa${tables[index]['table_number']}',
+                              'Mesa ${tables[index]['table_number']}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -135,19 +138,19 @@ class TableDetailPage extends StatefulWidget {
   final Map<String, dynamic> table;
   final SupabaseApi supabaseApi;
 
-  const TableDetailPage({super.key, required this.table, required this.supabaseApi});
+  const TableDetailPage(
+      {super.key, required this.table, required this.supabaseApi});
 
   @override
-  _TableDetailPageState createState() => _TableDetailPageState();
+  TableDetailPageState createState() => TableDetailPageState();
 }
 
-class _TableDetailPageState extends State<TableDetailPage> {
+class TableDetailPageState extends State<TableDetailPage> {
   bool _isHovering = false;
   bool _isAssigned = false;
   String uuid = '';
   String? nombre;
   bool? isWaiterAssigned;
-
 
   @override
   void initState() {
@@ -155,6 +158,7 @@ class _TableDetailPageState extends State<TableDetailPage> {
     _initialize();
   }
 
+  // Inicializa la página verificando el estado de asignación de la mesa y obteniendo datos del camarero
   Future<void> _initialize() async {
     await _checkMesaAsignada();
     await _getWaiter();
@@ -162,36 +166,39 @@ class _TableDetailPageState extends State<TableDetailPage> {
     await _getWaiterAssigned();
   }
 
+  // Verifica si la mesa está asignada a un camarero
   Future<void> _checkMesaAsignada() async {
-    bool assigned = await widget.supabaseApi.getWaiter(widget.table['table_number']);
+    bool assigned =
+        await widget.supabaseApi.getWaiter(widget.table['table_number']);
     setState(() {
       _isAssigned = assigned;
     });
   }
 
+  // Obtiene el UUID del camarero actual
   Future<void> _getWaiter() async {
     final activeUser = await widget.supabaseApi.getUser();
-    print('ID Camarero: $activeUser');
     setState(() {
       uuid = activeUser[0]['id'];
     });
   }
 
+  // Obtiene el nombre del camarero
   Future<void> _getName() async {
     final waiterName = await widget.supabaseApi.getName(uuid);
-    print('Nombre Camarero: $waiterName');
     setState(() {
       nombre = waiterName;
     });
-    }
+  }
 
+  // Verifica si la mesa está asignada al camarero actual
   Future<void> _getWaiterAssigned() async {
-    final waiterAssigned = await widget.supabaseApi.getCamareroAsignado(uuid, widget.table['table_number']);
+    final waiterAssigned = await widget.supabaseApi
+        .getCamareroAsignado(uuid, widget.table['table_number']);
     setState(() {
       isWaiterAssigned = waiterAssigned;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +206,8 @@ class _TableDetailPageState extends State<TableDetailPage> {
       appBar: AppBar(
         title: Text(
           'Detalles de Mesa ${widget.table['table_number']}',
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.green,
         actions: [
@@ -209,7 +217,8 @@ class _TableDetailPageState extends State<TableDetailPage> {
               onExit: (_) => setState(() => _isHovering = false),
               child: TextButton(
                 onPressed: () async {
-                  bool liberada = await widget.supabaseApi.releaseTable(widget.table['user_id'], widget.table['table_number']);
+                  bool liberada = await widget.supabaseApi.releaseTable(
+                      widget.table['user_id'], widget.table['table_number']);
                   if (liberada) {
                     if (context.mounted) {
                       showDialog(
@@ -217,12 +226,14 @@ class _TableDetailPageState extends State<TableDetailPage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Mesa Liberada'),
-                            content: Text('La mesa ${widget.table['table_number']} ha sido liberada correctamente.'),
+                            content: Text(
+                                'La mesa ${widget.table['table_number']} ha sido liberada correctamente.'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context); // Cerrar el diálogo
-                                  Navigator.pop(context); // Volver a la página anterior
+                                  Navigator.pop(
+                                      context); // Volver a la página anterior
                                 },
                                 child: const Text('OK'),
                               ),
@@ -238,7 +249,8 @@ class _TableDetailPageState extends State<TableDetailPage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Error al liberar mesa'),
-                            content: Text('Hubo un error al liberar la mesa ${widget.table['table_number']}'),
+                            content: Text(
+                                'Hubo un error al liberar la mesa ${widget.table['table_number']}'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
@@ -260,7 +272,8 @@ class _TableDetailPageState extends State<TableDetailPage> {
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(8),
@@ -294,65 +307,69 @@ class _TableDetailPageState extends State<TableDetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            _isAssigned 
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                          nombre != null ? 'Asignada a $nombre' : 'Cargando...',
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                        
-                    const SizedBox(width: 10),
-                    isWaiterAssigned == true
-                    ? ElevatedButton(
-                      onPressed: () async{
-                        bool success = await widget.supabaseApi.releaseWaiterTable(uuid, widget.table['table_number']);
-                        if (success) {
-                          setState(() {
-                            _isAssigned = false;
-                            nombre = null;
-                            isWaiterAssigned = false;
-                          });
-                        } else {
-                          print('Error al desvincular la mesa');
-                        }
-                      },
-                      child: const Text('Desvincular')
-                    )
-                    : Container()
-                  ],
-              )
-              : 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.person_add),
-                    onPressed: () async {
-                      bool success = await widget.supabaseApi.assignTableWaiter(uuid, widget.table['table_number']);
-                      if (success) {
-                        final waiterName = await widget.supabaseApi.getName(uuid);
-                        setState(() {
-                          _isAssigned = true;
-                          isWaiterAssigned = true;
-                          nombre = waiterName;
-                        });
-                      }
-                    },
+            _isAssigned
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        nombre != null ? 'Asignada a $nombre' : 'Cargando...',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(width: 10),
+                      isWaiterAssigned == true
+                          ? ElevatedButton(
+                              onPressed: () async {
+                                bool success = await widget.supabaseApi
+                                    .releaseWaiterTable(
+                                        uuid, widget.table['table_number']);
+                                if (success) {
+                                  setState(() {
+                                    _isAssigned = false;
+                                    nombre = null;
+                                    isWaiterAssigned = false;
+                                  });
+                                } else {
+                                  if (kDebugMode) {
+                                    print('Error al desvincular la mesa');
+                                  }
+                                }
+                              },
+                              child: const Text('Desvincular'))
+                          : Container()
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.person_add),
+                        onPressed: () async {
+                          bool success = await widget.supabaseApi
+                              .assignTableWaiter(
+                                  uuid, widget.table['table_number']);
+                          if (success) {
+                            final waiterName =
+                                await widget.supabaseApi.getName(uuid);
+                            setState(() {
+                              _isAssigned = true;
+                              isWaiterAssigned = true;
+                              nombre = waiterName;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Asignar mesa',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'Asignar mesa',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
             const SizedBox(height: 20),
             OrdersList(userTable: widget.table['user_id']),
           ],
         ),
-    )
+      ),
     );
   }
 }
@@ -394,10 +411,11 @@ class _OrdersListState extends State<OrdersList> {
             return const Center(child: Text('No hay pedidos disponibles.'));
           } else {
             final carts = snapshot.data!;
-            final Map<String,int> cantidad = {};
+            final Map<String, int> cantidad = {};
 
+            // Calcula la cantidad de cada tipo de comida en los pedidos
             for (var food in carts) {
-              if (cantidad.containsKey(food.name)){
+              if (cantidad.containsKey(food.name)) {
                 cantidad[food.name] = cantidad[food.name]! + 1;
               } else {
                 cantidad[food.name] = 1;
@@ -410,7 +428,8 @@ class _OrdersListState extends State<OrdersList> {
                 final int cantidadInt = cantidad[cart.name] ?? 0;
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 25.0, vertical: 8.0),
                   child: ListTile(
                     leading: const CircleAvatar(
                       child: Icon(Icons.food_bank),
