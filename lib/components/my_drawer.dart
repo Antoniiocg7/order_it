@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/components/my_drawer_tile.dart';
 import 'package:order_it/pages/cart_page.dart';
+import 'package:order_it/pages/my_orders.dart';
+import 'package:order_it/pages/my_profile.dart';
 import 'package:order_it/pages/settings_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -59,18 +61,62 @@ class MyDrawer extends StatelessWidget {
             ),
 
           MyDrawerTile(
-            text: "AJUSTES",
-            icon: Icons.settings,
+            text: "PEDIDOS",
+            icon: Icons.food_bank,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
+                  builder: (context) => const MyOrders(),
                 ),
               );
             },
           ),
+
+          MyDrawerTile(
+            text: "MIS DATOS",
+            icon: Icons.person,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyProfile(title: "Hola",),
+                ),
+              );
+            },
+          ),
+
+          MyDrawerTile(
+            text: "AYUDA",
+            icon: Icons.help_center,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyOrders(),
+                ),
+              );
+            },
+          ),
+
+
+          MyDrawerTile(
+            text: "ACERCA DE.",
+            icon: Icons.info_outline,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyOrders(),
+                ),
+              );
+            },
+          ),
+
 
           // Tirar logout abajo del todo
           const Spacer(),
