@@ -18,18 +18,33 @@ class StripeService {
     String lineItems = "";
     int index = 0;
 
-    productItems.forEach(
-      (val) {
-        var productPrice = (val["productPrice"] * 100).round().toString();
-        lineItems +=
-            "&line_items[$index][price_data][product_data][name]=${val['productName']}";
-        lineItems +=
-            "&line_items[$index][price_data][unit_amount]=$productPrice";
-        lineItems += "&line_items[$index][price_data][currency]=EUR";
-        lineItems += "&line_items[$index][quantity]=${val['qty'].toString()}";
-        index++;
-      },
-    );
+    for (var val in productItems) {
+      num precioAddons = 0;
+
+      for (var addon in val.addons) {
+        if (addon != null) {
+          precioAddons += addon.price;
+        }
+      }
+
+      print(precioAddons);
+      print(totalAmount);
+
+      var productPrice =
+          ((((val.food.price * val.quantity) + precioAddons)*1.10) * 100)
+              .round()
+              .toString();
+
+      print(productPrice);
+
+      lineItems +=
+          "&line_items[$index][price_data][product_data][name]=${val.food.name}";
+      lineItems +=
+          "&line_items[$index][price_data][unit_amount]=${productPrice.toString()}";
+      lineItems += "&line_items[$index][price_data][currency]=EUR";
+      lineItems += "&line_items[$index][quantity]=${val.quantity.toString()}";
+      index++;
+    }
 
     final response = await http.post(url,
         body:
@@ -46,7 +61,7 @@ class StripeService {
 
   static Future<dynamic> stripePaymentCheckout(
     productItems,
-    subTotal,
+    total,
     context,
     mounted, {
     onSuccess,
@@ -55,7 +70,7 @@ class StripeService {
   }) async {
     final String sessionId = await createCheckoutSession(
       productItems,
-      subTotal,
+      total,
     );
 
     final result = await redirectToCheckout(

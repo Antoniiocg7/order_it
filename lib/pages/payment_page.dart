@@ -1,15 +1,17 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/checkout.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
 import 'package:order_it/pages/home_page.dart';
+import 'package:order_it/pages/stripe_services.dart';
 import 'package:order_it/services/supabase_api.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
-
   final List<CartFood> userCart;
   static const double iva = 0.10;
 
@@ -26,6 +28,7 @@ class _PaymentPageState extends State<PaymentPage> {
       builder: (context, restaurant, child) {
         final List<CartFood> userCart = restaurant.getUserCart;
         final subtotal = (restaurant.getTotalPrice());
+        final total = restaurant.formatPrice(subtotal * 1.10);
 
         return Scaffold(
           appBar: AppBar(
@@ -75,34 +78,83 @@ class _PaymentPageState extends State<PaymentPage> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.asset(
-                                      cartFood.food.imagePath,
-                                      width: 45,
-                                      height: 45,
-                                      fit: BoxFit.cover,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.asset(
+                                        cartFood.food.imagePath,
+                                        width: 45,
+                                        height: 45,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    cartFood.food.name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                    Text(
+                                      cartFood.food.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)} (${cartFood.quantity} uds.) ',
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                    Text(
+                                      '${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)} (${cartFood.quantity} uds.) ',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
+                              if (cartFood.addons.isNotEmpty)
+                                SizedBox(
+                                  height: 50,
+                                  child: cartFood.addons.isEmpty
+                                      ? null
+                                      : ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: cartFood.addons
+                                              .map(
+                                                (addon) => Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0),
+                                                  child: FilterChip(
+                                                    label: Row(
+                                                      children: [
+                                                        Text(addon.name, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                                                        Text(
+                                                            " (${addon.price.toString()}) €", style: TextStyle(color: Theme.of(context).colorScheme.primary))
+                                                      ],
+                                                    ),
+                                                    onSelected: (value) {},
+                                                    shape: StadiumBorder(
+                                                      side: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
+                                                      ),
+                                                    ),
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
+                                                    labelStyle: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSecondary,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
+                                ),
                             ],
                           );
                         }).toList(),
@@ -175,8 +227,27 @@ class _PaymentPageState extends State<PaymentPage> {
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
-                        onPressed: () {
-                          _showAddPaymentMethodModal(restaurant);
+                        onPressed: () async {
+                          print(userCart);
+
+                          await StripeService.stripePaymentCheckout(
+                              userCart, total, context, mounted,
+                              onSuccess: () async {
+
+                            final SupabaseApi supabaseApi = SupabaseApi();
+                            await supabaseApi.createCart(
+                                restaurant.getUserCart, toDouble(total)! );
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DeliveryProgressPage()));
+                          }, onCancel: () {
+                            print("Cancel");
+                          }, onError: (e) {
+                            print("Error:" + e.toString());
+                          });
                         },
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
@@ -202,142 +273,6 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         );
       },
-    );
-  }
-
-  void _showAddPaymentMethodModal(Restaurant restaurant) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
-            left: 16.0,
-            right: 16.0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CheckoutPage(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class PaymentForm extends StatefulWidget {
-  final Restaurant restaurant;
-
-  const PaymentForm({super.key, required this.restaurant});
-
-  @override
-  _PaymentFormState createState() => _PaymentFormState();
-}
-
-class _PaymentFormState extends State<PaymentForm> {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String cardNumber = "";
-  String expiryDate = "";
-  String cardHolderName = "";
-  String cvvCode = "";
-  bool isCvvFocused = false;
-  bool isLoading = false;
-
-  Future<void> userTappedPay() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    FocusManager.instance.primaryFocus?.unfocus();
-    if (formKey.currentState!.validate()) {
-      final total = widget.restaurant.getTotalPrice() * 1.10;
-
-      final SupabaseApi supabaseApi = SupabaseApi();
-      await supabaseApi.createCart(widget.restaurant.getUserCart, total);
-
-      if (context.mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const DeliveryProgressPage(  ),
-          ),
-        );
-      }
-    }
-
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(26.0),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CreditCardWidget(
-              cardNumber: cardNumber,
-              expiryDate: expiryDate,
-              cardHolderName: cardHolderName,
-              cvvCode: cvvCode,
-              showBackView: isCvvFocused,
-              onCreditCardWidgetChange: (p0) {},
-            ),
-            const SizedBox(height: 10),
-            CreditCardForm(
-              cardNumber: cardNumber,
-              expiryDate: expiryDate,
-              cardHolderName: cardHolderName,
-              cvvCode: cvvCode,
-
-              formKey: formKey,
-              onCreditCardModelChange: (data) {
-                setState(() {
-                  cardNumber = data.cardNumber;
-                  expiryDate = data.expiryDate;
-                  cardHolderName = data.cardHolderName;
-                  cvvCode = data.cvvCode;
-                });
-              },
-            ),
-            const SizedBox(height: 33),
-            Center(
-              child: isLoading
-                  ? const CircularProgressIndicator()
-                  : SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: ElevatedButton(
-                        onPressed: userTappedPay,
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all<Color>(
-                            const Color.fromARGB(255, 14, 80, 44),
-                          ),
-                          foregroundColor: WidgetStateProperty.all<Color>(
-                            Colors.white,
-                          ),
-                          shape: WidgetStateProperty.all<
-                              RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'Pagar ${widget.restaurant.formatPrice(widget.restaurant.getTotalPrice() * 1.10)}',
-                        ),
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
