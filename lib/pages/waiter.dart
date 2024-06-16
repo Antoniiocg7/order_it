@@ -4,6 +4,7 @@ import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/models/cart.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Waiter extends StatefulWidget {
@@ -388,6 +389,8 @@ class _OrdersListState extends State<OrdersList> {
   late Future<List<Cart>> futureOrders;
   late Future<List<Food>> futureItems;
 
+  Map<int, bool> cardColors = {};
+
   @override
   void initState() {
     super.initState();
@@ -395,6 +398,23 @@ class _OrdersListState extends State<OrdersList> {
     futureItems = futureOrders.then((orders) {
       return orderController.fetchCartFood2(orders);
     });
+    _loadCardColors();
+  }
+
+  Future<void> _loadCardColors() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      // Cargar el estado de las tarjetas
+      cardColors = (prefs.getStringList('cardColors') ?? []).asMap().map((index, value) {
+        return MapEntry(index, value == 'true');
+      });
+    });
+  }
+
+  Future<void> _saveCardColors() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cardColorsList = cardColors.values.map((value) => value.toString()).toList();
+    prefs.setStringList('cardColors', cardColorsList);
   }
 
   @override
@@ -426,19 +446,35 @@ class _OrdersListState extends State<OrdersList> {
               itemBuilder: (context, index) {
                 final cart = carts[index];
                 final int cantidadInt = cantidad[cart.name] ?? 0;
+                bool? isServed = cardColors[index];
 
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 25.0, vertical: 8.0),
-                  child: ListTile(
-                    leading: const CircleAvatar(
-                      child: Icon(Icons.food_bank),
-                    ),
-                    title: Text(cart.name),
-                    subtitle: Text('Cantidad: $cantidadInt'),
-                    trailing: Text(
-                      '${cart.price} €',
-                      style: const TextStyle(fontSize: 16),
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isServed == null || !isServed) {
+                        cardColors[index] = true; // Verde
+                      } else {
+                        cardColors[index] = false; // Rojo
+                      }
+                      _saveCardColors();
+                    });
+                  },
+                  child: Card(
+                    color: isServed == null
+                        ? Colors.red
+                        : (isServed ? Colors.green : Colors.red),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 8.0),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.food_bank),
+                      ),
+                      title: Text(cart.name),
+                      subtitle: Text('Cantidad: $cantidadInt'),
+                      trailing: Text(
+                        '${cart.price} €',
+                        style: const TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
                 );
