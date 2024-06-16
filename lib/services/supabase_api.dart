@@ -672,11 +672,10 @@ class SupabaseApi {
   Future<List<Addon>> getFoodAddonsFromCart(
     String cartItemId,
   ) async {
-    final response =
-        await supabase.from('cart_item_addon').select('addon_id').eq(
-              'cart_item_id',
-              cartItemId,
-            );
+    final response = await supabase.from('cart_item_addon').select('*').eq(
+          'cart_item_id',
+          cartItemId,
+        );
 
     // Extraer los addon_id de la respuesta
     List<int> addonIds =
@@ -947,6 +946,12 @@ class SupabaseApi {
   Future<List<Map<String, dynamic>>> getFood2(foodId) async {
     final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
     final headers = _createHeaders();
+
+    final response2 = await supabase.from("cart_item").select('*').eq("id", 883648924234910724);
+
+    print(response2);
+
+    
 
     final response = await http.get(Uri.parse(url), headers: headers);
 

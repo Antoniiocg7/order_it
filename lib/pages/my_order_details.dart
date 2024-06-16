@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/models/cart.dart';
-import 'package:order_it/services/supabase_api.dart';
 
 class MyOrderDetails extends StatefulWidget {
   final Cart cart;
@@ -14,7 +13,6 @@ class MyOrderDetails extends StatefulWidget {
 
 class _MyOrderDetailsState extends State<MyOrderDetails> {
   final OrderController orderController = OrderController();
-  final SupabaseApi supabaseApi = SupabaseApi();
   late Future<List<Map<String, dynamic>>> futureCartFood;
 
   @override
@@ -90,46 +88,136 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                 child: Text('No hay pedidos disponibles.'));
                           } else {
                             final foods = snapshot.data!;
-                            return Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Principal',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 1),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: foods.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${foods[index]["name"]} x ${foods[index]["quantity"]} - ${foods[index]["price"] * foods[index]["quantity"]} € \n${foods[index]["price"]}  €',
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 1),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: foods.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  // Plato
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(8),
+                                                    child: Image.asset(
+                                                      foods[index]['imagepath'],
+                                                      width: 70,
+                                                      height: 70,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  // Nombre y precio
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        const SizedBox(
+                                                            height: 10),
+                                                        Text(
+                                                          foods[index]['name'],
+                                                          style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 10),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
+                                            ),
+                                            // Addons
+                                            if (foods[index]["addons"] != null)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0),
+                                                child: SizedBox(
+                                                  height: 60,
+                                                  child: ListView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    children: (foods[index]
+                                                            ['addons'] as List)
+                                                        .map(
+                                                          (addon) => Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    right: 8.0),
+                                                            child: FilterChip(
+                                                              label: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    addon['name'],
+                                                                    style: TextStyle(
+                                                                        color: Theme.of(
+                                                                                context)
+                                                                            .colorScheme
+                                                                            .primary),
+                                                                  ),
+                                                                  Text(
+                                                                      " (${addon['price'].toString()})€",
+                                                                      style: TextStyle(
+                                                                          color: Theme.of(context)
+                                                                              .colorScheme
+                                                                              .primary))
+                                                                ],
+                                                              ),
+                                                              onSelected:
+                                                                  (value) {},
+                                                              shape:
+                                                                  StadiumBorder(
+                                                                side: BorderSide(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary,
+                                                                ),
+                                                              ),
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .secondary,
+                                                              labelStyle:
+                                                                  TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .onSecondary,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                        .toList(),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             );
                           }
                         },

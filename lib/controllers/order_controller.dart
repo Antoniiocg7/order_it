@@ -1,3 +1,4 @@
+import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
@@ -21,23 +22,28 @@ class OrderController {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchCartFood(String cartId) async {
+   Future<List<Map<String, dynamic>>> fetchCartFood(String cartId) async {
     try {
-      final List<Map<String, dynamic>> cartItem =
+      final List<Map<String, dynamic>> cartItems =
           await supabaseApi.getCartItems2(cartId);
 
-      final List<CartItem> cartItems =
-          cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
+      final List<CartItem> cartItem =
+          cartItems.map((cartItems) => CartItem.fromJson(cartItems)).toList();
 
       List<Map<String, dynamic>> cartFood = [];
 
-      for (var element in cartItems) {
+      for (var element in cartItem) {
+
+        final List<Addon> cartItemsAddons =
+            await supabaseApi.getFoodAddonsFromCart(element.id);
+
         // Obtener la lista de alimentos de la API
         var foodList = await supabaseApi.getFood2(element.foodId);
 
         // Agregar la cantidad a cada alimento en la lista
         for (var food in foodList) {
           food['quantity'] = element.quantity;
+          food['addons'] = cartItemsAddons.map((addon) => addon.toJson()).toList();
         }
 
         // Agregar la lista de alimentos con cantidades a cartFood
@@ -49,6 +55,7 @@ class OrderController {
       throw Exception('Failed to fetch orders: $error');
     }
   }
+
 
   // Los artículos del pedido
   Future<List<Food>> fetchCartFood2(List<Cart> carts) async {

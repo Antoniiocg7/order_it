@@ -4,7 +4,6 @@ import 'package:order_it/components/my_drawer_tile.dart';
 import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/my_orders.dart';
 import 'package:order_it/pages/my_profile.dart';
-import 'package:order_it/pages/settings_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyDrawer extends StatelessWidget {
