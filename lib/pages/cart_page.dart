@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:order_it/components/my_cart_tile.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
-import 'package:order_it/pages/payment_page2.dart';
+import 'package:order_it/pages/payment_page.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({Key? key}) : super(key: key);
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {

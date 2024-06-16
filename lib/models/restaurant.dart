@@ -22,7 +22,7 @@ class Restaurant extends ChangeNotifier {
     O P E R A T I O N S
   */
   // Carrito del usuario
-  List<CartFood> _cart = [];
+  final List<CartFood> _cart = [];
   late Cart carta;
 
   // Método para cargar los detalles del carrito
@@ -46,9 +46,7 @@ class Restaurant extends ChangeNotifier {
       bool foodIsInCart = false;
 
       if (_cart.isNotEmpty) {
-        for (var foodInCart in _cart) {
-          print('foodCart ${foodInCart.food.id}');
-          print('foodCart ${food.id}');
+        for (var foodInCart in _cart) {         
           if (foodInCart.food.id == food.id) {
             foodIsInCart = true;
             foodInCart.quantity++;

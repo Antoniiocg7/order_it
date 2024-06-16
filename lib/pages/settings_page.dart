@@ -50,16 +50,8 @@ class SettingsPage extends StatelessWidget {
                     title: "Mis datos",
                   )),
           MyContainer(
-              title: "METODOS DE PAGO",
-              icon: const Icon(Icons.wallet),
-              route: (context) => const MyBilingDetails()),
-          MyContainer(
               title: "AYUDA",
               icon: const Icon(Icons.help),
-              route: (context) => const MyOrders()),
-          MyContainer(
-              title: "PREFERENCIAS",
-              icon: const Icon(Icons.remove_red_eye),
               route: (context) => const MyOrders()),
           MyContainer(
               title: "ACERCA DE.",

@@ -396,18 +396,18 @@ class _OrdersListState extends State<OrdersList> {
             final carts = snapshot.data!;
             final Map<String,int> cantidad = {};
 
-            carts.forEach((food){
+            for (var food in carts) {
               if (cantidad.containsKey(food.name)){
                 cantidad[food.name] = cantidad[food.name]! + 1;
               } else {
                 cantidad[food.name] = 1;
               }
-            });
+            }
             return ListView.builder(
               itemCount: carts.length,
               itemBuilder: (context, index) {
                 final cart = carts[index];
-                final int cantidad_int = cantidad[cart.name] ?? 0;
+                final int cantidadInt = cantidad[cart.name] ?? 0;
 
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
@@ -415,8 +415,8 @@ class _OrdersListState extends State<OrdersList> {
                     leading: const CircleAvatar(
                       child: Icon(Icons.food_bank),
                     ),
-                    title: Text('${cart.name}'),
-                    subtitle: Text('Cantidad: ${cantidad_int}'),
+                    title: Text(cart.name),
+                    subtitle: Text('Cantidad: $cantidadInt'),
                     trailing: Text(
                       '${cart.price} €',
                       style: const TextStyle(fontSize: 16),

@@ -132,7 +132,7 @@ class RegisterPage extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: onTap,
-                      child: Text(
+                      child: const Text(
                         "Inicia sesión",
                         style: TextStyle(
                             color: Colors.green,
