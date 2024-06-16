@@ -144,14 +144,22 @@ class TableDetailPage extends StatefulWidget {
 class _TableDetailPageState extends State<TableDetailPage> {
   bool _isHovering = false;
   bool _isAssigned = false;
+  String uuid = '';
   String? nombre;
+  bool? isWaiterAssigned;
+
 
   @override
   void initState() {
     super.initState();
-    _checkMesaAsignada();
-    _getWaiter();
-    _getName();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _checkMesaAsignada();
+    await _getWaiter();
+    await _getName();
+    await _getWaiterAssigned();
   }
 
   Future<void> _checkMesaAsignada() async {
@@ -161,17 +169,26 @@ class _TableDetailPageState extends State<TableDetailPage> {
     });
   }
 
-  Future<String> _getWaiter() async {
+  Future<void> _getWaiter() async {
     final activeUser = await widget.supabaseApi.getUser();
-    print(activeUser);
-    return activeUser[0]['id'];
+    print('ID Camarero: $activeUser');
+    setState(() {
+      uuid = activeUser[0]['id'];
+    });
   }
 
   Future<void> _getName() async {
-    final waiterId = await _getWaiter();
-    final waiterName = await widget.supabaseApi.getName(waiterId);
+    final waiterName = await widget.supabaseApi.getName(uuid);
+    print('Nombre Camarero: $waiterName');
     setState(() {
       nombre = waiterName;
+    });
+    }
+
+  Future<void> _getWaiterAssigned() async {
+    final waiterAssigned = await widget.supabaseApi.getCamareroAsignado(uuid, widget.table['table_number']);
+    setState(() {
+      isWaiterAssigned = waiterAssigned;
     });
   }
 
@@ -285,6 +302,25 @@ class _TableDetailPageState extends State<TableDetailPage> {
                           nombre != null ? 'Asignada a $nombre' : 'Cargando...',
                           style: const TextStyle(fontSize: 20),
                         ),
+                        
+                    const SizedBox(width: 10),
+                    isWaiterAssigned == true
+                    ? ElevatedButton(
+                      onPressed: () async{
+                        bool success = await widget.supabaseApi.releaseWaiterTable(uuid, widget.table['table_number']);
+                        if (success) {
+                          setState(() {
+                            _isAssigned = false;
+                            nombre = null;
+                            isWaiterAssigned = false;
+                          });
+                        } else {
+                          print('Error al desvincular la mesa');
+                        }
+                      },
+                      child: const Text('Desvincular')
+                    )
+                    : Container()
                   ],
               )
               : 
@@ -294,7 +330,15 @@ class _TableDetailPageState extends State<TableDetailPage> {
                   IconButton(
                     icon: const Icon(Icons.person_add),
                     onPressed: () async {
-                      await widget.supabaseApi.assignTableWaiter(await _getWaiter(), widget.table['table_number']);
+                      bool success = await widget.supabaseApi.assignTableWaiter(uuid, widget.table['table_number']);
+                      if (success) {
+                        final waiterName = await widget.supabaseApi.getName(uuid);
+                        setState(() {
+                          _isAssigned = true;
+                          isWaiterAssigned = true;
+                          nombre = waiterName;
+                        });
+                      }
                     },
                   ),
                   const SizedBox(width: 10),

@@ -149,6 +149,32 @@ class SupabaseApi {
     }
   }
 
+  Future<bool> getCamareroAsignado(String uuid, int tableNumber) async {
+    final url =
+        '$baseUrl/rest/v1/tables?select*&waiter_id=eq.$uuid&table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      if (kDebugMode) {
+        print('RESPUESTA: $jsonResponse');
+      }
+      if (jsonResponse.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (kDebugMode) {
+        print('Error al obtener el UUID del camarero: ${response.statusCode}');
+      }
+      return false;
+    }
+  }
+
   Future<bool> assignTableWaiter(String waiterId, int tableNumber) async {
     final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
 
@@ -175,6 +201,37 @@ class SupabaseApi {
       if (kDebugMode) {
         print(
           'Hubo un error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
+        );
+      }
+      return false;
+    }
+  }
+
+  Future<bool> releaseWaiterTable(String waiterId, int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
+
+    final headers = {
+      'apikey': apiKey,
+      'Authorization': authorization,
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode(
+      {'waiter_id': null}
+    );
+
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 204) {
+      if (kDebugMode) {
+        print('Mesa $tableNumber libre.');
+      }
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(
+          'Hubo un error al desasignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
         );
       }
       return false;
