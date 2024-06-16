@@ -12,17 +12,19 @@ class DeliveryProgressPage extends StatelessWidget {
         // Retorna false para deshabilitar volver atrás
         return false;
       },
-    
-    child: const Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 100,),
-            MyReceipt(),
-          ],
+      child: const Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 100,
+              ),
+              MyReceipt(),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }
