@@ -28,7 +28,8 @@ class _PaymentPageState extends State<PaymentPage> {
       builder: (context, restaurant, child) {
         final List<CartFood> userCart = restaurant.getUserCart;
         final subtotal = (restaurant.getTotalPrice());
-        final total = restaurant.formatPrice(subtotal * 1.10);
+        final totalStr = restaurant.formatPrice(subtotal * 1.10);
+        final totalDouble = subtotal * 1.10;
 
         return Scaffold(
           appBar: AppBar(
@@ -126,9 +127,22 @@ class _PaymentPageState extends State<PaymentPage> {
                                                   child: FilterChip(
                                                     label: Row(
                                                       children: [
-                                                        Text(addon.name, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                                                        Text(addon.name,
+                                                            style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
                                                         Text(
-                                                            " (${addon.price.toString()}) €", style: TextStyle(color: Theme.of(context).colorScheme.primary))
+                                                            " (${addon.price.toString()}) €",
+                                                            style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary))
                                                       ],
                                                     ),
                                                     onSelected: (value) {},
@@ -228,15 +242,13 @@ class _PaymentPageState extends State<PaymentPage> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: () async {
-                          print(userCart);
-
                           await StripeService.stripePaymentCheckout(
-                              userCart, total, context, mounted,
+                              userCart, totalStr, context, mounted,
                               onSuccess: () async {
 
                             final SupabaseApi supabaseApi = SupabaseApi();
                             await supabaseApi.createCart(
-                                restaurant.getUserCart, toDouble(total)! );
+                                restaurant.getUserCart, totalDouble);
 
                             Navigator.push(
                                 context,
