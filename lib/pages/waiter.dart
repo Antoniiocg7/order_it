@@ -3,6 +3,7 @@ import 'package:order_it/controllers/order_controller.dart';
 import 'package:order_it/models/cart.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Waiter extends StatefulWidget {
   const Waiter({super.key});
@@ -12,14 +13,43 @@ class Waiter extends StatefulWidget {
 }
 
 class _WaiterState extends State<Waiter> {
-  late Future<List<Map<String, dynamic>>> _tablesFuture;
   final SupabaseApi _supabaseApi = SupabaseApi();
+  List<Map<String, dynamic>> tables = [];
+  late RealtimeChannel _channel;
 
   @override
   void initState() {
     super.initState();
-    _tablesFuture = _supabaseApi.getTables();
+    _fetchTables();
+    _setupSubscription();
   }
+
+  Future<void> _fetchTables() async {
+
+  List<Map<String, dynamic>> fetchedTables = await _supabaseApi.getTables();
+
+  fetchedTables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
+
+  setState(() {
+    tables = fetchedTables;
+  });
+}
+
+ void _setupSubscription() {
+  
+  _channel = Supabase.instance.client
+      .channel('public:tables')
+      .onPostgresChanges(
+        event: PostgresChangeEvent.all,
+        callback: (payload) {
+          _fetchTables();
+        },
+        schema: 'public',
+        table: 'tables',
+      )
+      .subscribe();
+}
+
 
   void _navigateToTableDetail(BuildContext context, Map<String, dynamic> table) {
     Navigator.push(
@@ -37,19 +67,9 @@ class _WaiterState extends State<Waiter> {
         backgroundColor: Colors.green,
         title: const Text('Mesas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _tablesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay mesas disponibles'));
-          } else {
-            List<Map<String, dynamic>> tables = snapshot.data!;
-            tables.sort((a, b) => a['table_number'].compareTo(b['table_number']));
-            return Padding(
+      body: tables.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -86,7 +106,7 @@ class _WaiterState extends State<Waiter> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Mesa ${tables[index]['table_number']}',
+                              'Mesa${tables[index]['table_number']}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -100,11 +120,14 @@ class _WaiterState extends State<Waiter> {
                   );
                 },
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
+  }
+
+  @override
+  void dispose() {
+    _channel.unsubscribe();
+    super.dispose();
   }
 }
 
@@ -120,6 +143,55 @@ class TableDetailPage extends StatefulWidget {
 
 class _TableDetailPageState extends State<TableDetailPage> {
   bool _isHovering = false;
+  bool _isAssigned = false;
+  String uuid = '';
+  String? nombre;
+  bool? isWaiterAssigned;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _checkMesaAsignada();
+    await _getWaiter();
+    await _getName();
+    await _getWaiterAssigned();
+  }
+
+  Future<void> _checkMesaAsignada() async {
+    bool assigned = await widget.supabaseApi.getWaiter(widget.table['table_number']);
+    setState(() {
+      _isAssigned = assigned;
+    });
+  }
+
+  Future<void> _getWaiter() async {
+    final activeUser = await widget.supabaseApi.getUser();
+    print('ID Camarero: $activeUser');
+    setState(() {
+      uuid = activeUser[0]['id'];
+    });
+  }
+
+  Future<void> _getName() async {
+    final waiterName = await widget.supabaseApi.getName(uuid);
+    print('Nombre Camarero: $waiterName');
+    setState(() {
+      nombre = waiterName;
+    });
+    }
+
+  Future<void> _getWaiterAssigned() async {
+    final waiterAssigned = await widget.supabaseApi.getCamareroAsignado(uuid, widget.table['table_number']);
+    setState(() {
+      isWaiterAssigned = waiterAssigned;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -219,13 +291,68 @@ class _TableDetailPageState extends State<TableDetailPage> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            /*Text('Pedidos de la mesa ${widget.table['table_number']}:'),
-            const SizedBox(height: 20),*/
+            const SizedBox(height: 20),
+            _isAssigned 
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                          nombre != null ? 'Asignada a $nombre' : 'Cargando...',
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        
+                    const SizedBox(width: 10),
+                    isWaiterAssigned == true
+                    ? ElevatedButton(
+                      onPressed: () async{
+                        bool success = await widget.supabaseApi.releaseWaiterTable(uuid, widget.table['table_number']);
+                        if (success) {
+                          setState(() {
+                            _isAssigned = false;
+                            nombre = null;
+                            isWaiterAssigned = false;
+                          });
+                        } else {
+                          print('Error al desvincular la mesa');
+                        }
+                      },
+                      child: const Text('Desvincular')
+                    )
+                    : Container()
+                  ],
+              )
+              : 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.person_add),
+                    onPressed: () async {
+                      bool success = await widget.supabaseApi.assignTableWaiter(uuid, widget.table['table_number']);
+                      if (success) {
+                        final waiterName = await widget.supabaseApi.getName(uuid);
+                        setState(() {
+                          _isAssigned = true;
+                          isWaiterAssigned = true;
+                          nombre = waiterName;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Asignar mesa',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 20),
             OrdersList(userTable: widget.table['user_id']),
           ],
         ),
-      ),
+    )
     );
   }
 }
@@ -267,10 +394,20 @@ class _OrdersListState extends State<OrdersList> {
             return const Center(child: Text('No hay pedidos disponibles.'));
           } else {
             final carts = snapshot.data!;
+            final Map<String,int> cantidad = {};
+
+            carts.forEach((food){
+              if (cantidad.containsKey(food.name)){
+                cantidad[food.name] = cantidad[food.name]! + 1;
+              } else {
+                cantidad[food.name] = 1;
+              }
+            });
             return ListView.builder(
               itemCount: carts.length,
               itemBuilder: (context, index) {
                 final cart = carts[index];
+                final int cantidad_int = cantidad[cart.name] ?? 0;
 
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
@@ -278,10 +415,10 @@ class _OrdersListState extends State<OrdersList> {
                     leading: const CircleAvatar(
                       child: Icon(Icons.food_bank),
                     ),
-                    title: const Text('Restaurante'),
-                    subtitle: const Text('Fecha:'),
+                    title: Text('${cart.name}'),
+                    subtitle: Text('Cantidad: ${cantidad_int}'),
                     trailing: Text(
-                      '${cart.name} €',
+                      '${cart.price} €',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
