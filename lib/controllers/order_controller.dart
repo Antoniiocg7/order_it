@@ -26,27 +26,23 @@ class OrderController {
       final List<Map<String, dynamic>> cartItem =
           await supabaseApi.getCartItems2(cartId);
 
-      print(cartItem);
-
       final List<CartItem> cartItems =
-    cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
+          cartItem.map((cartItem) => CartItem.fromJson(cartItem)).toList();
 
-List<Map<String, dynamic>> cartFood = [];
+      List<Map<String, dynamic>> cartFood = [];
 
-for (var element in cartItems) {
-  // Obtener la lista de alimentos de la API
-  var foodList = await supabaseApi.getFood2(element.foodId);
+      for (var element in cartItems) {
+        // Obtener la lista de alimentos de la API
+        var foodList = await supabaseApi.getFood2(element.foodId);
 
-  // Agregar la cantidad a cada alimento en la lista
-  for (var food in foodList) {
-    food['quantity'] = element.quantity;
-  }
+        // Agregar la cantidad a cada alimento en la lista
+        for (var food in foodList) {
+          food['quantity'] = element.quantity;
+        }
 
-  // Agregar la lista de alimentos con cantidades a cartFood
-  cartFood.addAll(foodList);
-}
-
-print('Hola $cartFood');
+        // Agregar la lista de alimentos con cantidades a cartFood
+        cartFood.addAll(foodList);
+      }
 
       return cartFood;
     } catch (error) {

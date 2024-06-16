@@ -124,12 +124,10 @@ class SupabaseApi {
   }
 
   Future<String> getName(String uuid) async {
-    final url =
-        '$baseUrl/rest/v1/users?select=nombre&id=eq.$uuid';
+    final url = '$baseUrl/rest/v1/users?select=nombre&id=eq.$uuid';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
-
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
@@ -155,7 +153,6 @@ class SupabaseApi {
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
-
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
@@ -184,8 +181,7 @@ class SupabaseApi {
       'Content-Type': 'application/json',
     };
 
-    final body = jsonEncode(
-        {'waiter_id': waiterId});
+    final body = jsonEncode({'waiter_id': waiterId});
 
     final response =
         await http.patch(Uri.parse(url), headers: headers, body: body);
@@ -216,9 +212,7 @@ class SupabaseApi {
       'Content-Type': 'application/json',
     };
 
-    final body = jsonEncode(
-      {'waiter_id': null}
-    );
+    final body = jsonEncode({'waiter_id': null});
 
     final response =
         await http.patch(Uri.parse(url), headers: headers, body: body);
@@ -380,8 +374,6 @@ class SupabaseApi {
       );
 
       for (var item in cartFood) {
-        print(item.addons);
-
         await http.post(
           Uri.parse(urlCartItem),
           headers: headers,
@@ -398,8 +390,7 @@ class SupabaseApi {
             await http.post(
               Uri.parse(urlCartItemAddon),
               headers: headers,
-              body: jsonEncode(
-                  {"cart_item_id": item.id, "addon_id": addon.id}),
+              body: jsonEncode({"cart_item_id": item.id, "addon_id": addon.id}),
             );
           }
         }
@@ -522,8 +513,6 @@ class SupabaseApi {
       final response =
           await supabase.from('cart_item').select('*').eq('cart_id', cartId);
 
-      print(response);
-
       return response;
     } catch (e) {
       throw Exception('Error al cargar los items del carrito: $e');
@@ -591,8 +580,6 @@ class SupabaseApi {
             'is_finished',
             false,
           );
-
-      print("supabaseApi - CheckCart - $responseData ");
 
       return responseData;
     } catch (e) {
@@ -1023,9 +1010,7 @@ class SupabaseApi {
   }
 
   Future<bool> getReservas(String userId) async {
-
-    final url =
-        '$baseUrl/rest/v1/tables?select*&user_id=eq.$userId';
+    final url = '$baseUrl/rest/v1/tables?select*&user_id=eq.$userId';
 
     final headers = _createHeaders();
 
@@ -1041,7 +1026,6 @@ class SupabaseApi {
       return false;
     }
   }
-
 
   /*Future<bool> dobleReserva(String userId) async {
     final response = await supabaseClient

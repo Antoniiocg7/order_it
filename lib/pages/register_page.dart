@@ -70,13 +70,12 @@ class RegisterPage extends StatelessWidget {
 
               // Contraseña
               FadeInLeft(
-                duration: const Duration(seconds: 2),
-                child: MyTextField(
-                    controller: passwordController,
-                    hintText: "Contraseña",
-                    labelText: "Contraseña",
-                    obscureText: true)
-              ),
+                  duration: const Duration(seconds: 2),
+                  child: MyTextField(
+                      controller: passwordController,
+                      hintText: "Contraseña",
+                      labelText: "Contraseña",
+                      obscureText: true)),
 
               const SizedBox(
                 height: 20,
@@ -132,11 +131,10 @@ class RegisterPage extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: onTap,
-                      child: Text(
+                      child: const Text(
                         "Inicia sesión",
                         style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     )
                   ],

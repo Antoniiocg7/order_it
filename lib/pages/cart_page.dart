@@ -6,13 +6,13 @@ import 'package:order_it/pages/payment_page2.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({Key? key}) : super(key: key);
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) {
-        final userCart = _sortCartByInsertionOrder( restaurant.getUserCart );
+        final userCart = _sortCartByInsertionOrder(restaurant.getUserCart);
 
         return Scaffold(
           appBar: AppBar(
@@ -49,7 +49,9 @@ class CartPage extends StatelessWidget {
           ),
           body: Column(
             children: [
-              const SizedBox(height: 14,),
+              const SizedBox(
+                height: 14,
+              ),
               Expanded(
                 child: userCart.isEmpty
                     ? const Center(child: Text("Carrito vacío"))
@@ -64,8 +66,8 @@ class CartPage extends StatelessWidget {
               Container(
                 height: 150,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 212, 211, 211)
-                      .withOpacity(0.5),
+                  color:
+                      const Color.fromARGB(255, 212, 211, 211).withOpacity(0.5),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
@@ -76,15 +78,14 @@ class CartPage extends StatelessWidget {
                   children: [
                     const SizedBox(height: 35),
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         BotonPagar(userCart: userCart),
                         Column(
                           children: [
                             Text(
-                              restaurant.formatPrice(
-                                  restaurant.getTotalPrice()),
+                              restaurant
+                                  .formatPrice(restaurant.getTotalPrice()),
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -139,7 +140,7 @@ class BotonPagar extends StatelessWidget {
           : () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PaymentPage( userCart: userCart ),
+                  builder: (context) => PaymentPage(userCart: userCart),
                 ),
               ),
       child: SizedBox(

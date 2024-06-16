@@ -8,17 +8,16 @@ import 'package:order_it/services/supabase_api.dart';
 import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
-
   final List<CartFood> userCart;
   static const double iva = 0.10;
 
   const PaymentPage({super.key, required this.userCart});
 
   @override
-  _PaymentPageState createState() => _PaymentPageState();
+  PaymentPageState createState() => PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
@@ -234,10 +233,10 @@ class PaymentForm extends StatefulWidget {
   const PaymentForm({super.key, required this.restaurant});
 
   @override
-  _PaymentFormState createState() => _PaymentFormState();
+  PaymentFormState createState() => PaymentFormState();
 }
 
-class _PaymentFormState extends State<PaymentForm> {
+class PaymentFormState extends State<PaymentForm> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String cardNumber = "";
   String expiryDate = "";
@@ -260,6 +259,7 @@ class _PaymentFormState extends State<PaymentForm> {
 
       if (context.mounted) {
         Navigator.push(
+          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
             builder: (context) => const DeliveryProgressPage(),
@@ -295,7 +295,6 @@ class _PaymentFormState extends State<PaymentForm> {
               expiryDate: expiryDate,
               cardHolderName: cardHolderName,
               cvvCode: cvvCode,
-
               formKey: formKey,
               onCreditCardModelChange: (data) {
                 setState(() {
@@ -309,20 +308,20 @@ class _PaymentFormState extends State<PaymentForm> {
             const SizedBox(height: 33),
             Center(
               child: isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: userTappedPay,
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
+                          backgroundColor: WidgetStateProperty.all<Color>(
                             const Color.fromARGB(255, 14, 80, 44),
                           ),
-                          foregroundColor: MaterialStateProperty.all<Color>(
+                          foregroundColor: WidgetStateProperty.all<Color>(
                             Colors.white,
                           ),
-                          shape: MaterialStateProperty.all<
-                              RoundedRectangleBorder>(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
