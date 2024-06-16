@@ -6,14 +6,14 @@ import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
 import 'package:order_it/services/supabase_api.dart';
 
-class PaymentPage extends StatefulWidget {
-  const PaymentPage({super.key});
+class PaymentPage3 extends StatefulWidget {
+  const PaymentPage3({super.key});
 
   @override
-  State<PaymentPage> createState() => _PaymentPageState();
+  State<PaymentPage3> createState() => _PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _PaymentPageState extends State<PaymentPage3> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String cardNumber = "";
   String expiryDate = "";

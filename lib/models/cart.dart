@@ -1,8 +1,8 @@
 class Cart {
-  final String id;
-  final String userId;
-  final String price;
-  final bool isFinished;
+  String id;
+  String userId;
+  String price;
+  bool isFinished;
   //final List<CartItem> items;
 
   Cart({

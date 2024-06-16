@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             onPressed: () async {
                           final restaurant =
                               Provider.of<Restaurant>(context, listen: false);
-                          await restaurant.loadCartDetails();
+                          restaurant.loadCartDetails();
 
                           if (context.mounted) {
                                 Navigator.push(

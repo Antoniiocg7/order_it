@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:order_it/components/my_cart_tile.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
-import 'package:order_it/pages/payment_page.dart';
+import 'package:order_it/pages/payment_page2.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
@@ -49,6 +49,7 @@ class CartPage extends StatelessWidget {
           ),
           body: Column(
             children: [
+              const SizedBox(height: 14,),
               Expanded(
                 child: userCart.isEmpty
                     ? const Center(child: Text("Carrito vacío"))
@@ -119,9 +120,9 @@ class CartPage extends StatelessWidget {
 
 class BotonPagar extends StatelessWidget {
   const BotonPagar({
-    Key? key,
+    super.key,
     required this.userCart,
-  }) : super(key: key);
+  });
 
   final List<CartFood> userCart;
 
@@ -130,7 +131,7 @@ class BotonPagar extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all<Color>(
-          const Color.fromARGB(255, 19, 160, 78),
+          const Color.fromARGB(255, 14, 80, 44),
         ),
       ),
       onPressed: userCart.isEmpty
@@ -138,7 +139,7 @@ class BotonPagar extends StatelessWidget {
           : () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PaymentPage(  ),
+                  builder: (context) => PaymentPage( userCart: userCart ),
                 ),
               ),
       child: SizedBox(

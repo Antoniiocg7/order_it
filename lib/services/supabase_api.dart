@@ -215,8 +215,10 @@ class SupabaseApi {
     }
   }
 
-  Future<String> createCart() async {
-    final url = '$baseUrl/rest/v1/cart';
+  Future<String> createCart(List<CartFood> cartFood, double total) async {
+    final urlCart = '$baseUrl/rest/v1/cart';
+    final urlCartItem = '$baseUrl/rest/v1/cart_item';
+    final urlCartItemAddon = '$baseUrl/rest/v1/cart_item_addon';
     final headers = _createHeadersInsert();
 
     // Convert DateTime.now() to ISO 8601 string
@@ -227,15 +229,42 @@ class SupabaseApi {
 
     try {
       await http.post(
-        Uri.parse(url),
+        Uri.parse(urlCart),
         headers: headers,
         body: jsonEncode({
           "id": cartId,
           "user_id": userResponse.user!.id,
-          "is_finished": false,
+          "price": total,
+          "is_finished": true,
           "created_at": now,
         }),
       );
+
+      for (var item in cartFood) {
+        print(item.addons);
+
+        await http.post(
+          Uri.parse(urlCartItem),
+          headers: headers,
+          body: jsonEncode({
+            "id": item.id,
+            "cart_id": cartId,
+            "food_id": item.food.id,
+            "quantity": item.quantity,
+          }),
+        );
+
+        if (item.addons.isNotEmpty) {
+          for (var addon in item.addons) {
+            await http.post(
+              Uri.parse(urlCartItemAddon),
+              headers: headers,
+              body: jsonEncode(
+                  {"cart_item_id": item.id, "addon_id": addon.id}),
+            );
+          }
+        }
+      }
 
       return cartId;
     } catch (e) {
@@ -779,8 +808,6 @@ class SupabaseApi {
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    
-
     if (response.statusCode == 200) {
       //print(response.body);
       final List<dynamic> jsonResponse = json.decode(response.body);
@@ -807,7 +834,6 @@ class SupabaseApi {
 
   //xuski
   Future<List<Map<String, dynamic>>> getFood3(List<String> foodIds) async {
-    
     final url = '$baseUrl/rest/v1/food?id=in.(${foodIds.join(",")})';
     final headers = _createHeaders();
 

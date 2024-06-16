@@ -24,7 +24,8 @@ class MyReceipt extends StatelessWidget {
               padding: const EdgeInsets.all(25),
               child: Consumer<Restaurant>(
                 builder: (context, restaurant, child) =>
-                    Text(restaurant.displayCartReceipt()),
+                    Text(restaurant.displayCartReceipt())
+            
               ),
             ),
             const SizedBox(height: 25),
@@ -36,6 +37,7 @@ class MyReceipt extends StatelessWidget {
                 ),
               ),
               onPressed: () {
+                Provider.of<Restaurant>(context, listen: false).clearCart();
                 Navigator.push(
                   context,
                   MaterialPageRoute(

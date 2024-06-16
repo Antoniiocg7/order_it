@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
+import 'package:order_it/models/cart.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/services/supabase_api.dart';
@@ -14,19 +15,21 @@ class Restaurant extends ChangeNotifier {
     G E T T E R S
   */
   List<CartFood> get getUserCart => _cart;
+
+  Cart get getCarta => carta;
+
   /*
     O P E R A T I O N S
   */
   // Carrito del usuario
   List<CartFood> _cart = [];
+  late Cart carta;
 
   // Método para cargar los detalles del carrito
   Future<void> loadCartDetails() async {
     try {
       //_cart.clear();
-
       //List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
-
       _cart.addAll(_cart);
 
       notifyListeners();
@@ -41,8 +44,6 @@ class Restaurant extends ChangeNotifier {
   Future<bool> addToCart(Food food, List<Addon>? selectedAddons) async {
     try {
       bool foodIsInCart = false;
-      /* final supabase = Supabase.instance.client;
-      final user = await supabase.auth.getUser(); */
 
       if (_cart.isNotEmpty) {
         for (var foodInCart in _cart) {
@@ -79,6 +80,18 @@ class Restaurant extends ChangeNotifier {
     } catch (e) {
       return false; // Si hay un error, devolver false
     }
+  }
+
+  void crearNuevoCarrito() async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+
+    carta = (
+      Cart(
+        id: RandomIds.generateRandomId().toString(),
+        userId: user.user!.id,
+        price: "",
+        isFinished: false));
   }
 
   void nuevoCartItem(Food food, List<Addon>? selectedAddons) {
@@ -133,9 +146,9 @@ class Restaurant extends ChangeNotifier {
   }
 
   void clearCart() async {
-    final SupabaseApi supabase = SupabaseApi();
-    final cartId = await supabase.getCart();
-    await supabase.clearCart(cartId);
+    //final SupabaseApi supabase = SupabaseApi();
+    //final cartId = await supabase.getCart();
+    //await supabase.clearCart(cartId);
 
     _cart.clear();
 
