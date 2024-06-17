@@ -30,7 +30,7 @@ class LoginController {
       password: password,
     );
 
-    bool success = await supabaseApi.login(email, password);
+    bool success = await supabaseApi.login(email, password, context);
     int? rol = await supabaseApi.getUserRole(email);
     String? userId = await supabaseApi.getUserUUID(email);
 

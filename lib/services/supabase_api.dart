@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
 import 'package:order_it/models/usuario.dart' as order_it;
+import 'package:order_it/services/snackbar_helper.dart';
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -37,7 +39,11 @@ class SupabaseApi {
     };
   }
 
-  Future<bool> login(String email, String password) async {
+  Future<bool> login(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     final url = '$baseUrl/auth/v1/token?grant_type=password';
     final headers = _createHeaders();
 
@@ -52,6 +58,15 @@ class SupabaseApi {
       body: body,
     );
 
+    if (response.statusCode != 200) {
+      if (context.mounted) {
+        SnackbarHelper.showSnackbar(
+          context,
+          "Inicio de sesión incorrecto",
+          backgroundColor: Colors.red,
+        );
+      }
+    }
     return response.statusCode == 200;
   }
 
@@ -945,13 +960,15 @@ class SupabaseApi {
 
   Future<bool> updateUser(order_it.User updateUser) async {
     try {
-      final response = await supabase.from("users").update({
-        'nombre': updateUser.nombre,
-        'apellido_1': updateUser.apellido_1,
-        'telefono': updateUser.telefono
-      })
-      .eq("email", updateUser.email)
-      .select();
+      final response = await supabase
+          .from("users")
+          .update({
+            'nombre': updateUser.nombre,
+            'apellido_1': updateUser.apellido_1,
+            'telefono': updateUser.telefono
+          })
+          .eq("email", updateUser.email)
+          .select();
 
       print(response);
 
