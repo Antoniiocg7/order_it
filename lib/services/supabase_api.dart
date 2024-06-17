@@ -5,6 +5,7 @@ import 'package:order_it/models/addon.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/cart_item.dart';
 import 'package:order_it/models/food.dart';
+import 'package:order_it/models/usuario.dart' as order_it;
 import 'package:order_it/utils/random_id.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -942,16 +943,35 @@ class SupabaseApi {
     }
   }
 
+  Future<bool> updateUser(order_it.User updateUser) async {
+    try {
+      final response = await supabase.from("users").update({
+        'nombre': updateUser.nombre,
+        'apellido_1': updateUser.apellido_1,
+        'telefono': updateUser.telefono
+      })
+      .eq("email", updateUser.email)
+      .select();
+
+      print(response);
+
+      return true;
+    } catch (e) {
+      throw "No se pudieron actualizar los datos";
+    }
+  }
+
   // Joaquin
   Future<List<Map<String, dynamic>>> getFood2(foodId) async {
     final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
     final headers = _createHeaders();
 
-    final response2 = await supabase.from("cart_item").select('*').eq("id", 883648924234910724);
+    final response2 = await supabase
+        .from("cart_item")
+        .select('*')
+        .eq("id", 883648924234910724);
 
     print(response2);
-
-    
 
     final response = await http.get(Uri.parse(url), headers: headers);
 

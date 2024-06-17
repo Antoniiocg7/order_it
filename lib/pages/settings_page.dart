@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/order_controller.dart';
-import 'package:order_it/pages/my_biling_details.dart';
 import 'package:order_it/pages/my_orders.dart';
 import 'package:order_it/pages/my_profile.dart';
 import 'package:order_it/themes/theme_provider.dart';
@@ -53,10 +52,6 @@ class SettingsPage extends StatelessWidget {
               title: "AYUDA",
               icon: const Icon(Icons.help),
               route: (context) => const MyOrders()),
-          MyContainer(
-              title: "ACERCA DE.",
-              icon: const Icon(Icons.info_outline),
-              route: (context) => const MyBilingDetails()),
         ],
       ),
     );

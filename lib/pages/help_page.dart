@@ -16,7 +16,7 @@ class HelpPage extends StatelessWidget {
     },
     {
       "question": "¿Cómo puedo hacer un pedido desde la mesa?",
-      "answer": "Después de escanear el código QR, navega por el menú en la aplicación, selecciona los ítems que deseas pedir y agrégalos al carrito. Una vez que hayas terminado, procede a realizar el pedido desde la opción correspondiente en la aplicación."
+      "answer": "Después de escanear el código QR, navega por el menú en la aplicación, selecciona los ítems que deseas pedir y agrégalos al carrito. Una vez que hayas terminado, procede a realizar el pago y disfruta de tu pedido."
     },
     {
       "question": "¿Qué hago si mi pedido no se procesa correctamente?",

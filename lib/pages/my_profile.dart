@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/user_controller.dart';
 import 'package:order_it/models/usuario.dart' as order_it;
+import 'package:order_it/services/supabase_api.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key, required this.title});
@@ -14,16 +15,58 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   final UserController userController = UserController();
+  final SupabaseApi supabaseApi = SupabaseApi();
+
   late Future<order_it.User> user;
 
-
+  late TextEditingController nombreController;
+  late TextEditingController apellidoController;
+  late TextEditingController emailController;
+  late TextEditingController telefonoController;
+  late TextEditingController passwordController;
 
   @override
   void initState() {
     super.initState();
     user = userController.getUser();
-    if (kDebugMode) {
-      print(user);
+    user.then((userData) {
+      nombreController = TextEditingController(text: userData.nombre);
+      apellidoController = TextEditingController(text: userData.apellido_1);
+      emailController = TextEditingController(text: userData.email);
+      telefonoController = TextEditingController(text: userData.telefono);
+      passwordController = TextEditingController();
+    });
+  }
+
+  @override
+  void dispose() {
+    nombreController.dispose();
+    apellidoController.dispose();
+    emailController.dispose();
+    telefonoController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _updateUser() async {
+    final updatedUser = order_it.User(
+      id: (await user).id,
+      nombre: nombreController.text,
+      apellido_1: apellidoController.text,
+      email: emailController.text,
+      telefono: telefonoController.text,
+      // Agrega cualquier otro campo necesario
+    );
+
+    try {
+      await supabaseApi.updateUser(updatedUser);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuario actualizado correctamente')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al actualizar usuario: $e')),
+      );
     }
   }
 
@@ -47,7 +90,6 @@ class _MyProfileState extends State<MyProfile> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            final userData = snapshot.data!;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(26.0),
@@ -79,7 +121,7 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 24),
                     TextField(
-                      controller: TextEditingController(text: userData.nombre),
+                      controller: nombreController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
@@ -89,8 +131,7 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
-                      controller:
-                          TextEditingController(text: userData.apellido_1),
+                      controller: apellidoController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
@@ -100,7 +141,8 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
-                      controller: TextEditingController(text: userData.email),
+                      enabled: false,
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
@@ -113,8 +155,7 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
-                      controller:
-                          TextEditingController(text: userData.telefono),
+                      controller: telefonoController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
@@ -124,6 +165,7 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -135,7 +177,7 @@ class _MyProfileState extends State<MyProfile> {
                     const SizedBox(height: 32),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: _updateUser,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 47, 136, 219),
