@@ -23,10 +23,8 @@ class MyButton extends StatelessWidget {
       child: Container(
         height: size.height * 0.065,
         width: size.width * 0.75,
-        /*padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),*/
         decoration: BoxDecoration(
-            color: color ?? Theme.of(context).colorScheme.inversePrimary,
+            color: color ?? Colors.green,
             gradient: linearGradient,
             borderRadius: BorderRadius.circular(100)),
         child: Center(

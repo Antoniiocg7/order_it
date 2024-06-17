@@ -6,7 +6,6 @@ import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
 class FoodPage extends StatefulWidget {
-  
   final Food food;
   final bool ordersAllowed;
   final Map<Addon, bool> selectedAddons = {};
@@ -35,12 +34,10 @@ class _FoodPageState extends State<FoodPage> {
       }
     }
 
-    
-
-
-
     // Añadir al carrito
-    bool success = await context.read<Restaurant>().addToCart(food, currentlySelectedAddons);
+    bool success = await context
+        .read<Restaurant>()
+        .addToCart(food, currentlySelectedAddons);
 
     if (success && mounted) {
       Navigator.pop(context);
@@ -73,9 +70,9 @@ class _FoodPageState extends State<FoodPage> {
                       // Precio
                       Text(
                         "${widget.food.price}€",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Colors.green,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -115,11 +112,12 @@ class _FoodPageState extends State<FoodPage> {
                             if (widget.ordersAllowed) {
                               // Checkbox del complemento
                               return CheckboxListTile(
+                                activeColor: Colors.green,
                                 title: Text(addon.name),
                                 subtitle: Text(
                                   "${addon.price}€",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
+                                  style: const TextStyle(
+                                    color: Colors.green,
                                   ),
                                 ),
                                 value: widget.selectedAddons[addon],
@@ -135,8 +133,8 @@ class _FoodPageState extends State<FoodPage> {
                                 title: Text(addon.name),
                                 subtitle: Text(
                                   "${addon.price}€",
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
+                                  style: const TextStyle(
+                                    color: Colors.green,
                                   ),
                                 ),
                               );
