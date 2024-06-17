@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:order_it/controllers/user_controller.dart';
 import 'package:order_it/models/usuario.dart' as order_it;
@@ -60,7 +62,7 @@ class _MyProfileState extends State<MyProfile> {
     try {
       await supabaseApi.updateUser(updatedUser);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Usuario actualizado correctamente')),
+        const SnackBar(content: Text('Usuario actualizado correctamente')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

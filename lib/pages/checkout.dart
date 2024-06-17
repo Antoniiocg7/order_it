@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'stripe_services.dart';
 
@@ -36,14 +37,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
             await StripeService.stripePaymentCheckout(
                 items, 500, context, mounted, onSuccess: () {
-              print("Success");
+              if (kDebugMode) {
+                print("Success");
+              }
             }, onCancel: () {
-              print("Cancel");
+              if (kDebugMode) {
+                print("Cancel");
+              }
             }, onError: (e) {
-              print("Error:" + e.toString());
+              if (kDebugMode) {
+                print("Error:$e");
+              }
             });
 
-            print(items);
+            if (kDebugMode) {
+              print(items);
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: Colors.teal,

@@ -14,10 +14,10 @@ class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key, required this.userCart});
 
   @override
-  _PaymentPageState createState() => _PaymentPageState();
+  PaymentPageState createState() => PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
@@ -237,7 +237,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                   restaurant.getUserCart, totalDouble);
 
                               // Cerrar la pantalla de carga
-                              Navigator.pop(context);
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
 
                               // Verificar si el contexto está montado antes de navegar
                               if (context.mounted) {
@@ -284,12 +286,12 @@ class _PaymentPageState extends State<PaymentPage> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Dialog(
+        return const Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 CircularProgressIndicator(),
                 SizedBox(width: 16),
                 Text("Procesando..."),

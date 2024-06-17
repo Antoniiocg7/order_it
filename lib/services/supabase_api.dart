@@ -960,7 +960,7 @@ class SupabaseApi {
 
   Future<bool> updateUser(order_it.User updateUser) async {
     try {
-      final response = await supabase
+      await supabase
           .from("users")
           .update({
             'nombre': updateUser.nombre,
@@ -969,8 +969,6 @@ class SupabaseApi {
           })
           .eq("email", updateUser.email)
           .select();
-
-      print(response);
 
       return true;
     } catch (e) {
@@ -983,12 +981,7 @@ class SupabaseApi {
     final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
     final headers = _createHeaders();
 
-    final response2 = await supabase
-        .from("cart_item")
-        .select('*')
-        .eq("id", 883648924234910724);
-
-    print(response2);
+    await supabase.from("cart_item").select('*').eq("id", 883648924234910724);
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
