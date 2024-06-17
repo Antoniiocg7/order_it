@@ -70,9 +70,9 @@ class _FoodPageState extends State<FoodPage> {
                       // Precio
                       Text(
                         "${widget.food.price}€",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
-                          color: Colors.green,
+                          color: Colors.green.shade300,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -116,8 +116,8 @@ class _FoodPageState extends State<FoodPage> {
                                 title: Text(addon.name),
                                 subtitle: Text(
                                   "${addon.price}€",
-                                  style: const TextStyle(
-                                    color: Colors.green,
+                                  style: TextStyle(
+                                    color: Colors.green.shade300,
                                   ),
                                 ),
                                 value: widget.selectedAddons[addon],
