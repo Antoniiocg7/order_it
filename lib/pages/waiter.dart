@@ -29,8 +29,11 @@ class _WaiterState extends State<Waiter> {
   // Método para obtener las mesas desde la API de Supabase
   Future<void> _fetchTables() async {
     List<Map<String, dynamic>> fetchedTables = await _supabaseApi.getTables();
-    fetchedTables
-        .sort((a, b) => a['table_number'].compareTo(b['table_number']));
+    fetchedTables.sort(
+      (a, b) => a['table_number'].compareTo(
+        b['table_number'],
+      ),
+    );
     setState(() {
       tables = fetchedTables;
     });
@@ -68,7 +71,7 @@ class _WaiterState extends State<Waiter> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.green.shade400,
+        backgroundColor: Colors.green,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
@@ -216,6 +219,7 @@ class TableDetailPageState extends State<TableDetailPage> {
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: 17,
           ),
         ),
         iconTheme: const IconThemeData(
@@ -325,11 +329,16 @@ class TableDetailPageState extends State<TableDetailPage> {
                     children: [
                       Text(
                         nombre != null ? 'Asignada a $nombre' : 'Cargando...',
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(width: 10),
                       isWaiterAssigned == true
                           ? ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                  Colors.green.shade300,
+                                ),
+                              ),
                               onPressed: () async {
                                 bool success = await widget.supabaseApi
                                     .releaseWaiterTable(
@@ -346,36 +355,41 @@ class TableDetailPageState extends State<TableDetailPage> {
                                   }
                                 }
                               },
-                              child: const Text('Desvincular'))
+                              child: const Text(
+                                'Desvincular',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
                           : Container()
                     ],
                   )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.person_add),
-                        onPressed: () async {
-                          bool success = await widget.supabaseApi
-                              .assignTableWaiter(
-                                  uuid, widget.table['table_number']);
-                          if (success) {
-                            final waiterName =
-                                await widget.supabaseApi.getName(uuid);
-                            setState(() {
-                              _isAssigned = true;
-                              isWaiterAssigned = true;
-                              nombre = waiterName;
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'Asignar mesa',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
+                : GestureDetector(
+                    onTap: () async {
+                      bool success = await widget.supabaseApi.assignTableWaiter(
+                        uuid,
+                        widget.table['table_number'],
+                      );
+                      if (success) {
+                        final waiterName =
+                            await widget.supabaseApi.getName(uuid);
+                        setState(() {
+                          _isAssigned = true;
+                          isWaiterAssigned = true;
+                          nombre = waiterName;
+                        });
+                      }
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person_add),
+                        SizedBox(width: 10),
+                        Text(
+                          'Asignar mesa',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
                   ),
             const SizedBox(height: 20),
             OrdersList(userTable: widget.table['user_id']),
@@ -474,19 +488,39 @@ class _OrdersListState extends State<OrdersList> {
                   },
                   child: Card(
                     color: isServed == null
-                        ? Colors.red
-                        : (isServed ? Colors.green : Colors.red),
+                        ? Colors.red.shade400
+                        : (isServed ? Colors.green : Colors.red.shade400),
                     margin: const EdgeInsets.symmetric(
-                        horizontal: 25.0, vertical: 8.0),
+                      horizontal: 15.0,
+                      vertical: 8.0,
+                    ),
                     child: ListTile(
-                      leading: const CircleAvatar(
-                        child: Icon(Icons.food_bank),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(cart.imagePath),
                       ),
-                      title: Text(cart.name),
-                      subtitle: Text('Cantidad: $cantidadInt'),
+                      title: Text(
+                        cart.name,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'Cantidad: $cantidadInt',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
                       trailing: Text(
                         '${cart.price} €',
-                        style: const TextStyle(fontSize: 16),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
