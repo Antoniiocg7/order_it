@@ -229,7 +229,9 @@ class PaymentPageState extends State<PaymentPage> {
 
                           // Guardar el carrito en Supabase
                           await supabaseApi.createCart(
-                              restaurant.getUserCart, totalDouble);
+                            restaurant.getUserCart,
+                            totalDouble,
+                          );
 
                           // Cerrar la pantalla de carga
                           if (context.mounted) {

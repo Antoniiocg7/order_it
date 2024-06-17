@@ -383,7 +383,7 @@ class SupabaseApi {
         body: jsonEncode({
           "id": cartId,
           "user_id": userResponse.user!.id,
-          "price": total,
+          "price": double.parse(total.toStringAsFixed(2)),
           "is_finished": true,
           "created_at": now,
         }),
