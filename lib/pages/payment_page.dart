@@ -132,10 +132,10 @@ class PaymentPageState extends State<PaymentPage> {
                                                     Text(
                                                       addon.name,
                                                       style: TextStyle(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .colorScheme
-                                                              .primary,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary,
                                                           fontWeight:
                                                               FontWeight.bold),
                                                     ),
@@ -211,7 +211,8 @@ class PaymentPageState extends State<PaymentPage> {
                 right: 0,
                 child: Container(
                   color: Colors.white, // Fondo blanco para el botón
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 16.0),
                   child: ElevatedButton(
                     onPressed: () async {
                       // Mostrar la pantalla de carga
@@ -249,14 +250,13 @@ class PaymentPageState extends State<PaymentPage> {
                       );
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
+                      backgroundColor: WidgetStateProperty.all<Color>(
                         const Color.fromARGB(255, 14, 80, 44),
                       ),
-                      foregroundColor: MaterialStateProperty.all<Color>(
+                      foregroundColor: WidgetStateProperty.all<Color>(
                         Colors.white,
                       ),
-                      shape:
-                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),

@@ -82,7 +82,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   Center(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
-                      height: MediaQuery.of(context).size.height * 0.5, 
+                      height: MediaQuery.of(context).size.height * 0.5,
                       child: FuturBuild(),
                     ),
                   ),
@@ -100,14 +100,11 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       future: futureCartFood,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator.adaptive());
+          return const Center(child: CircularProgressIndicator.adaptive());
         } else if (snapshot.hasError) {
-          return Center(
-              child: Text('Error: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(
-              child: Text('No hay pedidos disponibles.'));
+          return const Center(child: Text('No hay pedidos disponibles.'));
         } else {
           final foods = snapshot.data!;
           return ListView.builder(
@@ -139,8 +136,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 10),
                                   Text(
@@ -168,12 +164,12 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                         children: [
                                           Text(
                                             addon['name'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: Colors.black),
                                           ),
                                           Text(
                                               " (${addon['price'].toString()})€",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.black))
                                         ],
                                       ),
