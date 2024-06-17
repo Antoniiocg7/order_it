@@ -28,9 +28,9 @@ class RegisterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //logo
+              // Logo
               FadeInDown(
-                duration: const Duration(seconds: 2),
+                duration: const Duration(seconds: 3),
                 child: Image.asset(
                   'assets/icons/Logo.png',
                   width: size.width * 1.2,
@@ -40,9 +40,8 @@ class RegisterPage extends StatelessWidget {
 
               //const SizedBox(height: 10),
 
-              //message, app slogan
               FadeInLeft(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: Text(
                   "¡Crea tu cuenta ahora!",
                   style: TextStyle(
@@ -55,57 +54,57 @@ class RegisterPage extends StatelessWidget {
                 height: 25,
               ),
 
-              // EMAIL TEXTFIELD
+              // Email
               FadeInRight(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                     controller: emailController,
                     hintText: "Email",
                     labelText: "Email",
-                    obscureText: false,
-                    icon: Icons.email),
+                    obscureText: false),
               ),
 
               const SizedBox(
                 height: 20,
               ),
 
-              //PASSWORD TEXTFIELD
+              // Contraseña
               FadeInLeft(
-                duration: const Duration(seconds: 1),
-                child: MyTextField(
-                    controller: passwordController,
-                    hintText: "Password",
-                    labelText: "Password",
-                    obscureText: true,
-                    icon: Icons.password),
-              ),
+                  duration: const Duration(seconds: 2),
+                  child: MyTextField(
+                      controller: passwordController,
+                      hintText: "Contraseña",
+                      labelText: "Contraseña",
+                      obscureText: true)),
 
               const SizedBox(
                 height: 20,
               ),
 
-              //CONFIRM PASSWORD TEXTFIELD
+              // Confirmar contraseña
               FadeInRight(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyTextField(
                     controller: confirmPasswordController,
-                    hintText: "Confirm password",
-                    labelText: "Confirm password",
-                    obscureText: true,
-                    icon: Icons.password),
+                    hintText: "Confirmar contraseña",
+                    labelText: "Confirmar contraseña",
+                    obscureText: true),
               ),
 
               const SizedBox(
                 height: 45,
               ),
 
-              //SIGN Up BUTTON
+              // Inicio de sesión
               FadeInUp(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: MyButton(
                   text: "Registrar",
+                  linearGradient: LinearGradient(
+                      colors: [Colors.green.shade900, Colors.green]),
                   onTap: () {
+                    // Esconder el teclado
+                    FocusManager.instance.primaryFocus?.unfocus();
                     registerController.register(
                         context, emailController.text, passwordController.text);
                   },
@@ -116,9 +115,9 @@ class RegisterPage extends StatelessWidget {
                 height: 25,
               ),
 
-              // ALREADY HAVE AN ACCOUNT? LOGIN HERE
+              // Ir a login
               FadeInUp(
-                duration: const Duration(seconds: 1),
+                duration: const Duration(seconds: 2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -132,11 +131,10 @@ class RegisterPage extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: onTap,
-                      child: Text(
+                      child: const Text(
                         "Inicia sesión",
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     )
                   ],

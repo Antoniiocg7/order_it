@@ -45,11 +45,11 @@ class _MyTextFieldState extends State<MyTextField> {
                   borderSide: BorderSide(color: Colors.indigo.withOpacity(0.3)),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color.fromARGB(255, 82, 81, 81)),
+                  borderSide: const BorderSide(color: Color.fromARGB(255, 135, 181, 136)),
                   borderRadius: BorderRadius.circular(18)
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide( color: Colors.grey),
+                  borderSide: const BorderSide( color: Color.fromARGB(255, 51, 132, 53)),
                   borderRadius: BorderRadius.circular(18)
 
                 ),

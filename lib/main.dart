@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:order_it/auth/login_or_register.dart';
 import 'package:order_it/models/restaurant.dart';
+import 'package:order_it/models/user.dart';
 import 'package:order_it/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,19 +10,30 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Hive.initFlutter();
+
+  // Registra el adaptador
+  Hive.registerAdapter(UsuarioAdapter());
+
+  // Abre la caja de usuarios
+  await Hive.openBox<Usuario>('userBox');
+
   await Supabase.initialize(
     url: 'https://gapuibdxbmoqjhibirjm.supabase.co',
     anonKey:
+    
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcHVpYmR4Ym1vcWpoaWJpcmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM4MjU1NDIsImV4cCI6MjAyOTQwMTU0Mn0.ytby3w54RxY_DkotV0g_eNiLVAJjc678X97l2kjUz9E',
   );
 
+  
+
   runApp(MultiProvider(providers: [
-    // THEME PROVIDER
+    // Provider del tema
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
     ),
 
-      // RESTAURANT PROVIDER
+      // Provider del restaurante
       ChangeNotifierProvider(
         create: (context) => Restaurant()
       ),
@@ -30,8 +43,6 @@ void main() async {
     )
   );
 } 
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

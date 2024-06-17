@@ -11,19 +11,34 @@ environment:
 
 dependencies:
   animate_do: ^3.3.4
+  base64: ^1.0.0
+  bcrypt: ^1.1.3
+  build_runner: 2.4.9
   collection: ^1.18.0
   cupertino_icons: ^1.0.6
+  dio: ^5.4.3+1
   flutter:
     sdk: flutter
   flutter_credit_card: ^4.0.1
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.0
+  font_awesome_flutter: ^10.7.0
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  hive_generator: ^2.0.1
   http: ^1.2.1
+  internet_connection_checker: ^1.0.0+1
   intl: ^0.19.0
+  line_awesome_flutter: ^3.0.1
   lottie: ^3.1.2
   provider: ^6.1.2
+  qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
+  shared_preferences: ^2.2.3
+  smooth_page_indicator: ^1.1.0
+  stripe_checkout: ^1.0.2
   supabase_flutter: ^2.5.2
 
 dev_dependencies:
@@ -35,18 +50,17 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
+    - assets/animations/
     - lib/images/application/
     - lib/images/desserts/
     - lib/images/dishes/
     - lib/images/drinks/
     - lib/images/salads/
     - lib/images/sides/
-
 
 flutter_launcher_icons:
   android: "launcher_icon"

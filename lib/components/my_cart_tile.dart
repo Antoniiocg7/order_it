@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:order_it/components/animated_price.dart';
 import 'package:order_it/components/my_quantity_selector.dart';
-import 'package:order_it/models/cart_item.dart';
+import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
-class MyCartTile extends StatelessWidget {
-  final CartItem cartItem;
+class MyCartTile extends StatefulWidget {
+  final CartFood cartFood;
 
-  const MyCartTile({super.key, required this.cartItem});
+  const MyCartTile({super.key, required this.cartFood});
+
+  @override
+  MyCartTileState createState() => MyCartTileState();
+}
+
+class MyCartTileState extends State<MyCartTile> {
+  final ValueNotifier<bool> isLoadingNotifier = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
       builder: (context, restaurant, child) => Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(8)),
-        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
         child: Column(
           children: [
             Padding(
@@ -24,27 +33,25 @@ class MyCartTile extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // FOOD IMAGE
+                  // Plato
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      cartItem.food.imagePath,
-                      width: 100,
-                      height: 100,
+                      widget.cartFood.food.imagePath,
+                      width: 70,
+                      height: 70,
                       fit: BoxFit.cover,
                     ),
                   ),
-
                   const SizedBox(width: 10),
-
-                  // NAME AND PRICE
+                  // Nombre y precio
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          cartItem.food.name,
+                          widget.cartFood.food.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -54,21 +61,25 @@ class MyCartTile extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "${cartItem.food.price}€",
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary),
+                            AnimatedPrice(
+                              key: ValueKey(
+                                  'price_${widget.cartFood.food.id}'), // Key única para el precio
+                              price: restaurant.formatPrice(
+                                widget.cartFood.food.price *
+                                    widget.cartFood.quantity,
+                              ),
+                              isLoading: isLoadingNotifier.value,
                             ),
                             QuantitySelector(
-                              quantity: cartItem.quantity,
-                              food: cartItem.food,
-                              onIncrement: () {
-                                restaurant.addToCart(
-                                    cartItem.food, cartItem.selectedAddons);
-                              },
-                              onDecrement: () {
-                                restaurant.removeFromCart(cartItem);
-                              },
+                              key: ValueKey(
+                                  'selector_${widget.cartFood.food.id}'), // Key única para el selector de cantidad
+                              initialQuantity: widget.cartFood.quantity,
+                              food: widget.cartFood.food,
+                              onIncrementAction: () =>
+                                  handleIncrement(restaurant),
+                              onDecrementAction: () =>
+                                  handleDecrement(restaurant),
+                              isLoadingNotifier: isLoadingNotifier,
                             ),
                           ],
                         ),
@@ -78,27 +89,33 @@ class MyCartTile extends StatelessWidget {
                 ],
               ),
             ),
-
-            // ADDONS
-            if (cartItem.selectedAddons.isNotEmpty)
+            // Addons
+            if (widget.cartFood.addons.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: SizedBox(
                   height: 60,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    children: cartItem.selectedAddons
+                    children: widget.cartFood.addons
                         .map(
                           (addon) => Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: FilterChip(
                               label: Row(
                                 children: [
-                                  // ADDON NAME
-                                  Text(addon.name),
-
-                                  // ADDON PRICE
-                                  Text(" (${addon.price.toString()})€")
+                                  Text(
+                                    addon.name,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                  ),
+                                  Text(" (${addon.price.toString()})€",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary))
                                 ],
                               ),
                               onSelected: (value) {},
@@ -110,9 +127,8 @@ class MyCartTile extends StatelessWidget {
                               backgroundColor:
                                   Theme.of(context).colorScheme.secondary,
                               labelStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                                 fontSize: 12,
                               ),
                             ),
@@ -126,5 +142,17 @@ class MyCartTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> handleIncrement(Restaurant restaurant) async {
+    isLoadingNotifier.value = true;
+    await restaurant.addToCart(widget.cartFood.food, widget.cartFood.addons);
+    isLoadingNotifier.value = false;
+  }
+
+  Future<void> handleDecrement(Restaurant restaurant) async {
+    isLoadingNotifier.value = true;
+    await restaurant.removeFromCart(widget.cartFood);
+    isLoadingNotifier.value = false;
   }
 }

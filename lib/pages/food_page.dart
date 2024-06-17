@@ -6,11 +6,13 @@ import 'package:order_it/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
 class FoodPage extends StatefulWidget {
+  
   final Food food;
+  final bool ordersAllowed;
   final Map<Addon, bool> selectedAddons = {};
 
-  FoodPage({super.key, required this.food}) {
-    // INITIALIZE SELECTED ADDONS TO BE FALSE
+  FoodPage({super.key, required this.food, required this.ordersAllowed}) {
+    // Inicializamos los complementos seleccionados a false
     for (Addon addon in food.addons ?? []) {
       selectedAddons[addon] = false;
     }
@@ -21,12 +23,11 @@ class FoodPage extends StatefulWidget {
 }
 
 class _FoodPageState extends State<FoodPage> {
-  // METHOD TO ADD TO CART
-  void addToCart(Food food, Map<Addon, bool> selectedAddons) {
-    // CLOSE THE CURRENT FOOD PAGE TO GO BACK MENU
-    Navigator.pop(context);
+  // Método para añadir al carrito
+  void addToCart(Food food, Map<Addon, bool> selectedAddons) async {
+    // Cerramos la anterior página para volver al menú
+    if (!mounted) return;
 
-    // FORMAT THE SELECTED ADDONS
     List<Addon> currentlySelectedAddons = [];
     for (Addon addon in widget.food.addons ?? []) {
       if (widget.selectedAddons[addon] == true) {
@@ -34,27 +35,34 @@ class _FoodPageState extends State<FoodPage> {
       }
     }
 
-    // ADD TO CART
-    context.read<Restaurant>().addToCart(food, currentlySelectedAddons);
+    
+
+
+
+    // Añadir al carrito
+    bool success = await context.read<Restaurant>().addToCart(food, currentlySelectedAddons);
+
+    if (success && mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        //SCAFFOLD UI
         Scaffold(
           body: SingleChildScrollView(
             child: Column(
               children: [
-                // FOOD IMAGE
+                // Imagen
                 Image.asset(widget.food.imagePath),
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // FOOD NAME
+                      // Nombre
                       Text(
                         widget.food.name,
                         style: const TextStyle(
@@ -62,7 +70,7 @@ class _FoodPageState extends State<FoodPage> {
                           fontSize: 20,
                         ),
                       ),
-                      // FOOD PRICE
+                      // Precio
                       Text(
                         "${widget.food.price}€",
                         style: TextStyle(
@@ -71,7 +79,7 @@ class _FoodPageState extends State<FoodPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      // FOOD DESCRIPTION
+                      // Descripción
                       Text(widget.food.description),
                       const SizedBox(height: 10),
                       Divider(
@@ -79,7 +87,7 @@ class _FoodPageState extends State<FoodPage> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        "Add-ons",
+                        "Complementos",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.inversePrimary,
                           fontSize: 16,
@@ -87,7 +95,7 @@ class _FoodPageState extends State<FoodPage> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      // ADDONS
+                      // Complementos
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -101,41 +109,56 @@ class _FoodPageState extends State<FoodPage> {
                           padding: EdgeInsets.zero,
                           itemCount: widget.food.addons?.length ?? 0,
                           itemBuilder: (context, index) {
-                            // GET INDIVIDUAL ADDON
+                            // Recoger el complemento individualmente
                             Addon addon = widget.food.addons![index];
-                            // RETURN CHECK BOX UI
-                            return CheckboxListTile(
-                              title: Text(addon.name),
-                              subtitle: Text(
-                                "${addon.price}€",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
+
+                            if (widget.ordersAllowed) {
+                              // Checkbox del complemento
+                              return CheckboxListTile(
+                                title: Text(addon.name),
+                                subtitle: Text(
+                                  "${addon.price}€",
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
-                              ),
-                              value: widget.selectedAddons[addon],
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  widget.selectedAddons[addon] = value!;
-                                });
-                              },
-                            );
+                                value: widget.selectedAddons[addon],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    widget.selectedAddons[addon] = value!;
+                                  });
+                                },
+                              );
+                            } else {
+                              // Lista de complementos
+                              return ListTile(
+                                title: Text(addon.name),
+                                subtitle: Text(
+                                  "${addon.price}€",
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),
                     ],
                   ),
                 ),
-                // BUTTON -> ADD TO CART
-                MyButton(
-                  text: "Add to cart",
-                  onTap: () => addToCart(widget.food, widget.selectedAddons),
-                ),
+                // Botón -> Añadir al carrito (Solo si ordersAllowed es true)
+                if (widget.ordersAllowed)
+                  MyButton(
+                    text: "Añadir al carrito",
+                    onTap: () => addToCart(widget.food, widget.selectedAddons),
+                  ),
                 const SizedBox(height: 25),
               ],
             ),
           ),
         ),
-        // BACK BUTTON
+        // Botón back
         SafeArea(
           child: Opacity(
             opacity: 0.6,

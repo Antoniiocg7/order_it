@@ -1,90 +1,143 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:order_it/models/addon.dart';
-import 'package:order_it/models/cart_item.dart';
+import 'package:order_it/models/cart.dart';
+import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/food.dart';
+import 'package:order_it/services/supabase_api.dart';
+import 'package:order_it/utils/random_id.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Restaurant extends ChangeNotifier {
+  final supabaseApi = SupabaseApi();
+  final supabase = Supabase.instance.client;
   /*
     G E T T E R S
   */
-  List<CartItem> get cart => _cart;
+  List<CartFood> get getUserCart => _cart;
+
+  Cart get getCarta => carta;
+
   /*
     O P E R A T I O N S
   */
-  // USER CART
-  final List<CartItem> _cart = [];
+  // Carrito del usuario
+  final List<CartFood> _cart = [];
+  late Cart carta;
 
-  // ADD TO CART
-  void addToCart(Food food, List<Addon> selectedAddons) {
-    // See if there is a cart item already with the same food and selected addons
-    CartItem? cartItem = _cart.firstWhereOrNull((item) {
-      // CHECK IF THE FOOD ITEMS ARE THE SAME
-      bool isSameFood = item.food == food;
+  // Método para cargar los detalles del carrito
+  Future<void> loadCartDetails() async {
+    try {
+      //_cart.clear();
+      //List<CartFood> cartFoodList = await supabaseApi.getCartFoodDetails();
+      _cart.addAll(_cart);
 
-      //CHECK IF THE LIST OF SELECTED ADDONS ARE THE SAME
-      bool isSameAddons =
-          const ListEquality().equals(item.selectedAddons, selectedAddons);
-
-      return isSameFood && isSameAddons;
-    });
-
-    // IF ITEM ALREADY EXISTS, INCREASE IT´S QUANTITY
-    if (cartItem != null) {
-      cartItem.quantity++;
-    } else {
-      // OTHERWISE, ADD A NEW CART ITEM TO THE CART
-      _cart.add(CartItem(food: food, selectedAddons: selectedAddons));
-    }
-    notifyListeners();
-  }
-
-  // REMOVE FROM CART
-  void removeFromCart(CartItem cartItem) {
-    int cartIndex = _cart.indexOf(cartItem);
-
-    if (cartIndex != -1) {
-      if (_cart[cartIndex].quantity > 1) {
-        _cart[cartIndex].quantity--;
-      } else {
-        _cart.removeAt(cartIndex);
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error al cargar los detalles del carrito: $e");
       }
     }
-    notifyListeners();
   }
 
-  // GET TOTAL PRICE OF CART
+  // Añadir al carrito
+  Future<bool> addToCart(Food food, List<Addon>? selectedAddons) async {
+    try {
+      bool foodIsInCart = false;
+
+      if (_cart.isNotEmpty) {
+        for (var foodInCart in _cart) {         
+          if (foodInCart.food.id == food.id) {
+            foodIsInCart = true;
+            foodInCart.quantity++;
+          }
+        }
+
+        selectedAddons ?? _cart.first.addons;
+      }
+
+      if (_cart.isNotEmpty && !foodIsInCart) {
+        nuevoCartItem(food, selectedAddons);
+      }
+
+      if (_cart.isEmpty) {
+        _cart.add(CartFood(
+            id: RandomIds.generateRandomId().toString(),
+            food: food,
+            addons: selectedAddons!,
+            quantity: 1));
+      }
+
+      if (kDebugMode) {
+        print(_cart);
+      }
+
+      await loadCartDetails();
+      notifyListeners();
+      return true; // Indicar que se agregó correctamente al carrito
+    } catch (e) {
+      return false; // Si hay un error, devolver false
+    }
+  }
+
+  void nuevoCartItem(Food food, List<Addon>? selectedAddons) {
+    _cart.add(CartFood(
+        id: RandomIds.generateRandomId().toString(),
+        food: food,
+        addons: selectedAddons!,
+        quantity: 1));
+  }
+
+  // Eliminar del carrito
+  Future<bool> removeFromCart(CartFood cartFood) async {
+    if (cartFood.quantity < 1) return false;
+
+    if (cartFood.quantity == 1) {
+      _cart.remove(cartFood);
+    }
+
+    if (cartFood.quantity > 1) {
+      cartFood.quantity--;
+    }
+
+    await loadCartDetails();
+    notifyListeners();
+    return true;
+  }
+
   double getTotalPrice() {
     double total = 0.0;
 
-    for (CartItem cartItem in _cart) {
-      double itemTotal = cartItem.food.price;
+    for (CartFood cartFood in _cart) {
+      double itemTotal = cartFood.food.price;
 
-      for (Addon addon in cartItem.selectedAddons) {
+      for (Addon addon in cartFood.addons) {
         itemTotal += addon.price;
       }
 
-      total += itemTotal * cartItem.quantity;
+      total += itemTotal * cartFood.quantity;
     }
 
     return total;
   }
 
-  // GET TOTAL NUMBER OF ITEMS IN CART
   int getTotalItemCount() {
     int totalItemCount = 0;
 
-    for (CartItem cartItem in _cart) {
-      totalItemCount += cartItem.quantity;
+    for (CartFood cartFood in _cart) {
+      totalItemCount += cartFood.quantity;
     }
 
     return totalItemCount;
   }
 
-  // CLEAR CART
-  void clearCart() {
+  void clearCart() async {
+    //final SupabaseApi supabase = SupabaseApi();
+    //final cartId = await supabase.getCart();
+    //await supabase.clearCart(cartId);
+
     _cart.clear();
+
     notifyListeners();
   }
 
@@ -92,13 +145,11 @@ class Restaurant extends ChangeNotifier {
     H E L P E R S
   */
 
-  // GENERATE A RECEIPT
   String displayCartReceipt() {
     final receipt = StringBuffer();
-    receipt.writeln("Here's your receipt");
+    receipt.writeln("Aquí tienes tu recibo");
     receipt.writeln();
 
-    // FORMAT THE DATE TO INCLUDE UP TO SECONDS ONLY
     String formattedData =
         DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
@@ -106,32 +157,30 @@ class Restaurant extends ChangeNotifier {
     receipt.writeln();
     receipt.writeln("------------");
 
-    for (final cartItem in _cart) {
+    for (final cartFood in _cart) {
       receipt.writeln(
-          "${cartItem.quantity} x ${cartItem.food.name} - ${_formatPrice(cartItem.food.price)}");
-      if (cartItem.selectedAddons.isNotEmpty) {
-        receipt.writeln(" Add-ons: ${_formatAddons(cartItem.selectedAddons)}");
+          "${cartFood.quantity} x ${cartFood.food.name} - ${formatPrice(cartFood.food.price)}");
+      if (cartFood.addons.isNotEmpty) {
+        receipt.writeln(" Complementos: ${_formatAddons(cartFood.addons)}");
       }
       receipt.writeln();
     }
 
     receipt.writeln("------------");
     receipt.writeln();
-    receipt.writeln("Total Items: ${getTotalItemCount()}");
-    receipt.writeln("Total Price: ${_formatPrice(getTotalPrice())}");
+    receipt.writeln("Cantidad total: ${getTotalItemCount()}");
+    receipt.writeln("Precio total: ${formatPrice(getTotalPrice())}");
 
     return receipt.toString();
   }
 
-  // FORMAT DOUBLE VALUE INTO MONEY
-  String _formatPrice(double price) {
-    return "${price.toStringAsFixed(2)}€";
+  String formatPrice(double price) {
+    return "${price.toStringAsFixed(2)} €";
   }
 
-  // FORMAT LIST OF ADDONS INTO A STRING SUMMARY
   String _formatAddons(List<Addon> addons) {
     return addons
-        .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
+        .map((addon) => "${addon.name} (${formatPrice(addon.price)})")
         .join(", ");
   }
 }

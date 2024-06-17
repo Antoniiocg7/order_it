@@ -3,14 +3,19 @@ import 'package:order_it/components/my_drawer.dart';
 import 'package:order_it/components/my_food_tile.dart';
 import 'package:order_it/components/my_tab_bar.dart';
 import 'package:order_it/models/food_category.dart';
+import 'package:order_it/models/restaurant.dart';
 import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/food_page.dart';
 import 'package:order_it/controllers/food_category_controller.dart';
 import 'package:order_it/controllers/food_controller.dart';
 import 'package:order_it/models/food.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+  final bool ordersAllowed;
+
+  const HomePage({super.key, required this.ordersAllowed});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -34,7 +39,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<FoodCategory>>(
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        // Retorna false para deshabilitar volver atrás
+        return false;
+      }, 
+
+    child: FutureBuilder<List<FoodCategory>>(
       future: FoodCategoryController().fetchCategories(),
       builder: (context, categorySnapshot) {
         if (categorySnapshot.connectionState == ConnectionState.waiting) {
@@ -47,7 +59,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               TabController(length: categories.length, vsync: this);
 
           return FutureBuilder<List<Food>>(
-            future: _foodController.fetchFood(),
+            future: _foodController.fetchAllFood(),
             builder: (context, foodSnapshot) {
               if (foodSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -57,7 +69,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 final foods = foodSnapshot.data ?? [];
                 return Scaffold(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
-                  drawer: const MyDrawer(),
+                  drawer: MyDrawer(ordersAllowed: widget.ordersAllowed),
                   appBar: AppBar(
                     centerTitle: true,
                     elevation: 0,
@@ -72,20 +84,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         );
                       },
                     ),
-                    title: const Text('Order It'),
-                    actions: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const CartPage(),
-                              ));
-                        },
-                        icon: const Icon(Icons.shopping_cart),
-                      ),
-                    ],
-                  ),
+                    title: const Text('Order It!'),
+                    actions: widget.ordersAllowed ? [
+                          IconButton(
+                            onPressed: () async {
+                          final restaurant =
+                              Provider.of<Restaurant>(context, listen: false);
+                          restaurant.loadCartDetails();
+
+                          if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CartPage(),
+                                  ),
+                            );
+                          }
+                            },
+                            icon: const Icon(Icons.shopping_cart),
+                          ),
+                        ] 
+                      : [],
+                    ),
                   body: Column(
                     children: [
                       MyTabBar(
@@ -110,7 +130,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            FoodPage(food: food),
+                                            FoodPage(food: food, ordersAllowed: widget.ordersAllowed),
                                       ),
                                     );
                                   },
@@ -128,6 +148,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           );
         }
       },
-    );
+    ));
   }
 }

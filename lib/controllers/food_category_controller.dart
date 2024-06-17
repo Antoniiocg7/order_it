@@ -13,7 +13,7 @@ class FoodCategoryController {
           .toList();
       return categories;
     } catch (error) {
-      throw Exception('Failed to fetch categories: $error');
+      throw Exception('Error al traer las categorías: $error');
     }
   }
 }

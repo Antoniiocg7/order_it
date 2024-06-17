@@ -6,95 +6,24 @@ class DeliveryProgressPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Delivery in progress..."),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-      ),
-      body: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          MyReceipt(),
-        ],
-      ),
-    );
-  }
-
-  // CUSTOM BUTTON NAVBAR - MESSAGE / CALL DELIVERY DRIVER
-  Widget _buildBottomNavBar(BuildContext context) {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-      padding: const EdgeInsets.all(25),
-      child: Row(
-        children: [
-          // PROFILE PICK OF DRIVER
-          Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                shape: BoxShape.circle),
-            child: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
-          ),
-
-          const SizedBox(width: 10),
-
-          // DRIVER DETAILS
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        // Retorna false para deshabilitar volver atrás
+        return false;
+      },
+      child: const Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Antonio Cañizares",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Theme.of(context).colorScheme.inversePrimary),
+              SizedBox(
+                height: 100,
               ),
-              Text(
-                "Driver",
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary),
-              ),
+              MyReceipt(),
             ],
           ),
-
-          const Spacer(),
-
-          Row(
-            children: [
-              // MESSAGE BUTTON
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    shape: BoxShape.circle),
-                child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.message,
-                      color: Theme.of(context).colorScheme.primary,
-                    )),
-              ),
-
-              const SizedBox(width: 10),
-
-              // CALL BUTTON
-              Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    shape: BoxShape.circle),
-                child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.call,
-                      color: Colors.green,
-                    )),
-              ),
-            ],
-          )
-        ],
+        ),
       ),
     );
   }

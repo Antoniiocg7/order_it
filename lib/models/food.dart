@@ -27,14 +27,16 @@ class Food {
       name: json['name'],
       description: json['description'],
       imagePath: json['imagepath'],
-      price: json['price'],
+      price: json['price'].toDouble(),
       categoryId: json['category_id'].toString(),
-      addonIds: [
-        json['id_addon_1'].toString(),
-        json['id_addon_2'].toString(),
-        json['id_addon_3'].toString(),
-      ].whereType<String>().toList(),
-      addons: null,
+      addonIds: json.containsKey('addon_ids')
+          ? List<String>.from(
+              json['addon_ids'].map((addonId) => addonId.toString()))
+          : [],
+      addons: json['addons'] != null
+          ? List<Addon>.from(
+              json['addons'].map((addon) => Addon.fromJson(addon)))
+          : null,
     );
   }
 
@@ -46,9 +48,8 @@ class Food {
       'imagepath': imagePath,
       'price': price,
       'category_id': int.parse(categoryId),
-      'id_addon_1': addonIds.isNotEmpty ? addonIds[0] : null,
-      'id_addon_2': addonIds.length > 1 ? addonIds[1] : null,
-      'id_addon_3': addonIds.length > 2 ? addonIds[2] : null,
+      'addon_ids': addonIds.map(int.parse).toList(),
+      'addons': addons?.map((addon) => addon.toJson()).toList(),
     };
   }
 }
