@@ -67,9 +67,15 @@ class _WaiterState extends State<Waiter> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: const Text('Mesas',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        backgroundColor: Colors.green.shade400,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: const Text(
+          'Mesas',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: tables.isEmpty
           ? const Center(child: CircularProgressIndicator())
@@ -207,8 +213,13 @@ class TableDetailPageState extends State<TableDetailPage> {
       appBar: AppBar(
         title: Text(
           'Detalles de Mesa ${widget.table['table_number']}',
-          style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
         ),
         backgroundColor: Colors.green,
         actions: [
@@ -405,7 +416,8 @@ class _OrdersListState extends State<OrdersList> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       // Cargar el estado de las tarjetas
-      cardColors = (prefs.getStringList('cardColors') ?? []).asMap().map((index, value) {
+      cardColors =
+          (prefs.getStringList('cardColors') ?? []).asMap().map((index, value) {
         return MapEntry(index, value == 'true');
       });
     });
@@ -413,7 +425,8 @@ class _OrdersListState extends State<OrdersList> {
 
   Future<void> _saveCardColors() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> cardColorsList = cardColors.values.map((value) => value.toString()).toList();
+    List<String> cardColorsList =
+        cardColors.values.map((value) => value.toString()).toList();
     prefs.setStringList('cardColors', cardColorsList);
   }
 

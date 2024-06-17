@@ -170,15 +170,13 @@ class _LoginPageState extends State<LoginPage> {
                     child: LoginWithButton(
                       onTap: () async {
                         GoogleSignInService.googleSignIn();
-                        if (await GoogleSignIn.standard().isSignedIn()) {
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const FirstPage(),
-                              ),
-                            );
-                          }
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FirstPage(),
+                            ),
+                          );
                         }
                       },
                       text: "Continuar con Google     ",

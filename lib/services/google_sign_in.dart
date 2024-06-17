@@ -5,11 +5,11 @@ class GoogleSignInService {
   static Future<AuthResponse> googleSignIn() async {
     /// Web Client ID that you registered with Google Cloud.
     const webClientId =
-        '581750972976-dm2uqljbks5cbij1hb861r311o2ctcdj.apps.googleusercontent.com';
+        '298816426418-bu2jpqqsa7d314vbtj7a3n20o5dnnete.apps.googleusercontent.com';
 
     /// iOS Client ID that you registered with Google Cloud.
     const iosClientId =
-        '581750972976-q01j9q71b265n0am7fated10rjdag5t1.apps.googleusercontent.com';
+        '298816426418-0jbhsjfk02jppbpupb7j5p66j9sspqli.apps.googleusercontent.com';
 
     // Google sign in en Android funciona sin añadir Android
     // Cliente ID registrado en Google Cloud
