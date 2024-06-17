@@ -121,21 +121,6 @@ class MyDrawer extends StatelessWidget {
           ),
 
 
-          MyDrawerTile(
-            text: "ACERCA DE.",
-            icon: Icons.info_outline,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MyOrders(),
-                ),
-              );
-            },
-          ),
-
-
           // Tirar logout abajo del todo
           const Spacer(),
 
