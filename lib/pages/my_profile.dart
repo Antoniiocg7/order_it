@@ -192,15 +192,6 @@ class _MyProfileState extends State<MyProfile> {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    const Row(children: [
-                      Text(
-                        'Se unió el 31 de Octubre 2022',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 34, 34, 34)),
-                      ),
-                      SizedBox(width: 106),
-                    ]),
                   ],
                 ),
               ),

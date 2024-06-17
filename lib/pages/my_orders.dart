@@ -86,8 +86,8 @@ class _MyOrdersState extends State<MyOrders> {
                             leading: const CircleAvatar(
                               child: Icon(Icons.food_bank),
                             ),
-                            title: const Text('Restaurante'),
-                            subtitle: const Text('Fecha:'),
+                            title: const Text('Restaurante: Order It'),
+                            subtitle: const Text('Fecha: 17/06/2024'),
                             trailing: Text(
                               '${cart.price} €',
                               style: const TextStyle(

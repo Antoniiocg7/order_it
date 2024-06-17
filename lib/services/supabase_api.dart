@@ -99,9 +99,7 @@ class SupabaseApi {
     final response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      if (kDebugMode) {
-        print('RESPUESTA: $jsonResponse');
-      }
+
       if (jsonResponse.isNotEmpty && jsonResponse[0]['id'] != null) {
         return jsonResponse[0]['id'];
       } else {
@@ -123,9 +121,7 @@ class SupabaseApi {
     final response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      if (kDebugMode) {
-        print('RESPUESTA: $jsonResponse');
-      }
+
       if (jsonResponse.isNotEmpty && jsonResponse[0]['waiter_id'] != null) {
         return true;
       } else {
@@ -147,9 +143,7 @@ class SupabaseApi {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      if (kDebugMode) {
-        print('RESPUESTA: $jsonResponse');
-      }
+
       if (jsonResponse.isNotEmpty) {
         return jsonResponse[0]['nombre'];
       } else {
@@ -172,9 +166,7 @@ class SupabaseApi {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      if (kDebugMode) {
-        print('RESPUESTA: $jsonResponse');
-      }
+
       if (jsonResponse.isNotEmpty) {
         return true;
       } else {
@@ -375,6 +367,8 @@ class SupabaseApi {
     final cartId = RandomIds.generateRandomId().toString();
     final supabase = Supabase.instance.client;
     final UserResponse userResponse = await supabase.auth.getUser();
+  
+    print(total.roundToDouble());
 
     try {
       await http.post(
@@ -793,9 +787,7 @@ class SupabaseApi {
     final response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       final List<dynamic> jsonResponse = json.decode(response.body);
-      if (kDebugMode) {
-        print('RESPUESTA: $jsonResponse');
-      }
+
       if (jsonResponse.isNotEmpty &&
           jsonResponse[0]['is_occupied'] != null &&
           jsonResponse[0]['is_occupied'] == true) {

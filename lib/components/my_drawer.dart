@@ -25,9 +25,7 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           const SizedBox(
-            height: 15,
-          ),
+           
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 55),
             child: Row(
@@ -42,7 +40,7 @@ class MyDrawer extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
             child: Image.asset(
               'assets/icons/Logo.png',
               width: size.width * 0.8,
@@ -65,7 +63,7 @@ class MyDrawer extends StatelessWidget {
 
           if(ordersAllowed)
             MyDrawerTile(
-              text: "CARRRITO",
+              text: "CARRITO",
               icon: Icons.shopping_cart_rounded,
               onTap: () {
                 Navigator.pop(context);
@@ -100,7 +98,7 @@ class MyDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MyProfile(title: "Hola",),
+                  builder: (context) => const MyProfile(title: "Mis datos",),
                 ),
               );
             },
