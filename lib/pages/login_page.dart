@@ -13,7 +13,6 @@ import 'package:order_it/services/google_sign_in.dart';
 import 'package:order_it/services/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
 
@@ -184,28 +183,6 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       text: "Continuar con Google     ",
                       icon: "assets/icons/google_icon.png",
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  FadeInUp(
-                    duration: const Duration(seconds: 2),
-                    child: LoginWithButton(
-                      onTap: () {},
-                      text: "Continuar con Facebook",
-                      icon: "assets/icons/facebook_icon.png",
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  FadeInUp(
-                    duration: const Duration(seconds: 2),
-                    child: LoginWithButton(
-                      onTap: () {},
-                      text: "Continuar con Apple       ",
-                      icon: "assets/icons/apple_icon.png",
                     ),
                   ),
                 ],
