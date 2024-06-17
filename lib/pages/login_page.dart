@@ -1,12 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:order_it/components/login_with_button.dart';
 import 'package:order_it/components/my_button.dart';
 import 'package:order_it/components/my_textfield.dart';
 import 'package:order_it/controllers/auth/login_controller.dart';
 import 'package:order_it/pages/first_page.dart';
-import 'package:order_it/services/google_sign_in.dart';
 import 'package:order_it/services/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -36,6 +34,9 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(
+                height: 40,
+              ),
               // Logo
               FadeInDown(
                 duration: const Duration(seconds: 3),
@@ -45,8 +46,6 @@ class _LoginPageState extends State<LoginPage> {
                   height: 300,
                 ),
               ),
-
-              const SizedBox(height: 0),
 
               // Email
               FadeInRight(
@@ -60,21 +59,22 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               const SizedBox(
-                height: 20,
+                height: 40,
               ),
 
               // Contraseña
               FadeInLeft(
                 duration: const Duration(seconds: 2),
                 child: MyTextField(
-                    controller: passwordController,
-                    hintText: "Contraseña",
-                    labelText: "Contraseña",
-                    obscureText: true),
+                  controller: passwordController,
+                  hintText: "Contraseña",
+                  labelText: "Contraseña",
+                  obscureText: true,
+                ),
               ),
 
               const SizedBox(
-                height: 30,
+                height: 60,
               ),
 
               // Inicio de sesión
@@ -114,7 +114,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               )
                             : SnackbarHelper.showSnackbar(
-                                context, "Inicio de sesión no válido.");
+                                context,
+                                "Inicio de sesión no válido.",
+                              );
                       }
                     }
                   },
@@ -125,48 +127,48 @@ class _LoginPageState extends State<LoginPage> {
                 height: 25,
               ),
 
-              FadeInUp(
-                duration: const Duration(seconds: 2),
-                child: const Text(
-                  "O iniciar sesión con:",
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
+              // FadeInUp(
+              //   duration: const Duration(seconds: 2),
+              //   child: const Text(
+              //     "O iniciar sesión con:",
+              //     style: TextStyle(
+              //       color: Colors.green,
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
 
               const SizedBox(
                 height: 15,
               ),
 
-              Column(
-                children: [
-                  FadeInUp(
-                    duration: const Duration(seconds: 2),
-                    child: LoginWithButton(
-                      onTap: () async {
-                        GoogleSignInService.googleSignIn();
-                        if (mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FirstPage(),
-                            ),
-                          );
-                        }
-                      },
-                      text: "Continuar con Google     ",
-                      icon: "assets/icons/google_icon.png",
-                    ),
-                  ),
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     FadeInUp(
+              //       duration: const Duration(seconds: 2),
+              //       child: LoginWithButton(
+              //         onTap: () async {
+              //           GoogleSignInService.googleSignIn();
+              //           if (mounted) {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                 builder: (context) => const FirstPage(),
+              //               ),
+              //             );
+              //           }
+              //         },
+              //         text: "Continuar con Google     ",
+              //         icon: "assets/icons/google_icon.png",
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              // const SizedBox(
+              //   height: 25,
+              // ),
 
               // Ir a registro
               FadeInUp(
