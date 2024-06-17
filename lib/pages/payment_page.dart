@@ -70,7 +70,7 @@ class PaymentPageState extends State<PaymentPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: userCart.map((cartFood) {
                           return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(
                                 height: 15,
@@ -79,29 +79,36 @@ class PaymentPageState extends State<PaymentPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.asset(
                                         cartFood.food.imagePath,
-                                        width: 45,
-                                        height: 45,
+                                        width: 70,
+                                        height: 70,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Text(
-                                      cartFood.food.name,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)} (${cartFood.quantity} uds.) ',
-                                      style: const TextStyle(
-                                        fontSize: 14,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cartFood.food.name,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            '${restaurant.formatPrice(cartFood.food.price * cartFood.quantity)} (${cartFood.quantity} uds.)',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -110,60 +117,57 @@ class PaymentPageState extends State<PaymentPage> {
                               if (cartFood.addons.isNotEmpty)
                                 SizedBox(
                                   height: 50,
-                                  child: cartFood.addons.isEmpty
-                                      ? null
-                                      : ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          children: cartFood.addons
-                                              .map(
-                                                (addon) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8.0),
-                                                  child: FilterChip(
-                                                    label: Row(
-                                                      children: [
-                                                        Text(addon.name,
-                                                            style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .primary,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                        Text(
-                                                            " (${addon.price.toString()}) €",
-                                                            style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .colorScheme
-                                                                    .primary))
-                                                      ],
-                                                    ),
-                                                    onSelected: (value) {},
-                                                    shape: StadiumBorder(
-                                                      side: BorderSide(
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: cartFood.addons
+                                        .map(
+                                          (addon) => Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8.0),
+                                            child: FilterChip(
+                                              label: Row(
+                                                children: [
+                                                  Text(
+                                                    addon.name,
+                                                    style: TextStyle(
                                                         color: Theme.of(context)
                                                             .colorScheme
                                                             .primary,
-                                                      ),
-                                                    ),
-                                                    backgroundColor:
-                                                        Theme.of(context)
-                                                            .colorScheme
-                                                            .secondary,
-                                                    labelStyle: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onSecondary,
-                                                      fontSize: 12,
-                                                    ),
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
+                                                  Text(
+                                                    " (${addon.price.toString()}) €",
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary),
+                                                  ),
+                                                ],
+                                              ),
+                                              onSelected: (value) {},
+                                              shape: StadiumBorder(
+                                                side: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
                                                 ),
-                                              )
-                                              .toList(),
-                                        ),
+                                              ),
+                                              backgroundColor:
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                              labelStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSecondary,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
                                 ),
                             ],
                           );
@@ -183,7 +187,7 @@ class PaymentPageState extends State<PaymentPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${restaurant.formatPrice(subtotal)} ',
+                        '${restaurant.formatPrice(subtotal)}',
                         style: const TextStyle(
                           fontSize: 14,
                         ),
@@ -255,14 +259,14 @@ class PaymentPageState extends State<PaymentPage> {
                           );
                         },
                         style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all<Color>(
+                          backgroundColor: MaterialStateProperty.all<Color>(
                             const Color.fromARGB(255, 14, 80, 44),
                           ),
-                          foregroundColor: WidgetStateProperty.all<Color>(
+                          foregroundColor: MaterialStateProperty.all<Color>(
                             Colors.white,
                           ),
                           shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
