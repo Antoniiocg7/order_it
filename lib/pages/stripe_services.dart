@@ -27,15 +27,10 @@ class StripeService {
         }
       }
 
-      print(precioAddons);
-      print(totalAmount);
-
       var productPrice =
-          ((((val.food.price * val.quantity) + precioAddons)*1.10) * 100)
+          (((val.food.price * val.quantity) + precioAddons) * 100)
               .round()
               .toString();
-
-      print(productPrice);
 
       lineItems +=
           "&line_items[$index][price_data][product_data][name]=${val.food.name}";
@@ -53,8 +48,6 @@ class StripeService {
           'Authorization': 'Bearer $secretKey',
           'Content-Type': 'application/x-www-form-urlencoded'
         });
-
-    print(response.body);
 
     return json.decode(response.body)["id"];
   }

@@ -5,6 +5,8 @@ import 'package:order_it/pages/cart_page.dart';
 import 'package:order_it/pages/help_page.dart';
 import 'package:order_it/pages/my_orders.dart';
 import 'package:order_it/pages/my_profile.dart';
+import 'package:order_it/themes/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -23,6 +25,22 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+           const SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16, top: 55),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(onPressed: () {
+                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                },
+                icon: const Icon(Icons.dark_mode_rounded,))
+              ],
+            ),
+          ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: Image.asset(
