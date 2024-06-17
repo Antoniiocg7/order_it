@@ -232,6 +232,35 @@ class SupabaseApi {
     }
   }
 
+  Future<bool> dishServed(String item) async {
+    final url = '$baseUrl/rest/v1/cart_item?id=eq.$item';
+
+    final headers = {
+      'apikey': apiKey,
+      'Authorization': authorization,
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({'served': true});
+
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 204) {
+      if (kDebugMode) {
+        print('Plato servido');
+      }
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(
+          'Hubo un error marcar el plato como servido: ${response.statusCode} ${response.body}',
+        );
+      }
+      return false;
+    }
+  }
+
   /*Future<String?> getUserUUID(String email) async {
     final url = '$baseUrl/rest/v1/users?select=user_id&email=eq.${Uri.encodeComponent(email)}';
     final headers = _createHeaders();

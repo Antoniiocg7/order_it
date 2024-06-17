@@ -367,7 +367,7 @@ class TableDetailPageState extends State<TableDetailPage> {
                     ],
                   ),
             const SizedBox(height: 20),
-            OrdersList(userTable: widget.table['user_id']),
+            OrdersList(userTable: widget.table['user_id'], supabaseApi: widget.supabaseApi),
           ],
         ),
       ),
@@ -375,10 +375,15 @@ class TableDetailPageState extends State<TableDetailPage> {
   }
 }
 
+
+
+
+
 class OrdersList extends StatefulWidget {
   final String? userTable;
+  final SupabaseApi supabaseApi;
 
-  const OrdersList({super.key, required this.userTable});
+  const OrdersList({super.key, required this.userTable, required this.supabaseApi});
 
   @override
   State<OrdersList> createState() => _OrdersListState();
@@ -404,7 +409,6 @@ class _OrdersListState extends State<OrdersList> {
   Future<void> _loadCardColors() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      // Cargar el estado de las tarjetas
       cardColors = (prefs.getStringList('cardColors') ?? []).asMap().map((index, value) {
         return MapEntry(index, value == 'true');
       });
@@ -415,6 +419,23 @@ class _OrdersListState extends State<OrdersList> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> cardColorsList = cardColors.values.map((value) => value.toString()).toList();
     prefs.setStringList('cardColors', cardColorsList);
+  }
+
+  Future<void> _toggleCardColor(int index, String cartId) async {
+    bool? isServed = cardColors[index];
+    if (isServed == null || !isServed) {
+      bool success = await widget.supabaseApi.dishServed(cartId);
+      if (success) {
+        setState(() {
+          cardColors[index] = true;
+        });
+      }
+    } else {
+      setState(() {
+        cardColors[index] = false;
+      });
+    }
+    _saveCardColors();
   }
 
   @override
@@ -446,23 +467,14 @@ class _OrdersListState extends State<OrdersList> {
               itemBuilder: (context, index) {
                 final cart = carts[index];
                 final int cantidadInt = cantidad[cart.name] ?? 0;
-                bool? isServed = cardColors[index];
+                bool? isServed = cardColors[index] ?? false;
 
                 return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (isServed == null || !isServed) {
-                        cardColors[index] = true; // Verde
-                      } else {
-                        cardColors[index] = false; // Rojo
-                      }
-                      _saveCardColors();
-                    });
-                  },
+                  onTap: () => _toggleCardColor(index, cart.id),
                   child: Card(
-                    color: isServed == null
+                    color: cardColors[index] == null
                         ? Colors.red
-                        : (isServed ? Colors.green : Colors.red),
+                        : (cardColors[index]! ? Colors.green : Colors.red),
                     margin: const EdgeInsets.symmetric(
                         horizontal: 25.0, vertical: 8.0),
                     child: ListTile(
