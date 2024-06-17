@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
@@ -221,24 +220,37 @@ class _PaymentPageState extends State<PaymentPage> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: () async {
+                          // Mostrar la pantalla de carga
+                          showLoadingDialog(context);
+
+                          // Iniciar el proceso de pago con Stripe
                           await StripeService.stripePaymentCheckout(
-                              userCart, totalStr, context, mounted,
-                              onSuccess: () async {
+                            userCart,
+                            totalStr,
+                            context,
+                            mounted,
+                            onSuccess: () async {
+                              final SupabaseApi supabaseApi = SupabaseApi();
 
-                            final SupabaseApi supabaseApi = SupabaseApi();
-                            await supabaseApi.createCart(
-                                restaurant.getUserCart, totalDouble);
+                              // Guardar el carrito en Supabase
+                              await supabaseApi.createCart(
+                                  restaurant.getUserCart, totalDouble);
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
+                              // Cerrar la pantalla de carga
+                              Navigator.pop(context);
+
+                              // Verificar si el contexto está montado antes de navegar
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
                                     builder: (context) =>
-                                        const DeliveryProgressPage()));
-                          }, onCancel: () {
-                            print("Cancel");
-                          }, onError: (e) {
-                            print("Error:" + e.toString());
-                          });
+                                        const DeliveryProgressPage(),
+                                  ),
+                                );
+                              }
+                            },
+                          );
                         },
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
@@ -260,6 +272,28 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                 ],
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(width: 16),
+                Text("Procesando..."),
+              ],
             ),
           ),
         );
