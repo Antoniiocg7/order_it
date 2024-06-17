@@ -1,15 +1,12 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:order_it/models/cart_food.dart';
 import 'package:order_it/models/restaurant.dart';
-import 'package:order_it/pages/checkout.dart';
 import 'package:order_it/pages/delivery_progress_page.dart';
 import 'package:order_it/pages/home_page.dart';
 import 'package:order_it/pages/stripe_services.dart';
 import 'package:order_it/services/supabase_api.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
   final List<CartFood> userCart;
@@ -195,24 +192,6 @@ class _PaymentPageState extends State<PaymentPage> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        'Impuestos',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        '10 %',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 16),
                   const Divider(height: 2),
                   const SizedBox(height: 16),
@@ -228,7 +207,7 @@ class _PaymentPageState extends State<PaymentPage> {
                         ),
                       ),
                       Text(
-                        restaurant.formatPrice(subtotal * 1.10),
+                        restaurant.formatPrice(subtotal),
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
