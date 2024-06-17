@@ -132,7 +132,7 @@ class BotonPagar extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all<Color>(
-          const Color.fromARGB(255, 14, 80, 44),
+          Colors.green,
         ),
       ),
       onPressed: userCart.isEmpty
